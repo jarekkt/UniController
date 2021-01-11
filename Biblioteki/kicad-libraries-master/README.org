@@ -1,0 +1,23 @@
+#+TITLE: kicad-libraries
+#+AUTHOR: Peter Polidoro
+#+EMAIL: peterpolidoro@gmail.com
+
+* Repository Information
+  - Author :: Peter Polidoro
+  - License :: Open-Source Hardware
+
+* Install Kicad
+
+** Windows or MacOS
+
+   Download and install.
+
+   [[http://www.kicad-pcb.org/display/KICAD/Download]]
+
+** Linux
+
+   #+BEGIN_SRC sh
+     sudo add-apt-repository ppa:js-reynaud/ppa-kicad
+     sudo apt-get update
+     sudo apt-get install kicad
+   #+END_SRC

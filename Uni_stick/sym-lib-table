@@ -1,0 +1,7 @@
+(sym_lib_table
+  (lib (name mfc_base_lib)(type Legacy)(uri /home/jarek/Projects/vcs/printer_electronics/Uni_Printer_v2/Biblioteki/mfc_base_lib.lib)(options "")(descr ""))
+  (lib (name step2cnc)(type Legacy)(uri /home/jarek/Projects/vcs/printer_electronics/Uni_Printer_v2/Biblioteki/step2cnc.lib)(options "")(descr ""))
+  (lib (name Uni_Printer-rescue)(type Legacy)(uri /home/jarek/Projects/vcs/printer_electronics/Uni_Printer_v2/Uni_Printer-rescue.lib)(options "")(descr ""))
+  (lib (name MPX5010DP)(type Legacy)(uri ${KIPRJMOD}/Biblioteki/MPX5010DP.lib)(options "")(descr ""))
+  (lib (name Uni_stick-rescue)(type Legacy)(uri ${KIPRJMOD}/Uni_stick-rescue.lib)(options "")(descr ""))
+)

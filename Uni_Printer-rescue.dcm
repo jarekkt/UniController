@@ -1,0 +1,23 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP AM26C31CD-AM26C31CD-Uni_Printer_v1-rescue
+F http://www.ti.com/lit/ds/symlink/am26c31.pdf
+$ENDCMP
+#
+$CMP BMP280-Sensor_Pressure
+F https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMP280-DS001.pdf
+$ENDCMP
+#
+$CMP ENC28J60x-SO-Interface_Ethernet
+F http://ww1.microchip.com/downloads/en/devicedoc/39662e.pdf
+$ENDCMP
+#
+$CMP SN65HVD233-Interface_CAN_LIN
+F http://www.ti.com/lit/ds/symlink/sn65hvd234.pdf
+$ENDCMP
+#
+$CMP USB_B-Connector
+F  ~
+$ENDCMP
+#
+#End Doc Library

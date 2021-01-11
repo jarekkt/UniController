@@ -1,0 +1,27 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP M12-5-RCPT_F
+K connector
+F ~
+$ENDCMP
+#
+$CMP M12-5-RCPT_F_SMD
+K connector
+F ~
+$ENDCMP
+#
+$CMP PIN_CRIMP_22-24AWG_GOLD
+K connector
+F ~
+$ENDCMP
+#
+$CMP SOCKET_CRIMP_22-24AWG_GOLD
+K connector
+F ~
+$ENDCMP
+#
+$CMP SPST_PENDANT_WASHDOWN
+K switch normally-open pushbutton push-button
+$ENDCMP
+#
+#End Doc Library
