@@ -50,9 +50,9 @@
       },
       "diff_pair_dimensions": [
         {
-          "gap": 0.25,
-          "via_gap": 0.25,
-          "width": 0.2
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
         }
       ],
       "drc_exclusions": [],
@@ -120,7 +120,7 @@
         "solder_paste_margin_ratio": -0.0
       },
       "track_widths": [
-        0.2,
+        0.0,
         0.2,
         0.3,
         0.4,
@@ -131,8 +131,8 @@
       ],
       "via_dimensions": [
         {
-          "diameter": 0.8,
-          "drill": 0.4
+          "diameter": 0.0,
+          "drill": 0.0
         },
         {
           "diameter": 0.45,
@@ -370,7 +370,11 @@
     "meta": {
       "version": 0
     },
-    "net_colors": null
+    "net_colors": {
+      "+3V3": "rgb(0, 194, 0)",
+      "+5V": "rgb(255, 0, 0)",
+      "GND": "rgb(0, 0, 255)"
+    }
   },
   "pcbnew": {
     "last_paths": {
@@ -415,7 +419,7 @@
   },
   "sheets": [
     [
-      "2a7264c7-811c-4cb6-a7e6-d8ee95cd3a07",
+      "00000000-0000-0000-0000-00005b7be5f5",
       ""
     ],
     [

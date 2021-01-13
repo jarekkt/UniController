@@ -1,7 +1,5 @@
 (kicad_sch (version 20201015) (generator eeschema)
 
-  (page 1 12)
-
   (paper "A4")
 
   (lib_symbols
@@ -976,7 +974,7 @@
   (label "SPI.MOSI" (at 213.36 76.2 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
   )
-  (label "SPI.NCSS" (at 213.36 78.74 180)
+  (label "SPI.NSS" (at 213.36 78.74 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
   )
   (label "IO2" (at 213.36 81.28 180)
@@ -998,7 +996,7 @@
   (hierarchical_label "TIM{CH1 CH2}" (shape input) (at 88.9 45.72 0)
     (effects (font (size 1.27 1.27)) (justify left))
   )
-  (hierarchical_label "SPI{MISO MOSI SCLK NCSS}" (shape input) (at 88.9 48.26 0)
+  (hierarchical_label "SPI{MISO MOSI SCLK NSS}" (shape input) (at 88.9 48.26 0)
     (effects (font (size 1.27 1.27)) (justify left))
   )
   (hierarchical_label "IO[1..2]" (shape input) (at 88.9 50.8 0)

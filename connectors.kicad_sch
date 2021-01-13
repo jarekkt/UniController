@@ -1,7 +1,5 @@
 (kicad_sch (version 20201015) (generator eeschema)
 
-  (page 1 12)
-
   (paper "A4")
 
   (lib_symbols
@@ -864,7 +862,7 @@
     (effects (font (size 1.27 1.27)) (justify right bottom))
   )
 
-  (label "AIN_SUP8" (at 23.495 113.03 0)
+  (label "AIN_IN_SUP8" (at 23.495 113.03 0)
     (effects (font (size 1.524 1.524)) (justify left bottom))
   )
   (label "AIN_IN8" (at 23.495 115.57 0)
@@ -1003,7 +1001,7 @@
   (hierarchical_label "AIN_IN[5..8]" (shape input) (at 43.18 55.88 0)
     (effects (font (size 1.27 1.27)) (justify left))
   )
-  (hierarchical_label "AIN_SUP[5..8]" (shape input) (at 43.18 59.69 0)
+  (hierarchical_label "AIN_IN_SUP[5..8]" (shape input) (at 43.18 59.69 0)
     (effects (font (size 1.27 1.27)) (justify left))
   )
   (hierarchical_label "ENC1_IN{A1 B1 A2 B2}" (shape input) (at 119.38 39.37 0)
