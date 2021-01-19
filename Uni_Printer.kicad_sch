@@ -182,10 +182,10 @@
   (junction (at 202.565 82.55) (diameter 1.016) (color 0 0 0 0))
   (junction (at 202.565 93.345) (diameter 1.016) (color 0 0 0 0))
 
-  (no_connect (at 36.83 224.79))
-  (no_connect (at 46.99 227.33))
   (no_connect (at 46.99 224.79))
   (no_connect (at 36.83 227.33))
+  (no_connect (at 46.99 227.33))
+  (no_connect (at 36.83 224.79))
 
   (wire (pts (xy 19.685 239.395) (xy 36.83 239.395))
     (stroke (width 0) (type solid) (color 0 0 0 0))
@@ -2243,7 +2243,7 @@
       (reference "J11") (unit 1) (value "LMJ1998824110DL1T39J") (footprint "moje:LMJ1998824110DL1T39J")
     )
     (path "/00000000-0000-0000-0000-00005fc2896f/88cc9e2f-8dd0-4b50-beb3-7bb67570c297"
-      (reference "L1") (unit 1) (value "10uH") (footprint "Inductor_SMD:L_0603_1608Metric")
+      (reference "L1") (unit 1) (value "10nH") (footprint "Inductor_SMD:L_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005fc2896f/230281f0-a761-4a02-92bb-5ef8fe461f5d"
       (reference "R1") (unit 1) (value "33") (footprint "Resistor_SMD:R_0603_1608Metric")

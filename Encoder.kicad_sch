@@ -236,10 +236,10 @@
   (junction (at 200.66 68.58) (diameter 1.016) (color 0 0 0 0))
   (junction (at 200.66 81.28) (diameter 1.016) (color 0 0 0 0))
 
-  (no_connect (at 93.98 80.01))
   (no_connect (at 172.72 78.74))
-  (no_connect (at 172.72 123.19))
   (no_connect (at 93.98 124.46))
+  (no_connect (at 93.98 80.01))
+  (no_connect (at 172.72 123.19))
 
   (wire (pts (xy 82.55 115.57) (xy 93.98 115.57))
     (stroke (width 0) (type solid) (color 0 0 0 0))

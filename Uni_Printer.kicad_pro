@@ -370,11 +370,7 @@
     "meta": {
       "version": 0
     },
-    "net_colors": {
-      "+3V3": "rgb(0, 194, 0)",
-      "+5V": "rgb(255, 0, 0)",
-      "GND": "rgb(0, 0, 255)"
-    }
+    "net_colors": null
   },
   "pcbnew": {
     "last_paths": {
