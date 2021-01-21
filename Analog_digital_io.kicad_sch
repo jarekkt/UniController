@@ -736,9 +736,9 @@
   (junction (at 125.095 43.18) (diameter 1.016) (color 0 0 0 0))
   (junction (at 125.095 60.96) (diameter 1.016) (color 0 0 0 0))
 
-  (no_connect (at 130.175 138.43))
-  (no_connect (at 140.335 138.43))
   (no_connect (at 130.175 77.47))
+  (no_connect (at 140.335 138.43))
+  (no_connect (at 130.175 138.43))
   (no_connect (at 140.335 77.47))
 
   (wire (pts (xy 90.805 69.85) (xy 94.615 69.85))
