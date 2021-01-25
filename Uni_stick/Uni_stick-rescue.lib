@@ -1,11 +1,11 @@
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
-# +24V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue
+# +24V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue
 #
-DEF +24V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue #PWR 0 0 Y Y 1 F P
+DEF +24V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "+24V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue" 0 140 50 H V C CNN
+F1 "+24V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -16,11 +16,11 @@ X +24V 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# +3.3V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue
+# +3.3V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue
 #
-DEF +3.3V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue #PWR 0 0 Y Y 1 F P
+DEF +3.3V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "+3.3V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue" 0 140 50 H V C CNN
+F1 "+3.3V-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -31,11 +31,11 @@ X +3V3 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# +5V-power
+# +5V-power-Uni_stick-rescue
 #
-DEF +5V-power #PWR 0 0 Y Y 1 F P
+DEF +5V-power-Uni_stick-rescue #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "+5V-power" 0 140 50 H V C CNN
+F1 "+5V-power-Uni_stick-rescue" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -46,11 +46,11 @@ X +5V 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# C-Device
+# C-Device-Uni_stick-rescue
 #
-DEF C-Device C 0 10 N Y 1 F N
+DEF C-Device-Uni_stick-rescue C 0 10 N Y 1 F N
 F0 "C" 25 100 50 H V L CNN
-F1 "C-Device" 25 -100 50 H V L CNN
+F1 "C-Device-Uni_stick-rescue" 25 -100 50 H V L CNN
 F2 "" 38 -150 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -64,19 +64,19 @@ X ~ 2 0 -150 110 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# CP_Small-Device
+# CP_Small-Device-Uni_stick-rescue
 #
-DEF CP_Small-Device C 0 10 N N 1 F N
+DEF CP_Small-Device-Uni_stick-rescue C 0 10 N N 1 F N
 F0 "C" 10 70 50 H V L CNN
-F1 "CP_Small-Device" 10 -80 50 H V L CNN
+F1 "CP_Small-Device-Uni_stick-rescue" 10 -80 50 H V L CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
  CP_*
 $ENDFPLIST
 DRAW
-S -60 -12 60 -27 0 1 0 F
 S -60 27 60 12 0 1 0 N
+S -60 -12 60 -27 0 1 0 F
 P 2 0 1 0 -50 60 -30 60 N
 P 2 0 1 0 -40 50 -40 70 N
 X ~ 1 0 100 73 D 50 50 1 1 P
@@ -84,11 +84,11 @@ X ~ 2 0 -100 73 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# C_Small-Device
+# C_Small-Device-Uni_stick-rescue
 #
-DEF C_Small-Device C 0 10 N N 1 F N
+DEF C_Small-Device-Uni_stick-rescue C 0 10 N N 1 F N
 F0 "C" 10 70 50 H V L CNN
-F1 "C_Small-Device" 10 -80 50 H V L CNN
+F1 "C_Small-Device-Uni_stick-rescue" 10 -80 50 H V L CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -102,29 +102,11 @@ X ~ 2 0 -100 80 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# C_Small-lampa_uv-cache
+# Conn_01x04-Connector_Generic-Uni_stick-rescue
 #
-DEF C_Small-lampa_uv-cache C 0 10 N N 1 F N
-F0 "C" 10 70 50 H V L CNN
-F1 "C_Small-lampa_uv-cache" 10 -80 50 H V L CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-$FPLIST
- C_*
-$ENDFPLIST
-DRAW
-P 2 0 1 13 -60 -20 60 -20 N
-P 2 0 1 12 -60 20 60 20 N
-X ~ 1 0 100 80 D 50 50 1 1 P
-X ~ 2 0 -100 80 U 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
-# Conn_01x04-Connector_Generic
-#
-DEF Conn_01x04-Connector_Generic J 0 40 Y N 1 F N
+DEF Conn_01x04-Connector_Generic-Uni_stick-rescue J 0 40 Y N 1 F N
 F0 "J" 0 200 50 H V C CNN
-F1 "Conn_01x04-Connector_Generic" 0 -300 50 H V C CNN
+F1 "Conn_01x04-Connector_Generic-Uni_stick-rescue" 0 -300 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -143,11 +125,11 @@ X Pin_4 4 -200 -200 150 R 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Conn_01x04_Male-Connector
+# Conn_01x04_Male-Connector-Uni_stick-rescue
 #
-DEF Conn_01x04_Male-Connector J 0 40 Y N 1 F N
+DEF Conn_01x04_Male-Connector-Uni_stick-rescue J 0 40 Y N 1 F N
 F0 "J" 0 200 50 H V C CNN
-F1 "Conn_01x04_Male-Connector" 0 -300 50 H V C CNN
+F1 "Conn_01x04_Male-Connector-Uni_stick-rescue" 0 -300 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -169,11 +151,11 @@ X Pin_4 4 200 -200 150 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Conn_01x06-Connector_Generic
+# Conn_01x06-Connector_Generic-Uni_stick-rescue
 #
-DEF Conn_01x06-Connector_Generic J 0 40 Y N 1 F N
+DEF Conn_01x06-Connector_Generic-Uni_stick-rescue J 0 40 Y N 1 F N
 F0 "J" 0 300 50 H V C CNN
-F1 "Conn_01x06-Connector_Generic" 0 -400 50 H V C CNN
+F1 "Conn_01x06-Connector_Generic-Uni_stick-rescue" 0 -400 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -196,11 +178,11 @@ X Pin_6 6 -200 -300 150 R 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Conn_02x06_Odd_Even-Connector_Generic
+# Conn_02x06_Odd_Even-Connector_Generic-Uni_stick-rescue
 #
-DEF Conn_02x06_Odd_Even-Connector_Generic J 0 40 Y N 1 F N
+DEF Conn_02x06_Odd_Even-Connector_Generic-Uni_stick-rescue J 0 40 Y N 1 F N
 F0 "J" 50 300 50 H V C CNN
-F1 "Conn_02x06_Odd_Even-Connector_Generic" 50 -400 50 H V C CNN
+F1 "Conn_02x06_Odd_Even-Connector_Generic-Uni_stick-rescue" 50 -400 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -213,13 +195,13 @@ S -50 -95 0 -105 1 1 6 N
 S -50 5 0 -5 1 1 6 N
 S -50 105 0 95 1 1 6 N
 S -50 205 0 195 1 1 6 N
-S -50 250 150 -350 1 1 10 f
 S 150 -295 100 -305 1 1 6 N
 S 150 -195 100 -205 1 1 6 N
 S 150 -95 100 -105 1 1 6 N
 S 150 5 100 -5 1 1 6 N
 S 150 105 100 95 1 1 6 N
 S 150 205 100 195 1 1 6 N
+S -50 250 150 -350 1 1 10 f
 X Pin_1 1 -200 200 150 R 50 50 1 1 P
 X Pin_10 10 300 -200 150 L 50 50 1 1 P
 X Pin_11 11 -200 -300 150 R 50 50 1 1 P
@@ -235,11 +217,11 @@ X Pin_9 9 -200 -200 150 R 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# GND-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue
+# GND-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue
 #
-DEF GND-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue #PWR 0 0 Y Y 1 F P
+DEF GND-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -250 50 H I C CNN
-F1 "GND-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue" 0 -150 50 H V C CNN
+F1 "GND-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue" 0 -150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -248,11 +230,11 @@ X GND 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# GND-lampa_uv-cache
+# GND-power-Uni_stick-rescue
 #
-DEF GND-lampa_uv-cache #PWR 0 0 Y Y 1 F P
+DEF GND-power-Uni_stick-rescue #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -250 50 H I C CNN
-F1 "GND-lampa_uv-cache" 0 -150 50 H V C CNN
+F1 "GND-power-Uni_stick-rescue" 0 -150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -261,78 +243,37 @@ X GND 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# GND-power
+# MPX5010DP-MPX5010DP
 #
-DEF GND-power #PWR 0 0 Y Y 1 F P
-F0 "#PWR" 0 -250 50 H I C CNN
-F1 "GND-power" 0 -150 50 H V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
+DEF MPX5010DP-MPX5010DP IC 0 30 Y Y 1 F N
+F0 "IC" 750 300 50 H V L CNN
+F1 "MPX5010DP-MPX5010DP" 750 200 50 H V L CNN
+F2 "MPX5500DP" 750 100 50 H I L CNN
+F3 "http://www.nxp.com/docs/en/data-sheet/MPX5010.pdf" 750 0 50 H I L CNN
+F4 "Pressure Sensor 10kPa Different. 2-Port Pressure Sensor 10kPa Different. 2-Port" 750 -100 50 H I L CNN "Description"
+F5 "29" 750 -200 50 H I L CNN "Height"
+F6 "NXP" 750 -300 50 H I L CNN "Manufacturer_Name"
+F7 "MPX5010DP" 750 -400 50 H I L CNN "Manufacturer_Part_Number"
+F8 "841-MPX5010DP" 750 -500 50 H I L CNN "Mouser Part Number"
+F9 "https://www.mouser.com/Search/Refine.aspx?Keyword=841-MPX5010DP" 750 -600 50 H I L CNN "Mouser Price/Stock"
+F10 "9227324" 750 -700 50 H I L CNN "RS Part Number"
+F11 "http://uk.rs-online.com/web/p/products/9227324" 750 -800 50 H I L CNN "RS Price/Stock"
 DRAW
-P 6 0 1 0 0 0 0 -50 50 -50 0 -100 -50 -50 0 -50 N
-X GND 1 0 0 0 D 50 50 1 1 W N
+P 5 0 1 6 200 100 700 100 700 -600 200 -600 200 100 N
+X VOUT 1 0 0 200 R 50 50 0 0 U
+X GND 2 0 -100 200 R 50 50 0 0 U
+X VCC 3 0 -200 200 R 50 50 0 0 U
+X V1 4 0 -300 200 R 50 50 0 0 U
+X V2 5 0 -400 200 R 50 50 0 0 U
+X V_EX 6 0 -500 200 R 50 50 0 0 U
 ENDDRAW
 ENDDEF
 #
-# L_Small-Device-LED_uv_v2-rescue
+# Mounting_Hole-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue
 #
-DEF L_Small-Device-LED_uv_v2-rescue L 0 10 N N 1 F N
-F0 "L" 30 40 50 H V L CNN
-F1 "L_Small-Device-LED_uv_v2-rescue" 30 -40 50 H V L CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-$FPLIST
- Choke_*
- *Coil*
- Inductor_*
- L_*
-$ENDFPLIST
-DRAW
-A 0 -60 20 -899 899 0 1 0 N 0 -80 0 -40
-A 0 -20 20 -899 899 0 1 0 N 0 -40 0 0
-A 0 20 20 -899 899 0 1 0 N 0 0 0 40
-A 0 60 20 -899 899 0 1 0 N 0 40 0 80
-X ~ 1 0 100 20 D 50 50 1 1 P
-X ~ 2 0 -100 20 U 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
-# MAX20050ATC_V+-MAX20050ATC_V+
-#
-DEF MAX20050ATC_V+-MAX20050ATC_V+ IC 0 30 Y Y 1 F N
-F0 "IC" 1050 300 50 H V L CNN
-F1 "MAX20050ATC_V+-MAX20050ATC_V+" 1050 200 50 H V L CNN
-F2 "SON50P300X300X80-13N" 1050 100 50 H I L CNN
-F3 "https://datasheets.maximintegrated.com/en/ds/MAX20050-MAX20053.pdf" 1050 0 50 H I L CNN
-F4 "LED Lighting Drivers 2A Synchronous Buck LED Driver" 1050 -100 50 H I L CNN "Description"
-F5 "0.8" 1050 -200 50 H I L CNN "Height"
-F6 "Maxim Integrated" 1050 -300 50 H I L CNN "Manufacturer_Name"
-F7 "MAX20050ATC/V+" 1050 -400 50 H I L CNN "Manufacturer_Part_Number"
-F8 "700-MAX20050ATC/V+" 1050 -500 50 H I L CNN "Mouser Part Number"
-F9 "https://www.mouser.com/Search/Refine.aspx?Keyword=700-MAX20050ATC%2FV%2B" 1050 -600 50 H I L CNN "Mouser Price/Stock"
-DRAW
-P 5 0 1 6 200 100 1000 100 1000 -800 200 -800 200 100 N
-X PGND 1 0 0 200 R 50 50 0 0 U
-X BST 10 1200 -200 200 L 50 50 0 0 U
-X LX_1 11 1200 -100 200 L 50 50 0 0 U
-X LX_2 12 1200 0 200 L 50 50 0 0 U
-X EP 13 600 -1000 200 U 50 50 0 0 U
-X IN 2 0 -100 200 R 50 50 0 0 U
-X CS+ 3 0 -200 200 R 50 50 0 0 U
-X CS- 4 0 -300 200 R 50 50 0 0 U
-X PWM 5 0 -400 200 R 50 50 0 0 U
-X ~FLT 6 0 -500 200 R 50 50 0 0 U
-X AGND 7 1200 -500 200 L 50 50 0 0 U
-X REFI 8 1200 -400 200 L 50 50 0 0 U
-X VCC 9 1200 -300 200 L 50 50 0 0 U
-ENDDRAW
-ENDDEF
-#
-# Mounting_Hole-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue
-#
-DEF Mounting_Hole-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue MK 0 40 Y Y 1 F N
+DEF Mounting_Hole-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue MK 0 40 Y Y 1 F N
 F0 "MK" 0 200 50 H V C CNN
-F1 "Mounting_Hole-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue" 0 125 50 H V C CNN
+F1 "Mounting_Hole-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue-Uni_Printer-rescue-Uni_stick-rescue" 0 125 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -344,11 +285,11 @@ C 0 0 50 0 1 50 N
 ENDDRAW
 ENDDEF
 #
-# PWR_FLAG-power
+# PWR_FLAG-power-Uni_stick-rescue
 #
-DEF PWR_FLAG-power #FLG 0 0 N N 1 F P
+DEF PWR_FLAG-power-Uni_stick-rescue #FLG 0 0 N N 1 F P
 F0 "#FLG" 0 75 50 H I C CNN
-F1 "PWR_FLAG-power" 0 150 50 H V C CNN
+F1 "PWR_FLAG-power-Uni_stick-rescue" 0 150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -357,11 +298,11 @@ X pwr 1 0 0 0 U 50 50 0 0 w
 ENDDRAW
 ENDDEF
 #
-# R-Device
+# R-Device-Uni_stick-rescue
 #
-DEF R-Device R 0 0 N Y 1 F N
+DEF R-Device-Uni_stick-rescue R 0 0 N Y 1 F N
 F0 "R" 80 0 50 V V C CNN
-F1 "R-Device" 0 0 50 V V C CNN
+F1 "R-Device-Uni_stick-rescue" 0 0 50 V V C CNN
 F2 "" -70 0 50 V I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -374,28 +315,31 @@ X ~ 2 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# R_Small-lampa_uv-cache
+# R_POT-Device
 #
-DEF R_Small-lampa_uv-cache R 0 10 N N 1 F N
-F0 "R" 30 20 50 H V L CNN
-F1 "R_Small-lampa_uv-cache" 30 -40 50 H V L CNN
+DEF R_POT-Device RV 0 40 Y N 1 F N
+F0 "RV" -175 0 50 V V C CNN
+F1 "R_POT-Device" -100 0 50 V V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
- R_*
+ Potentiometer*
 $ENDFPLIST
 DRAW
-S -30 70 30 -70 0 1 8 N
-X ~ 1 0 100 30 D 50 50 1 1 P
-X ~ 2 0 -100 30 U 50 50 1 1 P
+S 40 100 -40 -100 0 1 10 N
+P 2 0 1 0 100 0 60 0 N
+P 4 0 1 0 45 0 90 20 90 -20 45 0 F
+X 1 1 0 150 50 D 50 50 1 1 P
+X 2 2 150 0 50 L 50 50 1 1 P
+X 3 3 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# STEPSTICK_TRINAMIC2209-Uni_Printer-rescue
+# STEPSTICK_TRINAMIC2209-Uni_Printer-rescue-Uni_stick-rescue
 #
-DEF STEPSTICK_TRINAMIC2209-Uni_Printer-rescue SS 0 40 Y Y 1 F N
+DEF STEPSTICK_TRINAMIC2209-Uni_Printer-rescue-Uni_stick-rescue SS 0 40 Y Y 1 F N
 F0 "SS" 0 -950 60 H V C CNN
-F1 "STEPSTICK_TRINAMIC2209-Uni_Printer-rescue" 0 950 60 H V C CNN
+F1 "STEPSTICK_TRINAMIC2209-Uni_Printer-rescue-Uni_stick-rescue" 0 950 60 H V C CNN
 F2 "footprints:STEPSTICK" -100 -1050 60 H I C CNN
 F3 "" 0 0 60 H I C CNN
 DRAW
@@ -421,11 +365,11 @@ X DIR 9 -600 200 200 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
-# SolderJumper_3_Bridged12-Jumper
+# SolderJumper_3_Bridged12-Jumper-Uni_stick-rescue
 #
-DEF SolderJumper_3_Bridged12-Jumper JP 0 0 Y N 1 F N
+DEF SolderJumper_3_Bridged12-Jumper-Uni_stick-rescue JP 0 0 Y N 1 F N
 F0 "JP" -100 -100 50 H V C CNN
-F1 "SolderJumper_3_Bridged12-Jumper" 0 110 50 H V C CNN
+F1 "SolderJumper_3_Bridged12-Jumper-Uni_stick-rescue" 0 110 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -433,8 +377,8 @@ $FPLIST
 $ENDFPLIST
 DRAW
 A -40 0 40 901 -901 0 1 0 N -40 40 -40 -40
-A -40 0 40 901 -901 0 1 0 F -40 40 -40 -40
 A 40 0 40 -899 899 0 1 0 N 40 -40 40 40
+A -40 0 40 901 -901 0 1 0 F -40 40 -40 -40
 A 40 0 40 -899 899 0 1 0 F 40 -40 40 40
 S -40 20 -20 -20 0 1 0 F
 S -20 40 20 -40 0 1 0 F
