@@ -182,10 +182,10 @@
   (junction (at 202.565 82.55) (diameter 1.016) (color 0 0 0 0))
   (junction (at 202.565 93.345) (diameter 1.016) (color 0 0 0 0))
 
-  (no_connect (at 46.99 227.33))
   (no_connect (at 36.83 224.79))
   (no_connect (at 36.83 227.33))
   (no_connect (at 46.99 224.79))
+  (no_connect (at 46.99 227.33))
 
   (wire (pts (xy 19.685 239.395) (xy 36.83 239.395))
     (stroke (width 0) (type solid) (color 0 0 0 0))
@@ -847,7 +847,7 @@
     (property "Datasheet" "~" (id 3) (at 41.91 229.87 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "TME" "DR1206-390K-4/8" (id 4) (at 41.91 229.87 90)
+    (property "TME" "DR1206-100R-4/8" (id 4) (at 41.91 229.87 90)
       (effects (font (size 1.27 1.27)) hide)
     )
   )
@@ -856,7 +856,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005c921a83)
-    (property "Nazwa arkusza" "Analod / Digital IO" (id 0) (at 146.05 207.5175 0)
+    (property "Sheet name" "Analod / Digital IO" (id 0) (at 146.05 207.5175 0)
       (effects (font (size 1.524 1.524)) (justify left bottom))
     )
     (property "Sheet file" "Analog_digital_io.kicad_sch" (id 1) (at 146.05 230.4801 0)
@@ -889,7 +889,7 @@
     (stroke (width 0.001) (type solid) (color 132 0 132 1))
     (fill (color 255 255 255 0.0000))
     (uuid 6e32f2aa-aff0-4978-a4c5-4354c79bd585)
-    (property "Nazwa arkusza" "Connectors" (id 0) (at 233.68 78.1041 0)
+    (property "Sheet name" "Connectors" (id 0) (at 233.68 78.1041 0)
       (effects (font (size 1.27 1.27)) (justify left bottom))
     )
     (property "Sheet file" "connectors.kicad_sch" (id 1) (at 233.68 211.3289 0)
@@ -952,7 +952,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005c7db324)
-    (property "Nazwa arkusza" "Digital Inputs" (id 0) (at 146.05 107.1875 0)
+    (property "Sheet name" "Digital Inputs" (id 0) (at 146.05 107.1875 0)
       (effects (font (size 1.524 1.524)) (justify left bottom))
     )
     (property "Sheet file" "Digital_in.kicad_sch" (id 1) (at 146.05 127.6101 0)
@@ -985,7 +985,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005d8fd6d8)
-    (property "Nazwa arkusza" "Encoder" (id 0) (at 146.05 135.1275 0)
+    (property "Sheet name" "Encoder" (id 0) (at 146.05 135.1275 0)
       (effects (font (size 1.524 1.524)) (justify left bottom))
     )
     (property "Sheet file" "Encoder.kicad_sch" (id 1) (at 146.05 147.9301 0)
@@ -1009,7 +1009,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005fc2896f)
-    (property "Nazwa arkusza" "Ethernet" (id 0) (at 124.46 268.6045 0)
+    (property "Sheet name" "Ethernet" (id 0) (at 124.46 268.6045 0)
       (effects (font (size 1.27 1.27)) (justify left bottom))
     )
     (property "Sheet file" "ethernet.kicad_sch" (id 1) (at 124.46 297.6885 0)
@@ -1048,7 +1048,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005c8f792e)
-    (property "Nazwa arkusza" "Outputs" (id 0) (at 146.05 90.6775 0)
+    (property "Sheet name" "Outputs" (id 0) (at 146.05 90.6775 0)
       (effects (font (size 1.524 1.524)) (justify left bottom))
     )
     (property "Sheet file" "Outputs.kicad_sch" (id 1) (at 146.05 100.9401 0)
@@ -1069,7 +1069,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005b7be5f5)
-    (property "Nazwa arkusza" "Power_supply" (id 0) (at 146.05 77.9775 0)
+    (property "Sheet name" "Power_supply" (id 0) (at 146.05 77.9775 0)
       (effects (font (size 1.524 1.524)) (justify left bottom))
     )
     (property "Sheet file" "Power_supply.kicad_sch" (id 1) (at 146.05 85.7001 0)
@@ -1087,7 +1087,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005c984242)
-    (property "Nazwa arkusza" "Processor" (id 0) (at 49.53 77.9775 0)
+    (property "Sheet name" "Processor" (id 0) (at 49.53 77.9775 0)
       (effects (font (size 1.524 1.524)) (justify left bottom))
     )
     (property "Sheet file" "processor.kicad_sch" (id 1) (at 49.53 302.8701 0)
@@ -1273,7 +1273,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005c929e60)
-    (property "Nazwa arkusza" "RS485 / CAN" (id 0) (at 146.05 179.5775 0)
+    (property "Sheet name" "RS485 / CAN" (id 0) (at 146.05 179.5775 0)
       (effects (font (size 1.524 1.524)) (justify left bottom))
     )
     (property "Sheet file" "RS485_CAN.kicad_sch" (id 1) (at 147.32 200.0001 0)
@@ -1312,7 +1312,7 @@
     (stroke (width 0) (type solid) (color 0 0 0 0))
     (fill (color 0 0 0 0.0000))
     (uuid 00000000-0000-0000-0000-00005e711988)
-    (property "Nazwa arkusza" "Step Dir" (id 0) (at 146.05 154.1775 0)
+    (property "Sheet name" "Step Dir" (id 0) (at 146.05 154.1775 0)
       (effects (font (size 1.524 1.524)) (justify left bottom))
     )
     (property "Sheet file" "Stepdir.kicad_sch" (id 1) (at 146.05 173.3301 0)
@@ -1342,7 +1342,7 @@
     (stroke (width 0.001) (type solid) (color 132 0 132 1))
     (fill (color 255 255 255 0.0000))
     (uuid aaf6b8be-3cd5-40aa-861d-a1bd427c6a24)
-    (property "Nazwa arkusza" "midboard" (id 0) (at 233.68 221.6141 0)
+    (property "Sheet name" "midboard" (id 0) (at 233.68 221.6141 0)
       (effects (font (size 1.27 1.27)) (justify left bottom))
     )
     (property "Sheet file" "midboard.kicad_sch" (id 1) (at 233.68 254.5089 0)
@@ -1454,7 +1454,7 @@
       (reference "#PWR0145") (unit 1) (value "GND-lampa_uv-cache-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue") (footprint "")
     )
     (path "/00000000-0000-0000-0000-00005b7be5f5/8f06f2c4-2ebc-4a6d-9e1a-37d81177eaa9"
-      (reference "C1") (unit 1) (value "100nF") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "C1") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005b7be5f5/d546c53e-f668-4815-b5cb-d3b1b5a128b2"
       (reference "C40") (unit 1) (value "10uF 50V") (footprint "Capacitor_SMD:C_1210_3225Metric")
@@ -1466,7 +1466,7 @@
       (reference "C42") (unit 1) (value "5.6nF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005b7be5f5/6a7d44fa-3cc0-4b32-bcb7-581945dab382"
-      (reference "C43") (unit 1) (value "22uF 25V") (footprint "Capacitor_SMD:C_1206_3216Metric")
+      (reference "C43") (unit 1) (value "22uF 25V") (footprint "Capacitor_SMD:C_1210_3225Metric")
     )
     (path "/00000000-0000-0000-0000-00005b7be5f5/1466a5ba-5c29-4c2d-9ac1-1c6d52b3950a"
       (reference "C44") (unit 1) (value "100uF 6.3V Tantal") (footprint "Capacitor_Tantalum_SMD:CP_EIA-6032-28_Kemet-C")
@@ -1610,52 +1610,52 @@
       (reference "D8") (unit 2) (value "D_Schottky_x4_BAV99S") (footprint "moje:SOT-363")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005e7123eb"
-      (reference "JP1") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP1") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005e7123fe"
-      (reference "JP2") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP2") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005e712411"
-      (reference "JP3") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP3") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005e712424"
-      (reference "JP4") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP4") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005e77838c"
-      (reference "JP7") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP7") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005e80742d"
-      (reference "JP8") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP8") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005e80d724"
-      (reference "JP9") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP9") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005e813a8c"
-      (reference "JP10") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP10") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/e47e9712-7b47-458f-93d4-8fe810bfbe46"
-      (reference "JP11") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP11") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/df161eeb-94b4-4e83-b60f-c055aadba4e0"
-      (reference "JP12") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP12") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/79d2f09b-1a18-4cc2-bf09-ecfa01f7a875"
-      (reference "JP13") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP13") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/820ecf4d-fe97-4f38-9abc-ad00b1ca50ff"
-      (reference "JP14") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP14") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/54c35eae-eb30-49bc-9a45-153aac297945"
-      (reference "JP15") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP15") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/33b65b25-bb04-4c5e-8d0d-84f26c9d688b"
-      (reference "JP16") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP16") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/74ce8ff7-3282-42cd-a849-8f1028bf5b56"
-      (reference "JP17") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP17") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/e628790d-09a0-4f55-8756-6b962712fb7d"
-      (reference "JP18") (unit 1) (value "Jumper") (footprint "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_RoundedPad1.0x1.5mm")
+      (reference "JP18") (unit 1) (value "Jumper") (footprint "moje:SolderJumper-3-open")
     )
     (path "/00000000-0000-0000-0000-00005c7db324/00000000-0000-0000-0000-00005c805883"
       (reference "R6") (unit 1) (value "1k") (footprint "Resistor_SMD:R_0603_1608Metric")
@@ -1796,10 +1796,10 @@
       (reference "IC11") (unit 1) (value "ITS4141NHUMA1") (footprint "moje:SOT230P700X170-4N")
     )
     (path "/00000000-0000-0000-0000-00005c8f792e/1bdf2414-d832-4ffc-9665-a14128729101"
-      (reference "RN12") (unit 1) (value "15k") (footprint "moje:R_Array_Convex_4x0603")
+      (reference "RN12") (unit 1) (value "10k") (footprint "moje:R_Array_Convex_4x0603")
     )
     (path "/00000000-0000-0000-0000-00005c8f792e/a8a4fd31-537f-4aab-a29d-3a7dde9e614e"
-      (reference "RN13") (unit 1) (value "15k") (footprint "moje:R_Array_Convex_4x0603")
+      (reference "RN13") (unit 1) (value "10k") (footprint "moje:R_Array_Convex_4x0603")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005c989f96"
       (reference "#FLG06") (unit 1) (value "PWR_FLAG") (footprint "")
@@ -1868,16 +1868,16 @@
       (reference "#PWR0125") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005e76b0e3"
-      (reference "C10") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_1206_3216Metric")
+      (reference "C10") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005c989a97"
-      (reference "C11") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_1206_3216Metric")
+      (reference "C11") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005c98473d"
       (reference "C12") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005c989c1f"
-      (reference "C13") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_1206_3216Metric")
+      (reference "C13") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005c984736"
       (reference "C14") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
@@ -1904,7 +1904,7 @@
       (reference "C22") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005c98475e"
-      (reference "C23") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_1206_3216Metric")
+      (reference "C23") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005c984765"
       (reference "C24") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
@@ -1949,10 +1949,10 @@
       (reference "SW3") (unit 1) (value "SW_Push") (footprint "Buttons_Switches_SMD:SW_SPST_B3U-1000P")
     )
     (path "/00000000-0000-0000-0000-00005c984242/64b482d1-9699-4886-8f18-6e6c8d4ba001"
-      (reference "U1") (unit 1) (value "STM32H743VITx") (footprint "Package_QFP:LQFP-100_14x14mm_P0.5mm")
+      (reference "U1") (unit 1) (value "STM32H743VIT6") (footprint "Package_QFP:LQFP-100_14x14mm_P0.5mm")
     )
     (path "/00000000-0000-0000-0000-00005c984242/00000000-0000-0000-0000-00005c989b71"
-      (reference "Y1") (unit 1) (value "ABM7-8.000MHZ-D2Y-T") (footprint "moje:XTAL500X320X130N_v2")
+      (reference "Y1") (unit 1) (value "ABM7-25.000MHZ-D2Y-T") (footprint "moje:XTAL500X320X130N_v2")
     )
     (path "/00000000-0000-0000-0000-00005c929e60/00000000-0000-0000-0000-00005c929f43"
       (reference "#PWR0118") (unit 1) (value "+3.3V") (footprint "")
@@ -2207,10 +2207,10 @@
       (reference "C5") (unit 1) (value "18pF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005fc2896f/34d31fa0-bf13-454d-845b-a40ead5fff3e"
-      (reference "C6") (unit 1) (value "18p") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "C6") (unit 1) (value "18pF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005fc2896f/ffb6df97-3396-4e7b-ad97-e0316db59519"
-      (reference "C7") (unit 1) (value "18p") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "C7") (unit 1) (value "18pF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005fc2896f/2690dd66-85bf-4f73-8419-ba0e907a6eab"
       (reference "C9") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
@@ -2231,7 +2231,7 @@
       (reference "C37") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005fc2896f/0a264901-2af9-467b-a776-283d7e054ddb"
-      (reference "CP1") (unit 1) (value "1.0uF/1.0ESR") (footprint "Capacitor_SMD:C_0603_1608Metric")
+      (reference "CP1") (unit 1) (value "2.2uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/00000000-0000-0000-0000-00005fc2896f/a62c4667-75c6-4bfc-b784-f506a80a747e"
       (reference "CP2") (unit 1) (value "470pF") (footprint "Capacitor_SMD:C_0603_1608Metric")
@@ -2387,7 +2387,7 @@
       (reference "#PWR0121") (unit 1) (value "GND") (footprint "")
     )
     (path "/aaf6b8be-3cd5-40aa-861d-a1bd427c6a24/8205b691-06ca-4063-9567-cb01694d00cb"
-      (reference "C8") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_1206_3216Metric")
+      (reference "C8") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/aaf6b8be-3cd5-40aa-861d-a1bd427c6a24/bda0059f-df6e-4c0a-9093-e63857739c2a"
       (reference "C25") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
@@ -2396,7 +2396,7 @@
       (reference "C34") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/aaf6b8be-3cd5-40aa-861d-a1bd427c6a24/247fc129-1f3d-4e1c-8a8d-f3a630cf924b"
-      (reference "C38") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_1206_3216Metric")
+      (reference "C38") (unit 1) (value "10uF") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/aaf6b8be-3cd5-40aa-861d-a1bd427c6a24/4e8def1a-ba0c-4039-95b6-d4ac503bcf73"
       (reference "D1") (unit 1) (value "D_Schottky_x4_BAV99S") (footprint "moje:SOT-363")
