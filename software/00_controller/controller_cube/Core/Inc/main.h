@@ -60,6 +60,34 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define IN_CPU1_Pin GPIO_PIN_7
+#define IN_CPU1_GPIO_Port GPIOE
+#define IN_CPU2_Pin GPIO_PIN_8
+#define IN_CPU2_GPIO_Port GPIOE
+#define IN_CPU3_Pin GPIO_PIN_10
+#define IN_CPU3_GPIO_Port GPIOE
+#define IN_CPU4_Pin GPIO_PIN_12
+#define IN_CPU4_GPIO_Port GPIOE
+#define MID_IO1_Pin GPIO_PIN_14
+#define MID_IO1_GPIO_Port GPIOE
+#define MID_IO2_Pin GPIO_PIN_15
+#define MID_IO2_GPIO_Port GPIOE
+#define OUT_DIR3_Pin GPIO_PIN_8
+#define OUT_DIR3_GPIO_Port GPIOD
+#define OUT_CPU4_Pin GPIO_PIN_9
+#define OUT_CPU4_GPIO_Port GPIOD
+#define OUT_CPU3_Pin GPIO_PIN_10
+#define OUT_CPU3_GPIO_Port GPIOD
+#define OUT_CPU2_Pin GPIO_PIN_11
+#define OUT_CPU2_GPIO_Port GPIOD
+#define OUT_CPU1_Pin GPIO_PIN_3
+#define OUT_CPU1_GPIO_Port GPIOD
+#define OUT_DIR1_Pin GPIO_PIN_6
+#define OUT_DIR1_GPIO_Port GPIOD
+#define OUT_DIR2_Pin GPIO_PIN_7
+#define OUT_DIR2_GPIO_Port GPIOD
+#define IO_LED_Pin GPIO_PIN_0
+#define IO_LED_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
