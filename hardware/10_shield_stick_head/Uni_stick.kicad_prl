@@ -2,7 +2,6 @@
   "board": {
     "active_layer": 0,
     "active_layer_preset": "",
-    "auto_track_width": true,
     "hidden_nets": [],
     "high_contrast_mode": 0,
     "net_color_mode": 1,
@@ -58,8 +57,7 @@
       37,
       38
     ],
-    "visible_layers": "fffffff_ffffffff",
-    "zone_display_mode": 0
+    "visible_layers": "fffffff_ffffffff"
   },
   "meta": {
     "filename": "Uni_stick.kicad_prl",
