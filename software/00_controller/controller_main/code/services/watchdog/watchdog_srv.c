@@ -83,7 +83,7 @@ void srv_wdg_kick(void)
     /* Reload IWDG counter */
     HAL_IWDG_Refresh(&IwdgHandle);
 #endif
-    GPIO_Tgl(WDG_KICK);
+
 }
 
 /*!
