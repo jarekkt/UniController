@@ -1,0 +1,26 @@
+%TF.GenerationSoftware,KiCad,Pcbnew,5.99.0-unknown-b90e72ed07~107~ubuntu18.04.1*%
+%TF.CreationDate,2021-02-01T09:40:28+01:00*%
+%TF.ProjectId,Uni_Printer,556e695f-5072-4696-9e74-65722e6b6963,rev?*%
+%TF.SameCoordinates,PX48009e0PY88da2e0*%
+%TF.FileFunction,Profile,NP*%
+%FSLAX46Y46*%
+G04 Gerber Fmt 4.6, Leading zero omitted, Abs format (unit mm)*
+G04 Created by KiCad (PCBNEW 5.99.0-unknown-b90e72ed07~107~ubuntu18.04.1) date 2021-02-01 09:40:28*
+%MOMM*%
+%LPD*%
+G01*
+G04 APERTURE LIST*
+%TA.AperFunction,Profile*%
+%ADD10C,0.100000*%
+%TD*%
+G04 APERTURE END LIST*
+D10*
+X81000000Y0D02*
+X0Y0D01*
+X0Y127500000D02*
+X81000000Y127500000D01*
+X0Y0D02*
+X0Y127500000D01*
+X81000000Y127500000D02*
+X81000000Y0D01*
+M02*
