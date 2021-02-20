@@ -2,8 +2,6 @@
 #include "services.h"
 
 
-#define UF(inst_, flag_)  ( (((inst_)->CR1 & (flag_)) == (flag_) )? SET : RESET)
-
 typedef struct
 {    
     xSemaphoreHandle    sema;   
@@ -24,7 +22,6 @@ typedef struct
 typedef struct
 {   
     srv_serial_485_ctx_t u2;
-    srv_serial_485_ctx_t u3;
 }srv_serial_485_data_t;
 
 
@@ -37,20 +34,19 @@ srv_serial_485_ctx_t   * srv_serial_485_id2ctx(uint32_t id)
     switch(id)
     {
         case SRV_SERIAL_485_UxART1_ID: return &serial_485.u2;
-        case SRV_SERIAL_485_UxART2_ID: return &serial_485.u3;
     }
 
     return NULL;
 }
 
 
-void    srv_serial_485_low_init(srv_serial_485_ctx_t * ctx,USART_TypeDef * usart,GPIO_TypeDef * gpio,uint16_t pin)
+void    srv_serial_485_low_init(srv_serial_485_ctx_t * ctx)
 {
-    ctx->usart = usart;
-    ctx->gpio  = gpio;
-    ctx->pin   = pin;
-
-    HAL_GPIO_WritePin(gpio,pin,GPIO_PIN_RESET);
+	// Enable and configure RS485 DE signal hardware control
+	// Time is in sample units ( 1/16 character time)
+	LL_USART_SetDEDeassertionTime(ctx->usart,8);
+	LL_USART_SetDEAssertionTime(ctx->usart,8);
+	LL_USART_EnableDEMode(ctx->usart);
 
     vSemaphoreCreateBinary(ctx->sema);
 }
@@ -103,19 +99,12 @@ void    srv_serial_485_once(void)
 
     /* Initialize port engines */
 
-    srv_serial_485_low_init(&serial_485.u2,USART2,USART2_CTRL_GPIO_Port,USART2_CTRL_Pin);
-    srv_serial_485_low_init(&serial_485.u3,USART3,USART3_CTRL_GPIO_Port,USART3_CTRL_Pin);
-
+    srv_serial_485_low_init(&serial_485.u2);
 
 
     /* Enable port interrupt */
     HAL_NVIC_SetPriority(USART2_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
-
-    /* Enable port interrupt */
-    HAL_NVIC_SetPriority(USART2_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY, 0);
-    HAL_NVIC_EnableIRQ(USART3_IRQn);
-
 
 
     // Note - interrupts must be enabled with call to srv_serial_485_enable()
@@ -179,7 +168,6 @@ void UARTx_485_IRQHandler(uint32_t id,srv_serial_485_ctx_t  * pctx)
 
   if( LL_USART_IsActiveFlag_TC(pctx->usart) != 0)
   {
-      HAL_GPIO_WritePin(pctx->gpio,pctx->pin,GPIO_PIN_RESET);
       /* Disable the Transmit interrupt */
       LL_USART_DisableIT_TXE_TXFNF(pctx->usart);
 
@@ -195,15 +183,6 @@ void USART2_IRQHandler(void)
 {
    UARTx_485_IRQHandler(SRV_SERIAL_485_UxART1_ID,&serial_485.u2);
 }
-
-void USART3_IRQHandler(void)
-{
-   UARTx_485_IRQHandler(SRV_SERIAL_485_UxART2_ID,&serial_485.u3);
-}
-
-
-
-
 
 
 static int srv_serial_485_send_cc(srv_serial_485_ctx_t  * ctx,char cc)
@@ -253,7 +232,6 @@ void    srv_serial_485_send(uint32_t port_id,const char * buffer,int length)
     	length = strlen(buffer);
     }
 
-    HAL_GPIO_WritePin(ctx->gpio,ctx->pin,GPIO_PIN_SET);
 
 
     // send remaining characters
@@ -305,8 +283,6 @@ void    srv_serial_485_puts(uint32_t port_id,const char * buffer,int length)
     ctx->TxHead = 0;
     ctx->TxTail = 0;
 
-    HAL_GPIO_WritePin(ctx->gpio,ctx->pin,GPIO_PIN_SET);
-
     while(length > 0)
     {
 		if( LL_USART_IsActiveFlag_TXE_TXFNF(ctx->usart) != 0)
@@ -317,7 +293,7 @@ void    srv_serial_485_puts(uint32_t port_id,const char * buffer,int length)
 		}
     }
 
-    HAL_GPIO_WritePin(ctx->gpio,ctx->pin,GPIO_PIN_RESET);
+
 
 }
 

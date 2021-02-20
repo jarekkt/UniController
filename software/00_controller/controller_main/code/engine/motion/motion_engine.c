@@ -470,11 +470,11 @@ static void motion_engine_dir(int32_t idx,int32_t dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_EXT2);
+					GPIO_Set(OUT_DIR1);
 				}
 				else
 				{
-					GPIO_Clr(OUT_EXT2);
+					GPIO_Clr(OUT_DIR1);
 				}
 			}break;
 
@@ -482,11 +482,11 @@ static void motion_engine_dir(int32_t idx,int32_t dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_EXT4);
+					GPIO_Set(OUT_DIR2);
 				}
 				else
 				{
-					GPIO_Clr(OUT_EXT4);
+					GPIO_Clr(OUT_DIR2);
 				}
 
 			}break;
@@ -495,11 +495,11 @@ static void motion_engine_dir(int32_t idx,int32_t dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_EXT6);
+					GPIO_Set(OUT_DIR3);
 				}
 				else
 				{
-					GPIO_Clr(OUT_EXT6);
+					GPIO_Clr(OUT_DIR3);
 				}
 			}break;
 		}
