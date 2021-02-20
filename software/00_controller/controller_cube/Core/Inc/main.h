@@ -69,6 +69,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define IN_CPU5_ADC1_18_Pin GPIO_PIN_4
+#define IN_CPU5_ADC1_18_GPIO_Port GPIOA
+#define IN_CPU6_ADC1_19_Pin GPIO_PIN_5
+#define IN_CPU6_ADC1_19_GPIO_Port GPIOA
+#define IN_CPU7_ADC1_9_Pin GPIO_PIN_0
+#define IN_CPU7_ADC1_9_GPIO_Port GPIOB
+#define IN_CPU8_ADC1_5_Pin GPIO_PIN_1
+#define IN_CPU8_ADC1_5_GPIO_Port GPIOB
 #define IN_CPU1_Pin GPIO_PIN_7
 #define IN_CPU1_GPIO_Port GPIOE
 #define IN_CPU2_Pin GPIO_PIN_8
@@ -89,6 +97,10 @@ void Error_Handler(void);
 #define OUT_CPU3_GPIO_Port GPIOD
 #define OUT_CPU2_Pin GPIO_PIN_11
 #define OUT_CPU2_GPIO_Port GPIOD
+#define I2C3_SDA_Pin GPIO_PIN_9
+#define I2C3_SDA_GPIO_Port GPIOC
+#define I2C3_SCL_Pin GPIO_PIN_8
+#define I2C3_SCL_GPIO_Port GPIOA
 #define OUT_CPU1_Pin GPIO_PIN_3
 #define OUT_CPU1_GPIO_Port GPIOD
 #define OUT_DIR1_Pin GPIO_PIN_6

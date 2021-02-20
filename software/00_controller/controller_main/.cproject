@@ -134,8 +134,9 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.98454966" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.889452706"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.78764325.1106995007" name="fsdata.h" rcbsApplicability="disable" resourcePath="code/network/lwip_apps/httpd/fsdata.h" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="network/lwip_apps/httpd/fs.c|network/lwip_apps/httpd/makefsdata|network/lwip_apps/httpd/fsdata.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="code"/>
+						<entry excluding="network/lwip_apps/httpd/fsdata.h|network/lwip_apps/httpd/makefsdata|network/lwip_apps/httpd/fsdata.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="code"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="controller_cube"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cube"/>
 					</sourceEntries>
@@ -244,9 +245,6 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.244642544" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1590141616.1628482936" name="fs.c" rcbsApplicability="disable" resourcePath="code/network/lwip_apps/httpd/fs.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.267056587.1733244089">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.267056587.1733244089" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.267056587"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="network/lwip_apps/httpd/fs.c|network/lwip_apps/httpd/fsdata.c|network/lwip_apps/httpd/makefsdata|network/lwip_apps/httpd/fs" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="code"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="controller_cube"/>

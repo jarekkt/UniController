@@ -5,9 +5,67 @@
 
 volatile int32_t gpio_test_mode = 0;
 
+
+
+void  srv_gpio_pinmode(uint32_t mask)
+{
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+
+    GPIO_InitStruct.Pin = IN_CPU5_ADC1_18_Pin;
+	if(mask & 0x10)
+	{
+	    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+	}
+	else
+	{
+		 GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	}
+    HAL_GPIO_Init(IN_CPU5_ADC1_18_GPIO_Port, &GPIO_InitStruct);
+
+
+
+    GPIO_InitStruct.Pin = IN_CPU6_ADC1_19_Pin;
+	if(mask & 0x20)
+	{
+	    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+	}
+	else
+	{
+		 GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	}
+    HAL_GPIO_Init(IN_CPU6_ADC1_19_GPIO_Port, &GPIO_InitStruct);
+
+
+    GPIO_InitStruct.Pin = IN_CPU7_ADC1_9_Pin;
+	if(mask & 0x40)
+	{
+	    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+	}
+	else
+	{
+		 GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	}
+    HAL_GPIO_Init(IN_CPU7_ADC1_9_GPIO_Port, &GPIO_InitStruct);
+
+
+    GPIO_InitStruct.Pin = IN_CPU8_ADC1_5_Pin;
+	if(mask & 0x80)
+	{
+	    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+	}
+	else
+	{
+		 GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	}
+    HAL_GPIO_Init(IN_CPU8_ADC1_5_GPIO_Port, &GPIO_InitStruct);
+
+}
+
 void      srv_gpio_init(void)
 {
-
+	srv_gpio_pinmode(0);
 }
 
 uint32_t  srv_gpio_get_io(void)
@@ -33,7 +91,6 @@ uint32_t  srv_gpio_get_io(void)
 	{
 		io |= 0x08;
 	}
-
 
 	if(GPIO_Get(IN_CPU5_ADC1_18)!=0)
 	{
