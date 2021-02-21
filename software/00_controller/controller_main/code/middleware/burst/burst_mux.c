@@ -31,7 +31,7 @@ void burst_mux_init()
 	memset(&bmux,0,sizeof(bmux));
 
 	// Selects address pair - for RS485 channels
-	bmux.address  = srv_gpio_get_address() << 1;
+	bmux.address  = 0; // todo
 }
 
 void burst_mux_once()

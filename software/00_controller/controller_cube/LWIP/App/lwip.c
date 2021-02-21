@@ -116,6 +116,11 @@ void MX_LWIP_Init(void)
 /* USER CODE END H7_OS_THREAD_NEW_CMSIS_RTOS_V2 */
 
 /* USER CODE BEGIN 3 */
+#ifdef USE_MY_CODE
+   extern void lwip_apps_init(void);
+
+   lwip_apps_init();
+#endif
 
 /* USER CODE END 3 */
 }

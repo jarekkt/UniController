@@ -35,17 +35,17 @@ typedef struct
 const mwr_gpio_sequence_t mwr_test_pins[] = 
 {
 
-  /* 00 */ { GPIO_SEQ_PIN(OUT1)},
-  /* 01 */ { GPIO_SEQ_PIN(OUT2)},
-  /* 02 */ { GPIO_SEQ_PIN(OUT3)},
-  /* 03 */ { GPIO_SEQ_PIN(OUT4)},
+  /* 00 */ { GPIO_SEQ_PIN(OUT_CPU1)},
+  /* 01 */ { GPIO_SEQ_PIN(OUT_CPU2)},
+  /* 02 */ { GPIO_SEQ_PIN(OUT_CPU3)},
+  /* 03 */ { GPIO_SEQ_PIN(OUT_CPU4)},
 
-  /* 04 */ { GPIO_SEQ_PIN(LED)},
-  /* 05 */ { GPIO_SEQ_PIN(LIGHT_ON)},
-  /* 06 */ { GPIO_SEQ_PIN(OUT_EXT2)},
-  /* 07 */ { GPIO_SEQ_PIN(OUT_EXT4)},
+  /* 04 */ { GPIO_SEQ_PIN(OUT_DIR1)},
+  /* 05 */ { GPIO_SEQ_PIN(OUT_DIR2)},
+  /* 06 */ { GPIO_SEQ_PIN(OUT_DIR3)},
+  /* 07 */ { GPIO_SEQ_PIN(MID_IO1)},
 
-  /* 08 */ { GPIO_SEQ_PIN(OUT_EXT6)},
+  /* 08 */ { GPIO_SEQ_PIN(MID_IO2)},
 
 };
 
@@ -84,8 +84,6 @@ void mwr_iotest_init(void)
 
 void mwr_iotest_once(void)
 {
-
-	burst_log_printf(1,"Device address: 0x%02X\r\n",srv_gpio_get_address());
 
 }
 

@@ -40,12 +40,15 @@ _Min_Stack_Size = 0x400 ;	/* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  DTCMRAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
-  ITCMRAM    (xrw)    : ORIGIN = 0x00000000,   LENGTH = 64K
-  RAM_D1    (xrw)    : ORIGIN = 0x24000000,   LENGTH = 512K
-  RAM_D2    (xrw)    : ORIGIN = 0x30000000,   LENGTH = 288K
-  RAM_D3    (xrw)    : ORIGIN = 0x38000000,   LENGTH = 64K
-  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 2048K
+  DTCMRAM    (xrw)    	  : ORIGIN = 0x20000000,   LENGTH = 128K
+  ITCMRAM    (xrw)    	  : ORIGIN = 0x00000000,   LENGTH = 64K
+  RAM_D1    (xrw)    	  : ORIGIN = 0x24000000,   LENGTH = 512K
+  RAM_D2    (xrw)    	  : ORIGIN = 0x30000000,   LENGTH = 288K
+  RAM_D3    (xrw)    	  : ORIGIN = 0x38000000,   LENGTH = 64K
+  FLASH_A    (rx)    	  : ORIGIN = 0x8000000,    LENGTH = 1024K
+  FLASH_B    (rx)   	  : ORIGIN = 0x08100000,   LENGTH = 384K
+  FLASH_STORAGE1_B (rx)   : ORIGIN = 0x08120000,   LENGTH = 128K
+  FLASH_STORAGE2_B (rx)   : ORIGIN = 0x08140000,   LENGTH = 128K
 }
 
 /* Sections */
@@ -57,7 +60,7 @@ SECTIONS
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_A
 
   /* The program code and other data into "FLASH" Rom type memory */
   .text :
@@ -83,13 +86,13 @@ SECTIONS
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_A
 
   .ARM.extab   : {
     . = ALIGN(4);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_A
 
   .ARM : {
     . = ALIGN(4);
@@ -97,8 +100,17 @@ SECTIONS
     *(.ARM.exidx*)
     __exidx_end = .;
     . = ALIGN(4);
-  } >FLASH
-
+  } >FLASH_A
+  
+  .serials :
+  {    
+    . = ALIGN(4);
+    __sermon_start__ = .;
+    *(.sermon*)
+    __sermon_end__ = .;    
+        
+  } >FLASH_A
+                 
   .preinit_array     :
   {
     . = ALIGN(4);
@@ -106,7 +118,7 @@ SECTIONS
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_A
 
   .init_array :
   {
@@ -116,7 +128,7 @@ SECTIONS
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_A
 
   .fini_array :
   {
@@ -126,7 +138,7 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
-  } >FLASH
+  } >FLASH_A
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
@@ -144,7 +156,26 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
 
-  } >RAM_D1 AT> FLASH
+  } >RAM_D1 AT> FLASH_A
+
+ .data_nv :
+  {
+  	. = ALIGN(4);
+	__var_nv_start__ = .;
+	*(.var_nv)
+	__var_nv_end__ = .;   
+  }>RAM_D1
+
+  SizeOfVarNv = SIZEOF(.data_nv);	
+
+  .data_nv_sh :
+  {
+	. = ALIGN(4);
+	__var_nv_sh_start__ = .;
+	. = . + SizeOfVarNv ;
+	__var_nv_sh_end__ = .;  
+   }>RAM_D1   
+
 
   /* Uninitialized data section into "RAM_D1" Ram type memory */
   . = ALIGN(4);
@@ -172,6 +203,22 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM_D1
+
+
+  .storage1 :
+  {
+  	__storage1_start__ = .;
+  	*(.storage1)
+  	__storage1_end__ = .;
+  } >FLASH_STORAGE1_B
+  
+  .storage2 :
+  {
+  	__storage2_start__ = .;
+  	*(.storage2)
+  	__storage2_end__ = .;
+  } >FLASH_STORAGE1_B   
+
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :

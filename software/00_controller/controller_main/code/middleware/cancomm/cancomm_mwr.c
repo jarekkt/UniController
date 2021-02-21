@@ -133,14 +133,6 @@ static void mwr_cancomm_config(void)
 	/* Notification Error */
 	Error_Handler();
   }
-
-
-
-
-  GPIO_Clr(CAN1_ENA); // LBL low
-  GPIO_Clr(CAN1_ENA); // Slope control enabled
-
-
   
 }
 

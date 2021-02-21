@@ -90,7 +90,7 @@ void tsk_storage_execute(void)
        srv_nov_dump_change();
 #endif
      
-       result = srv_nov_store();
+       result = srv_nov_store(0);
 
 
        if(result != 0)
