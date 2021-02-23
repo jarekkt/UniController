@@ -4,37 +4,110 @@ import math
 import numpy as np
 
 
-class tick:
+
+class motion_test:
     def __init__(self):
-        self.plt       = plt
-        #self.m_dist    = 20000.0
-        #self.m_speed   = 1500.0
-        #self.m_speed0  = 500.0
-        #self.m_accel_s = 1000.0
-        #self.m_jerk    = 500.0
+        self.safeZ = -7
 
-        self.m_dist    = 10.0
-        self.m_speed   = 50.0
-        self.m_speed0  =  5.0
-        self.m_accel_s = 50.0
-        self.m_jerk    = 50.0
+    def path_moveTo(self,x,y,z,nozzle):
+        pass
 
-        self.m_tick    = 0.00001
-        self.c_speed   = self.m_speed0
-        self.c_accel   = 0
-        self.c_jerk    = 0
-        self.c_dist    = 0
-        self.c_tick    = 0
-        self.c_idx     = 0
+    def trajectory(self):
 
-        self.test_set = '\t{}/*dist*/, {} /* speed0 */, {} /* speed */, {} /* accel */, {} /* jerk */'.format(self.m_dist, self.m_speed0, self.m_speed, self.m_accel_s,self.m_jerk)
+        za = -15
+        zb = -13
 
-        self.t_dist   = arr.array('f')
-        self.t_speed  = arr.array('f')
-        self.t_accel  = arr.array('f')
-        self.t_jerk   = arr.array('f')
-        self.t_time   = arr.array('f')
-        self.t_zcut   = arr.array('f')
+        # pick & place, one nozzle, symmetric
+        
+        path_moveTo(0, 0, self.safeZ, 1)
+        path_moveTo(0, 0, za, 1)
+        path_moveTo(0, 0, self.safeZ, 1)
+        path_moveTo(100, 0, self.safeZ, 1)
+        path_moveTo(100, 0, za, 1)
+        path_moveTo(100, 0, self.safeZ, 1)
+        path_moveTo(120, 0, self.safeZ, 1)
+        path_moveTo(120, 0, za, 1)
+        path_moveTo(120, 0, self.safeZ, 1)
+        path_moveTo(124, 0, self.safeZ, 1)
+        path_moveTo(124, 0, za, 1)
+        path_moveTo(124, 0, self.safeZ, 1)
+        path_moveTo(125, 0, self.safeZ, 1)
+        path_moveTo(125, 0, za, 1)
+        path_moveTo(125, 0, self.safeZ, 1)
+
+        # pick & place, one nozzle, asymmetric
+        
+        path_moveTo(0, 50, self.safeZ, 1)
+        path_moveTo(0, 50, zb, 1)
+        path_moveTo(0, 50, self.safeZ, 1)
+        path_moveTo(100, 50, self.safeZ, 1)
+        path_moveTo(100, 50, za, 1)
+        path_moveTo(100, 50, self.safeZ, 1)
+        path_moveTo(120, 50, self.safeZ, 1)
+        path_moveTo(120, 50, zb, 1)
+        path_moveTo(120, 50, self.safeZ, 1)
+        path_moveTo(124, 50, self.safeZ, 1)
+        path_moveTo(124, 50, za, 1)
+        path_moveTo(124, 50, self.safeZ, 1)
+        path_moveTo(125, 50, self.safeZ, 1)
+        path_moveTo(125, 50, zb, 1)
+        path_moveTo(125, 50, self.safeZ, 1)
+
+        #pick & place, dual nozzle, symmetric
+        
+        path_moveTo(0, 100, self.safeZ, 1)
+        path_moveTo(0, 100, za, 1)
+        path_moveTo(0, 100, self.safeZ, 1)
+        path_moveTo(100, 100, -self.safeZ, 2)
+        path_moveTo(100, 100, 15, 2)
+        path_moveTo(100, 100, -self.safeZ, 2)
+        path_moveTo(120, 100, self.safeZ, 1)
+        path_moveTo(120, 100, za, 1)
+        path_moveTo(120, 100, self.safeZ, 1)
+        path_moveTo(124, 100, -self.safeZ, 2)
+        path_moveTo(124, 100, 15, 2)
+        path_moveTo(124, 100, -self.safeZ, 2)
+        path_moveTo(125, 100, self.safeZ, 1)
+        path_moveTo(125, 100, za, 1)
+        path_moveTo(125, 100, self.safeZ, 1)
+
+        # pick & place, dual nozzle, asymmetric
+        
+        path_moveTo(0, 150, self.safeZ, 1)
+        path_moveTo(0, 150, za, 1)
+        path_moveTo(0, 150, self.safeZ, 1)
+        path_moveTo(100, 150, -self.safeZ, 2)
+        path_moveTo(100, 150, 15, 2)
+        path_moveTo(100, 150, -self.safeZ, 2)
+        path_moveTo(120, 150, self.safeZ, 1)
+        path_moveTo(120, 150, zb, 1)
+        path_moveTo(120, 150, self.safeZ, 1)
+        path_moveTo(124, 150, -self.safeZ, 2)
+        path_moveTo(124, 150, 15, 2)
+        path_moveTo(124, 150, -self.safeZ, 2)
+        path_moveTo(125, 150, self.safeZ, 1)
+        path_moveTo(125, 150, zb, 1)
+        path_moveTo(125, 150, self.safeZ, 1)
+
+        # move to push / pull feeder
+        
+        path_moveTo(200, 50, self.safeZ, 1)
+        path_moveTo(220, 50, self.safeZ - 5, 1)
+        path_moveTo(220, 50, self.safeZ, 1)
+        path_moveTo(200, 80, self.safeZ, 1)
+        path_moveTo(190, 100, self.safeZ, 1)
+        path_moveTo(190, 120, self.safeZ, 1)
+        path_moveTo(300, 120, za, 1)
+        path_moveTo(300, 150, za, 1)
+        path_moveTo(280, 150, za, 1)
+        path_moveTo(279, 150, za, 1)
+        path_moveTo(275, 150, za, 1)
+        path_moveTo(275, 150, self.safeZ, 1)
+        
+        
+class cut_rev_test:
+    def __init__(self,tick_test):
+        self.t_zcut = arr.array('f')
         self.t_zcut_time = arr.array('f')
 
         self.t_zcut.append(0.005 * self.m_dist)
@@ -49,6 +122,59 @@ class tick:
         self.t_zcut.append(0.99 * self.m_dist)
         self.t_zcut.append(0.995 * self.m_dist)
 
+    def calc_rev_check(self):
+        for ii in range(0, len(self.t_zcut)):
+            self.t_zcut_time.append(self.tick_test.calc_rev_time(self.t_zcut[ii]))
+
+    def plot(self):
+        # Plot the data
+        self.plt.plot(self.tick_test.t_time, self.tick_test.t_dist,label='distance')
+        self.plt.plot(self.t_zcut_time,self.t_zcut,'ro',marker='x',label='zcut')
+        self.plt.legend(loc='upper right')
+
+
+
+class motion_profile:
+    def __init__(self, speed, accel, jerk, speed0):
+        self.m_speed = speed
+        self.m_speed0 = speed0
+        self.m_accel = accel
+        self.m_jerk = jerk
+
+
+
+
+
+class tick_calc:
+    def __init__(self,dist,profile,tick_time,log=0,test_case=0):
+        self.plt       = plt
+
+        self.m_dist    = dist
+        self.m_speed   = profile.m_speed
+        self.m_speed0  = profile.m_speed0
+        self.m_accel_s = profile.m_accel
+        self.m_jerk    = profile.m_jerk
+
+        self.m_tick    = tick_time
+        self.c_speed   = self.m_speed0
+        self.c_accel   = 0
+        self.c_jerk    = 0
+        self.c_dist    = 0
+        self.c_tick    = 0
+        self.c_idx     = 0
+        self.log       = log
+        self.test_case = test_case
+
+
+        if self.test_case:
+            self.test_set = '\t{}/*dist*/, {} /* speed0 */, {} /* speed */, {} /* accel */, {} /* jerk */'.format(self.m_dist, self.m_speed0, self.m_speed, self.m_accel_s,self.m_jerk)
+
+        self.t_dist   = arr.array('f')
+        self.t_speed  = arr.array('f')
+        self.t_accel  = arr.array('f')
+        self.t_jerk   = arr.array('f')
+        self.t_time   = arr.array('f')
+
     def calc_phase(self):
         hd = self.m_dist / 2
 
@@ -60,7 +186,8 @@ class tick:
             coeff = [1/(self.m_jerk*self.m_jerk),(2*self.m_speed0/self.m_jerk),0,-hd]
             roots = np.roots(coeff)
             self.m_accel_s = roots[2]
-            print('Changing acceleration from {} to {} (distance limit)'.format(old_acc,self.m_accel_s))
+            if self.log:
+                print('Changing acceleration from {} to {} (distance limit)'.format(old_acc,self.m_accel_s))
 
         h_v  = self.m_speed0 + self.m_accel_s * self.m_accel_s/self.m_jerk
 
@@ -70,7 +197,8 @@ class tick:
             old_speed = self.m_speed
             self.m_accel_s = math.sqrt((self.m_speed - self.m_speed0)*self.m_jerk)
             self.m_speed   = self.m_speed0 + self.m_accel_s * self.m_accel_s/self.m_jerk
-            print('Changing acceleration {}->{} and speed {}->{} (max speed limit)'.format(old_acc, self.m_accel_s,old_speed,self.m_speed ))
+            if self.log:
+                print('Changing acceleration {}->{} and speed {}->{} (max speed limit)'.format(old_acc, self.m_accel_s,old_speed,self.m_speed ))
 
         self.T11 = self.m_accel_s / self.m_jerk
         self.T13 = self.T11
@@ -93,7 +221,8 @@ class tick:
             # Reaching max speed gives too large distance
             # Cut linear acceleration period
             lc = hd - self.s_t1
-            print('Too long distance {} > {}'.format(self.s_t123,hd))
+            if self.log:
+                print('Too long distance {} > {}'.format(self.s_t123,hd))
             coeff = [self.m_accel_s/2, self.v_t1 + self.m_accel_s*self.T11,self.T11* self.v_t1+self.m_accel_s*self.T11*self.T11/2-self.m_jerk*self.T11*self.T11*self.T11/6-lc]
             roots = np.roots(coeff)
             self.T12 = roots[1]
@@ -105,7 +234,8 @@ class tick:
             self.s_t123 = self.s_t1 + self.s_t2 + self.s_t3
 
         if self.v_t3 > self.m_speed:
-            print('Too big speed {}>{}'.format(self.v_t3 , self.m_speed))
+            if self.log:
+                print('Too big speed {}>{}'.format(self.v_t3 , self.m_speed))
             # We are within distance limit, but we reach too big end speed
             self.T12  = (self.m_speed - self.v_t1 + self.m_jerk * self.T13 *self.T13 /2 - self.m_accel_s * self.T13)/ self.m_accel_s
             if self.T12 <0:
@@ -122,22 +252,24 @@ class tick:
         self.T2 = self.S2 / self.m_speed
         self.T3 = self.T1
         self.S3 = self.S1
-        
-        self.test_result = '\t{} /* T11 */, {} /* T12 */, {} /* T13 */,  {} /* T2 */, {} /* speed0 */, {} /* speed */, {} /* accel */, {} /* jerk */'.format(self.T11,self.T12,self.T13,self.T2,self.m_speed0,self.m_speed,self.m_accel_s,self.m_jerk)
-        print('Test case\n')
-        print('{\n\t{')
-        print(self.test_set)
-        print('\t},\n\t{')
-        print(self.test_result)
-        print('\t},\n}')
-        
-        self.T = self.T1 + self.T2 + self.T3
-        print('T11={} T12={} T13={}  T1={} hd/s1 = {}/{}  T2={}'.format(self.T11,self.T12,self.T13,self.T1 ,hd,self.s_t123,self.T2))
 
-    def calc_zcut_one(self,zdist):
+        if self.test_case:
+            self.test_result = '\t{} /* T11 */, {} /* T12 */, {} /* T13 */,  {} /* T2 */, {} /* speed0 */, {} /* speed */, {} /* accel */, {} /* jerk */'.format(self.T11,self.T12,self.T13,self.T2,self.m_speed0,self.m_speed,self.m_accel_s,self.m_jerk)
+            print('Test case\n')
+            print('{\n\t{')
+            print(self.test_set)
+            print('\t},\n\t{')
+            print(self.test_result)
+            print('\t},\n}')
+
+        self.T = self.T1 + self.T2 + self.T3
+        if self.log:
+            print('T11={} T12={} T13={}  T1={} hd/s1 = {}/{}  T2={}'.format(self.T11,self.T12,self.T13,self.T1 ,hd,self.s_t123,self.T2))
+
+    def calc_rev_time(self,zdist):
         org_dist = zdist
         if self.m_dist < zdist:
-            result = self.T;
+            result = float('nan')
         elif zdist < self.S1:
             # First acceleration phase
             if zdist < self.s_t1:
@@ -187,12 +319,11 @@ class tick:
                 roots = np.roots(coeff)
                 result = roots[2].real + self.T13 + self.T12 + self.T1 + self.T2
 
-        print('Dist={} Time={}'.format(org_dist,result))
+        if self.log:
+            print('Dist={} Time={}'.format(org_dist,result))
         return result
 
-    def calc_zcut_all(self):
-        for ii in range(0,len(self.t_zcut)):
-            self.t_zcut_time.append(self.calc_zcut_one(self.t_zcut[ii]))
+
 
     def one_step(self):
             if self.c_tick < self.T1:
@@ -224,19 +355,6 @@ class tick:
 
             self.c_dist = self.c_dist + self.c_speed * self.m_tick
 
-
-    def execute(self):
-        self.calc_phase()
-        self.calc_zcut_all()
-
-        print('Total Time={}'.format(self.T))
-
-        while self.m_dist >= self.c_dist:
-            self.one_step()
-            self.add_log()
-            self.advance()
-
-
     def  add_log(self):
         self.t_jerk.append(self.c_jerk)
         self.t_speed.append(self.c_speed)
@@ -248,11 +366,22 @@ class tick:
         self.c_idx = self.c_idx + 1
         self.c_tick = self.c_tick + self.m_tick
 
+    def execute(self):
+        self.calc_phase()
+
+        if self.log:
+            print('Total Time={}'.format(self.T))
+
+        while self.m_dist >= self.c_dist:
+            self.one_step()
+            self.add_log()
+            self.advance()
+
+
     def plot(self):
         # Plot the data
         self.plt.subplot(4, 1, 1)
         self.plt.plot(self.t_time, self.t_dist,label='distance')
-        self.plt.plot(self.t_zcut_time,self.t_zcut,'ro',marker='x',label='zcut')
         self.plt.legend(loc='upper right')
 
         self.plt.subplot(4, 1, 2)
@@ -271,8 +400,21 @@ class tick:
         self.plt.subplots_adjust(hspace=0.4)
         self.plt.show()
 
-tt = tick()
-tt.execute()
-tt.plot()
+
+
+
+
+mp_x = motion_profile(1000,1000,10000,50)
+mp_y = motion_profile(2000,2000,50000,50)
+
+l1 = tick_calc(10000,mp_x,0.001,1)
+l1.execute()
+l1.plot()
+
+l2 = tick_calc(10000,mp_y,0.001,1)
+l2.execute()
+l2.plot()
+
+
 print('Done')
 
