@@ -19,90 +19,90 @@ class motion_test:
 
         # pick & place, one nozzle, symmetric
         
-        path_moveTo(0, 0, self.safeZ, 1)
-        path_moveTo(0, 0, za, 1)
-        path_moveTo(0, 0, self.safeZ, 1)
-        path_moveTo(100, 0, self.safeZ, 1)
-        path_moveTo(100, 0, za, 1)
-        path_moveTo(100, 0, self.safeZ, 1)
-        path_moveTo(120, 0, self.safeZ, 1)
-        path_moveTo(120, 0, za, 1)
-        path_moveTo(120, 0, self.safeZ, 1)
-        path_moveTo(124, 0, self.safeZ, 1)
-        path_moveTo(124, 0, za, 1)
-        path_moveTo(124, 0, self.safeZ, 1)
-        path_moveTo(125, 0, self.safeZ, 1)
-        path_moveTo(125, 0, za, 1)
-        path_moveTo(125, 0, self.safeZ, 1)
+        self.path_moveTo(0, 0, self.safeZ, 1)
+        self.path_moveTo(0, 0, za, 1)
+        self.path_moveTo(0, 0, self.safeZ, 1)
+        self.path_moveTo(100, 0, self.safeZ, 1)
+        self.path_moveTo(100, 0, za, 1)
+        self.path_moveTo(100, 0, self.safeZ, 1)
+        self.path_moveTo(120, 0, self.safeZ, 1)
+        self.path_moveTo(120, 0, za, 1)
+        self.path_moveTo(120, 0, self.safeZ, 1)
+        self.path_moveTo(124, 0, self.safeZ, 1)
+        self.path_moveTo(124, 0, za, 1)
+        self.path_moveTo(124, 0, self.safeZ, 1)
+        self.path_moveTo(125, 0, self.safeZ, 1)
+        self.path_moveTo(125, 0, za, 1)
+        self.path_moveTo(125, 0, self.safeZ, 1)
 
         # pick & place, one nozzle, asymmetric
         
-        path_moveTo(0, 50, self.safeZ, 1)
-        path_moveTo(0, 50, zb, 1)
-        path_moveTo(0, 50, self.safeZ, 1)
-        path_moveTo(100, 50, self.safeZ, 1)
-        path_moveTo(100, 50, za, 1)
-        path_moveTo(100, 50, self.safeZ, 1)
-        path_moveTo(120, 50, self.safeZ, 1)
-        path_moveTo(120, 50, zb, 1)
-        path_moveTo(120, 50, self.safeZ, 1)
-        path_moveTo(124, 50, self.safeZ, 1)
-        path_moveTo(124, 50, za, 1)
-        path_moveTo(124, 50, self.safeZ, 1)
-        path_moveTo(125, 50, self.safeZ, 1)
-        path_moveTo(125, 50, zb, 1)
-        path_moveTo(125, 50, self.safeZ, 1)
+        self.path_moveTo(0, 50, self.safeZ, 1)
+        self.path_moveTo(0, 50, zb, 1)
+        self.path_moveTo(0, 50, self.safeZ, 1)
+        self.path_moveTo(100, 50, self.safeZ, 1)
+        self.path_moveTo(100, 50, za, 1)
+        self.path_moveTo(100, 50, self.safeZ, 1)
+        self.path_moveTo(120, 50, self.safeZ, 1)
+        self.path_moveTo(120, 50, zb, 1)
+        self.path_moveTo(120, 50, self.safeZ, 1)
+        self.path_moveTo(124, 50, self.safeZ, 1)
+        self.path_moveTo(124, 50, za, 1)
+        self.path_moveTo(124, 50, self.safeZ, 1)
+        self.path_moveTo(125, 50, self.safeZ, 1)
+        self.path_moveTo(125, 50, zb, 1)
+        self.path_moveTo(125, 50, self.safeZ, 1)
 
         #pick & place, dual nozzle, symmetric
         
-        path_moveTo(0, 100, self.safeZ, 1)
-        path_moveTo(0, 100, za, 1)
-        path_moveTo(0, 100, self.safeZ, 1)
-        path_moveTo(100, 100, -self.safeZ, 2)
-        path_moveTo(100, 100, 15, 2)
-        path_moveTo(100, 100, -self.safeZ, 2)
-        path_moveTo(120, 100, self.safeZ, 1)
-        path_moveTo(120, 100, za, 1)
-        path_moveTo(120, 100, self.safeZ, 1)
-        path_moveTo(124, 100, -self.safeZ, 2)
-        path_moveTo(124, 100, 15, 2)
-        path_moveTo(124, 100, -self.safeZ, 2)
-        path_moveTo(125, 100, self.safeZ, 1)
-        path_moveTo(125, 100, za, 1)
-        path_moveTo(125, 100, self.safeZ, 1)
+        self.path_moveTo(0, 100, self.safeZ, 1)
+        self.path_moveTo(0, 100, za, 1)
+        self.path_moveTo(0, 100, self.safeZ, 1)
+        self.path_moveTo(100, 100, -self.safeZ, 2)
+        self.path_moveTo(100, 100, 15, 2)
+        self.path_moveTo(100, 100, -self.safeZ, 2)
+        self.path_moveTo(120, 100, self.safeZ, 1)
+        self.path_moveTo(120, 100, za, 1)
+        self.path_moveTo(120, 100, self.safeZ, 1)
+        self.path_moveTo(124, 100, -self.safeZ, 2)
+        self.path_moveTo(124, 100, 15, 2)
+        self.path_moveTo(124, 100, -self.safeZ, 2)
+        self.path_moveTo(125, 100, self.safeZ, 1)
+        self.path_moveTo(125, 100, za, 1)
+        self.path_moveTo(125, 100, self.safeZ, 1)
 
         # pick & place, dual nozzle, asymmetric
         
-        path_moveTo(0, 150, self.safeZ, 1)
-        path_moveTo(0, 150, za, 1)
-        path_moveTo(0, 150, self.safeZ, 1)
-        path_moveTo(100, 150, -self.safeZ, 2)
-        path_moveTo(100, 150, 15, 2)
-        path_moveTo(100, 150, -self.safeZ, 2)
-        path_moveTo(120, 150, self.safeZ, 1)
-        path_moveTo(120, 150, zb, 1)
-        path_moveTo(120, 150, self.safeZ, 1)
-        path_moveTo(124, 150, -self.safeZ, 2)
-        path_moveTo(124, 150, 15, 2)
-        path_moveTo(124, 150, -self.safeZ, 2)
-        path_moveTo(125, 150, self.safeZ, 1)
-        path_moveTo(125, 150, zb, 1)
-        path_moveTo(125, 150, self.safeZ, 1)
+        self.path_moveTo(0, 150, self.safeZ, 1)
+        self.path_moveTo(0, 150, za, 1)
+        self.path_moveTo(0, 150, self.safeZ, 1)
+        self.path_moveTo(100, 150, -self.safeZ, 2)
+        self.path_moveTo(100, 150, 15, 2)
+        self.path_moveTo(100, 150, -self.safeZ, 2)
+        self.path_moveTo(120, 150, self.safeZ, 1)
+        self.path_moveTo(120, 150, zb, 1)
+        self.path_moveTo(120, 150, self.safeZ, 1)
+        self.path_moveTo(124, 150, -self.safeZ, 2)
+        self.path_moveTo(124, 150, 15, 2)
+        self.path_moveTo(124, 150, -self.safeZ, 2)
+        self.path_moveTo(125, 150, self.safeZ, 1)
+        self.path_moveTo(125, 150, zb, 1)
+        self.path_moveTo(125, 150, self.safeZ, 1)
 
         # move to push / pull feeder
         
-        path_moveTo(200, 50, self.safeZ, 1)
-        path_moveTo(220, 50, self.safeZ - 5, 1)
-        path_moveTo(220, 50, self.safeZ, 1)
-        path_moveTo(200, 80, self.safeZ, 1)
-        path_moveTo(190, 100, self.safeZ, 1)
-        path_moveTo(190, 120, self.safeZ, 1)
-        path_moveTo(300, 120, za, 1)
-        path_moveTo(300, 150, za, 1)
-        path_moveTo(280, 150, za, 1)
-        path_moveTo(279, 150, za, 1)
-        path_moveTo(275, 150, za, 1)
-        path_moveTo(275, 150, self.safeZ, 1)
+        self.path_moveTo(200, 50, self.safeZ, 1)
+        self.path_moveTo(220, 50, self.safeZ - 5, 1)
+        self.path_moveTo(220, 50, self.safeZ, 1)
+        self.path_moveTo(200, 80, self.safeZ, 1)
+        self.path_moveTo(190, 100, self.safeZ, 1)
+        self.path_moveTo(190, 120, self.safeZ, 1)
+        self.path_moveTo(300, 120, za, 1)
+        self.path_moveTo(300, 150, za, 1)
+        self.path_moveTo(280, 150, za, 1)
+        self.path_moveTo(279, 150, za, 1)
+        self.path_moveTo(275, 150, za, 1)
+        self.path_moveTo(275, 150, self.safeZ, 1)
         
         
 class cut_rev_test:
@@ -141,14 +141,36 @@ class motion_profile:
         self.m_accel = accel
         self.m_jerk = jerk
 
+    def scale(self,coeff):
+        self.m_speed = self.m_speed * coeff
+        self.m_speed0 = self.m_speed0 * coeff
+        self.m_accel = self.m_accel * coeff
+        self.m_jerk = self.m_jerk * coeff
+
+
+class motion_profile_caster:
+        def __init__(self, Xp,Yp,Xe,Ye,mx,my,mp,coordinated):
+
+            self.dX = Xe-Xp
+            self.dY = dY
+            self.mx = mx
+            self.my = my
+            self.mp = mp
+            self.mp_x_cast = mp
+            self.mp_y_cast = mp
+
+            self.mp_x_cast.scale(math.cos(math.atan2(dY,dX)))
+            self.mp_y_cast.scale(math.sin(math.atan2(dY, dX)))
+
+
+
+
 
 
 
 
 class tick_calc:
     def __init__(self,dist,profile,tick_time,log=0,test_case=0):
-        self.plt       = plt
-
         self.m_dist    = dist
         self.m_speed   = profile.m_speed
         self.m_speed0  = profile.m_speed0
@@ -378,27 +400,27 @@ class tick_calc:
             self.advance()
 
 
-    def plot(self):
+    def plot(self,plt):
         # Plot the data
-        self.plt.subplot(4, 1, 1)
-        self.plt.plot(self.t_time, self.t_dist,label='distance')
-        self.plt.legend(loc='upper right')
+        plt.subplot(4, 1, 1)
+        plt.plot(self.t_time, self.t_dist,label='distance')
+        plt.legend(loc='upper right')
 
-        self.plt.subplot(4, 1, 2)
-        self.plt.plot(self.t_time, self.t_speed, label='speed')
-        self.plt.legend(loc='upper right')
+        plt.subplot(4, 1, 2)
+        plt.plot(self.t_time, self.t_speed, label='speed')
+        plt.legend(loc='upper right')
 
-        self.plt.subplot(4, 1, 3)
-        self.plt.plot(self.t_time, self.t_accel, label='acceleration')
-        self.plt.legend(loc='upper right')
+        plt.subplot(4, 1, 3)
+        plt.plot(self.t_time, self.t_accel, label='acceleration')
+        plt.legend(loc='upper right')
 
-        self.plt.subplot(4, 1, 4)
-        self.plt.plot(self.t_time, self.t_jerk, label='jerk')
-        self.plt.legend(loc='upper right')
+        plt.subplot(4, 1, 4)
+        plt.plot(self.t_time, self.t_jerk, label='jerk')
+        plt.legend(loc='upper right')
 
         # Show the plot
-        self.plt.subplots_adjust(hspace=0.4)
-        self.plt.show()
+        plt.subplots_adjust(hspace=0.4)
+
 
 
 
@@ -407,14 +429,25 @@ class tick_calc:
 mp_x = motion_profile(1000,1000,10000,50)
 mp_y = motion_profile(2000,2000,50000,50)
 
+mp_path = motion_profile(3000,3000,25000,50)
+
+
+
+
+p    = plt
+
 l1 = tick_calc(10000,mp_x,0.001,1)
+
+
+
 l1.execute()
-l1.plot()
+l1.plot(p)
 
 l2 = tick_calc(10000,mp_y,0.001,1)
 l2.execute()
-l2.plot()
+l2.plot(p)
 
+p.show()
 
 print('Done')
 

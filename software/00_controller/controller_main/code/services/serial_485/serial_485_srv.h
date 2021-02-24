@@ -10,12 +10,10 @@
 
 #include "system.h"
 
-#define SRV_SERIAL_485_UxART1_ID       0
-#define SRV_SERIAL_485_UxART2_ID       1
+#define SRV_SERIAL_485_UxART2_ID       0
 
 
-#define SRV_SERIAL_RS485_1		 	  	SRV_SERIAL_485_UxART1_ID
-#define SRV_SERIAL_RS485_2		   		SRV_SERIAL_485_UxART2_ID
+#define SRV_SERIAL_RS485		   		SRV_SERIAL_485_UxART2_ID
 
 void    srv_serial_485_init(void);
 void    srv_serial_485_once(void);

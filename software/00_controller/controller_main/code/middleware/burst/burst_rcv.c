@@ -93,21 +93,37 @@ void burst_rcv_usb_rx(char * msg,uint32_t msg_len)
 	}
 }
 
+void burst_rcv_eth_rx(char * msg,uint32_t msg_len)
+{
+	burst_serial_data_t	  * serial_ch;
+
+	serial_ch   = &brcv.ch[CH_ETH];
+
+	if(msg_len < sizeof(serial_ch->RxBuffer))
+	{
+		memcpy(serial_ch->RxBuffer,msg,msg_len);
+		serial_ch->RxCnt = msg_len;
+        serial_ch->RxMsgCounter++;
+        serial_ch->RxMsgOk = 1;
+
+        // TODO - check if really interrupt context
+		xSemaphoreGiveFromISR(brcv.sema_recv,NULL);
+	}
+}
+
+
+
 
 static void burst_rcv_cc_debug(uint32_t portId,uint8_t cc,portBASE_TYPE * woken)
 {
 	burst_rcv_cc(cc,CH_DEBUG,woken);
 }
 
-static void burst_rcv_cc_rs485_1(uint32_t portId,uint8_t cc,portBASE_TYPE * woken)
+static void burst_rcv_cc_rs485(uint32_t portId,uint8_t cc,portBASE_TYPE * woken)
 {
-	burst_rcv_cc(cc,CH_RS485_1,woken);
+	burst_rcv_cc(cc,CH_RS485,woken);
 }
 
-static void burst_rcv_cc_rs485_2(uint32_t portId,uint8_t cc,portBASE_TYPE * woken)
-{
-	burst_rcv_cc(cc,CH_RS485_2,woken);
-}
 
 
 void burst_rcv_once()
@@ -118,15 +134,11 @@ void burst_rcv_once()
 	brcv.ch[CH_DEBUG].serial_id	= SRV_SERIAL_DEBUG;
 	srv_serial_rcv_callback(SRV_SERIAL_DEBUG,burst_rcv_cc_debug);
 
-	// CH_RS485_1
-	brcv.ch[CH_RS485_1].serial_id	= SRV_SERIAL_RS485_1;
-	srv_serial_485_rcv_callback(SRV_SERIAL_RS485_1,burst_rcv_cc_rs485_1);
-	srv_serial_485_enable(SRV_SERIAL_RS485_1,1);
+	// CH_RS485
+	brcv.ch[CH_RS485].serial_id	= SRV_SERIAL_RS485;
+	srv_serial_485_rcv_callback(SRV_SERIAL_RS485,burst_rcv_cc_rs485);
+	srv_serial_485_enable(SRV_SERIAL_RS485,1);
 
-	// CH_RS485_2
-	brcv.ch[CH_RS485_2].serial_id	= SRV_SERIAL_RS485_2;
-	srv_serial_485_rcv_callback(SRV_SERIAL_RS485_2,burst_rcv_cc_rs485_2);
-	srv_serial_485_enable(SRV_SERIAL_RS485_2,1);
 
 	// CH_USB
 	// No configuration needed
@@ -150,8 +162,7 @@ void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,char * response, in
 
     switch(rcv_ctx->channel)
     {
-			case CH_RS485_1:
-			case CH_RS485_2:
+			case CH_RS485:
 			{
 				srv_serial_485_send(brcv.ch[rcv_ctx->channel].serial_id,response,length);
 			}break;

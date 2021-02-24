@@ -33,7 +33,7 @@ srv_serial_485_ctx_t   * srv_serial_485_id2ctx(uint32_t id)
 {
     switch(id)
     {
-        case SRV_SERIAL_485_UxART1_ID: return &serial_485.u2;
+        case SRV_SERIAL_485_UxART2_ID: return &serial_485.u2;
     }
 
     return NULL;
@@ -181,7 +181,7 @@ void UARTx_485_IRQHandler(uint32_t id,srv_serial_485_ctx_t  * pctx)
 
 void USART2_IRQHandler(void)
 {
-   UARTx_485_IRQHandler(SRV_SERIAL_485_UxART1_ID,&serial_485.u2);
+   UARTx_485_IRQHandler(SRV_SERIAL_485_UxART2_ID,&serial_485.u2);
 }
 
 

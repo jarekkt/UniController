@@ -2481,7 +2481,7 @@
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid d9e3910f-ab80-434a-b51c-f5f7ce2910db)
   )
-  (hierarchical_label "USART2_RTS__PD5" (shape output) (at 160.02 162.56 180)
+  (hierarchical_label "USART2_DE__PD4" (shape output) (at 160.02 162.56 180)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid fa1c4d87-8f03-44dc-91b0-7a4b4a849f01)
   )

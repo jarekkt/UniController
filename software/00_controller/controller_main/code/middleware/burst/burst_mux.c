@@ -101,6 +101,7 @@ int32_t burst_mux_process_enc_addr(char ** fstart,char * fend,burst_rcv_ctx_t *r
 
 	switch(rcv_ctx->channel)
 	{
+		case CH_ETH:
 		case CH_DEBUG:
 		{
 			is_our = 0;
@@ -114,7 +115,7 @@ int32_t burst_mux_process_enc_addr(char ** fstart,char * fend,burst_rcv_ctx_t *r
 			}
 		}break;
 
-		case CH_RS485_1:
+		case CH_RS485:
 		{
 			if( bmux.address == rcv_ctx->address)
 			{
@@ -122,13 +123,6 @@ int32_t burst_mux_process_enc_addr(char ** fstart,char * fend,burst_rcv_ctx_t *r
 			}
 		}break;
 
-		case CH_RS485_2:
-		{
-			if( bmux.address + 1 == rcv_ctx->address)
-			{
-				is_our = 0;
-			}
-		}break;
 
 		default:
 		{
