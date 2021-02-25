@@ -8,9 +8,27 @@ import numpy as np
 class motion_test:
     def __init__(self):
         self.safeZ = -7
+        self.Xc = arr.array('f')
+        self.Yc = arr.array('f')
+        self.Zc = arr.array('f')
+        self.N = arr.array('f')
 
     def path_moveTo(self,x,y,z,nozzle):
-        pass
+        self.Xc.append(x)
+        self.Yc.append(y)
+        self.Zc.append(z)
+        self.N.append(nozzle)
+
+    def path_plot(self,pltO):
+        ax = pltO.axes(projection='3d')
+        ax.plot3D(self.Xc, self.Yc, self.Zc, 'gray')
+
+        Xs, Ys = np.mgrid[0:300:50, 0:300:50]
+        Z1s = self.safeZ * np.ones_like(Xs)
+        Z2s = -self.safeZ * np.ones_like(Xs)
+        ax.plot_surface(Xs, Ys, Z1s, alpha=0.3, color='green')
+        ax.plot_surface(Xs, Ys, Z2s, alpha=0.3, color='cyan')
+
 
     def trajectory(self):
 
@@ -126,11 +144,11 @@ class cut_rev_test:
         for ii in range(0, len(self.t_zcut)):
             self.t_zcut_time.append(self.tick_test.calc_rev_time(self.t_zcut[ii]))
 
-    def plot(self):
+    def plot(self,plt):
         # Plot the data
-        self.plt.plot(self.tick_test.t_time, self.tick_test.t_dist,label='distance')
-        self.plt.plot(self.t_zcut_time,self.t_zcut,'ro',marker='x',label='zcut')
-        self.plt.legend(loc='upper right')
+        plt.plot(self.tick_test.t_time, self.tick_test.t_dist,label='distance')
+        plt.plot(self.t_zcut_time,self.t_zcut,'ro',marker='x',label='zcut')
+
 
 
 
@@ -432,22 +450,28 @@ mp_y = motion_profile(2000,2000,50000,50)
 mp_path = motion_profile(3000,3000,25000,50)
 
 
-
-
 p    = plt
 
-l1 = tick_calc(10000,mp_x,0.001,1)
-
-
-
-l1.execute()
-l1.plot(p)
-
-l2 = tick_calc(10000,mp_y,0.001,1)
-l2.execute()
-l2.plot(p)
+test = motion_test()
+test.trajectory()
+test.path_plot(p)
 
 p.show()
+
+#
+#plt.legend(loc='upper right')
+#
+#l1 = tick_calc(10000,mp_x,0.001,1)
+#
+#
+#l1.execute()
+#l1.plot(p)
+#
+#l2 = tick_calc(10000,mp_y,0.001,1)
+#l2.execute()
+#l2.plot(p)
+
+#
 
 print('Done')
 
