@@ -3,6 +3,18 @@
 #include "lwip/sys.h"
 #include "lwip/api.h"
 
+
+
+
+
+
+void tcpconn_process_outgoing(struct netconn *)
+{
+
+}
+
+
+
 static void tcpconn_thread(void *arg)
 {
   struct netconn *  conn;
@@ -19,25 +31,39 @@ static void tcpconn_thread(void *arg)
   netconn_listen(conn);
 
 
-
-  /// void netconn_set_recvtimeout ( struct netconn * aNetConn, int aTimeout );
-  #define LWIP_SO_RCVTIME0                  1              // default is 0
-
   while (1)
   {
     err = netconn_accept(conn, &newconn);
 
     if (err == ERR_OK)
     {
-      while ((err = netconn_recv(newconn, &buf)) == ERR_OK)
+      netconn_set_recvtimeout (newconn,1);
+
+      do
       {
-        do
-        {
-             netbuf_data(buf, &data, &len);
-             err = netconn_write(newconn, data, len, NETCONN_COPY);
-        } while (netbuf_next(buf) >= 0);
-        netbuf_delete(buf);
-      }
+    	err = netconn_recv(newconn, &buf);
+    	if(err == ERR_OK)
+    	{
+			do
+			{
+				 netbuf_data(buf, &data, &len);
+				 err = netconn_write(newconn, data, len, NETCONN_COPY);
+			} while (netbuf_next(buf) >= 0);
+			netbuf_delete(buf);
+
+			tcpconn_process_outgoing();
+    	}
+    	else if(err == ERR_TIMEOUT)
+    	{
+    		tcpconn_process_outgoing();
+    	}
+    	else
+    	{
+    		// Some other error, we treat it as broken connection
+    		break;
+    	}
+
+      }while(1);
 
       netconn_close(newconn);
       netconn_delete(newconn);
@@ -47,6 +73,6 @@ static void tcpconn_thread(void *arg)
 
 void tcpconn_init(void)
 {
-  sys_thread_new("tcpecho_thread", tcpconn_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+  sys_thread_new("tcpcon n", tcpconn_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 }
 

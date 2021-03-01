@@ -3,6 +3,8 @@
 #include "engine.h"
 #include "middleware.h"
 #include "services.h"
+#include "lwip_apps.h"
+
 
 
 
@@ -13,7 +15,7 @@ void system_main_init()
   mwr_init();
   engine_init();
 
-  /* Initial storage initialiation - must be last one*/
+  /* Initial storage initialization - must be last one*/
   srv_nov_init();
   srv_nov_start();
 
@@ -24,5 +26,8 @@ void system_main_init()
 
   /* Dump storage initialization messages */
   srv_nov_print_info(burst_log_printf);
+
+  /* High level network services */
+  lwip_apps_init();
 
 }

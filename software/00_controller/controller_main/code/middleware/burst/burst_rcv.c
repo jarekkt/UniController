@@ -9,11 +9,7 @@
 #include "services.h"
 #include "middleware.h"
 
-
-
-#define BURST_MUX_TIMEOUT 10000
-
-
+#define BURST_MUX_TIMEOUT 1000
 
 
 typedef struct
@@ -93,7 +89,7 @@ void burst_rcv_usb_rx(char * msg,uint32_t msg_len)
 	}
 }
 
-void burst_rcv_eth_rx(char * msg,uint32_t msg_len)
+void burst_rcv_eth_rx(const char * msg,uint32_t msg_len)
 {
 	burst_serial_data_t	  * serial_ch;
 
@@ -139,10 +135,13 @@ void burst_rcv_once()
 	srv_serial_485_rcv_callback(SRV_SERIAL_RS485,burst_rcv_cc_rs485);
 	srv_serial_485_enable(SRV_SERIAL_RS485,1);
 
-
 	// CH_USB
 	// No configuration needed
 	brcv.ch[CH_USB].serial_id 		= -1;
+
+	// CH_ETH
+	// No configuration needed
+	brcv.ch[CH_ETH].serial_id 		= -1;
 
 	xTaskCreate( burst_rcv_task, "Burst", 6 * configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY   + 1, NULL );
 }
@@ -176,6 +175,12 @@ void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,char * response, in
 			{
 				srv_serial_send(brcv.ch[rcv_ctx->channel].serial_id,response,length);
 			}break;
+
+			case CH_ETH:
+			{
+				burst_rcv_eth_tx(response,length);
+			}break;
+
 
 			default:
 			{

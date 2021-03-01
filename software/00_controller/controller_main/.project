@@ -180,11 +180,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/usart.h</locationURI>
 		</link>
 		<link>
-			<name>cube/Core/Inc/usb_otg.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/usb_otg.h</locationURI>
-		</link>
-		<link>
 			<name>cube/Core/Src/adc.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/adc.c</locationURI>

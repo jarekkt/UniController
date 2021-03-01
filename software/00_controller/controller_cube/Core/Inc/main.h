@@ -69,6 +69,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LWIP_SO_RCVTIMEO 1
 #define IN_CPU5_ADC1_18_Pin GPIO_PIN_4
 #define IN_CPU5_ADC1_18_GPIO_Port GPIOA
 #define IN_CPU6_ADC1_19_Pin GPIO_PIN_5
