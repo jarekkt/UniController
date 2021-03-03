@@ -50,6 +50,7 @@
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../controller_cube/Core/Inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/code/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/code&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/code/network/lwip_apps/tcpconn&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../controller_cube/Drivers/STM32H7xx_HAL_Driver/Inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../controller_cube/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../controller_cube/Drivers/CMSIS/Device/ST/STM32H7xx/Include&quot;"/>

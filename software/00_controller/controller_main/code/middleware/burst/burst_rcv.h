@@ -41,7 +41,6 @@ void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,char * response, in
 void burst_rcv_usb_rx(char * msg,uint32_t msg_len);
 void burst_rcv_usb_tx(char * msg,uint32_t msg_len);
 
-void burst_rcv_eth_rx(char * msg,uint32_t msg_len);
-void burst_rcv_eth_tx(char * msg,uint32_t msg_len);
+
 
 #endif //BURST_RCV_H

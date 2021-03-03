@@ -3,14 +3,99 @@
 #include "lwip/sys.h"
 #include "lwip/api.h"
 
+#include "string.h"
+#include "system.h"
+
+typedef struct
+{
+	fn_cb_t 		 callback_fn;
+	char 			 buf[4096];
+	uint32_t		 buf_tail;
+	uint32_t		 buf_head;
+
+}tcpconn_data_t;
 
 
 
+tcpconn_data_t	 tctx;
 
 
-void tcpconn_process_outgoing(struct netconn *)
+static void callback_null(const char * msg,uint32_t msg_len)
 {
 
+}
+
+
+void tcpconn_callback(fn_cb_t fb_cb)
+{
+	tctx.callback_fn = fb_cb;
+}
+
+void tcpconn_send(const char * msg,uint32_t msg_len)
+{
+
+	uint32_t		  free_count;
+	uint32_t		  part_count;
+
+	if(tctx.buf_head >=  tctx.buf_tail)
+	{
+		free_count = DIM(tctx.buf) - (tctx.buf_head -  tctx.buf_tail) -1;
+	}
+	else
+	{
+		free_count = tctx.buf_tail - tctx.buf_head-1;
+	}
+
+	if(msg_len > free_count)
+	{
+		msg_len = free_count;
+	}
+
+	if( tctx.buf_head + free_count >  DIM(tctx.buf))
+	{
+		part_count = DIM(tctx.buf) - tctx.buf_head;
+
+		memcpy(&tctx.buf[tctx.buf_head],msg,part_count);
+		memcpy(&tctx.buf[0],&msg[part_count],free_count - part_count);
+		tctx.buf_head =  free_count - part_count;
+	}
+	else
+	{
+		memcpy(&tctx.buf[tctx.buf_head],msg,free_count);
+		tctx.buf_head = (tctx.buf_head + free_count) % DIM(tctx.buf);
+	}
+}
+
+
+void tcpconn_process_incoming(void *  data,u16_t len)
+{
+	tctx.callback_fn(data,len);
+}
+
+
+void tcpconn_process_outgoing(struct netconn * nc)
+{
+	err_t             err;
+	uint32_t 		  head_flash;
+
+	//todo - process or at least count error
+
+	head_flash = tctx.buf_head;
+	if(head_flash != tctx.buf_tail)
+	{
+		if(head_flash  > tctx.buf_tail)
+		{
+			err = netconn_write(nc, &tctx.buf[tctx.buf_tail], head_flash - tctx.buf_tail, NETCONN_COPY);
+			tctx.buf_tail = head_flash;
+		}
+		else
+		{
+			err = netconn_write(nc, &tctx.buf[tctx.buf_tail], DIM(tctx.buf) - tctx.buf_tail, NETCONN_COPY);
+			tctx.buf_tail = 0;
+			err = netconn_write(nc, &tctx.buf[0], head_flash, NETCONN_COPY);
+			tctx.buf_tail = head_flash;
+		}
+	}
 }
 
 
@@ -20,9 +105,10 @@ static void tcpconn_thread(void *arg)
   struct netconn *  conn;
   struct netconn *  newconn;
   struct netbuf  *  buf;
-  err_t             err;
+
   void           *  data;
   u16_t             len;
+  err_t             err;
 
   LWIP_UNUSED_ARG(arg);
 
@@ -47,15 +133,15 @@ static void tcpconn_thread(void *arg)
 			do
 			{
 				 netbuf_data(buf, &data, &len);
-				 err = netconn_write(newconn, data, len, NETCONN_COPY);
+				 tcpconn_process_incoming(data,len);
 			} while (netbuf_next(buf) >= 0);
 			netbuf_delete(buf);
 
-			tcpconn_process_outgoing();
+			tcpconn_process_outgoing(newconn);
     	}
     	else if(err == ERR_TIMEOUT)
     	{
-    		tcpconn_process_outgoing();
+    		tcpconn_process_outgoing(newconn);
     	}
     	else
     	{
@@ -73,6 +159,10 @@ static void tcpconn_thread(void *arg)
 
 void tcpconn_init(void)
 {
-  sys_thread_new("tcpcon n", tcpconn_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+  memset(&tctx,0,sizeof(tctx));
+
+  tctx.callback_fn = callback_null;
+
+  sys_thread_new("tcpconn", tcpconn_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 }
 

@@ -23,20 +23,22 @@ typedef struct
 	volatile uint32_t	mt_active;
 	volatile uint32_t	irq_mask;
 
-
 	uint32_t			home_axis;
-
 	uint32_t			abort_mask;
 	uint32_t			stop_mask;
 	uint32_t			start_mask;
 
 	uint32_t			endpos_hit_cntr;
-
 	int32_t				encoders[2];
 
-
-
 	motion_timer_t		mt[AXIS_CNT];
+
+
+
+	/* Buffer management */
+	motion_cbuf_t		mb_global;
+	motion_cbuf_t		mj_global;
+
 }motion_ctx_t;
 
 typedef struct
@@ -44,6 +46,12 @@ typedef struct
 	uint32_t 			step_freq;
 
 }motion_nv_data_t;
+
+
+/* Main motion buffers */
+
+static motion_buffer_t   mb[AXIS_CNT][MF_BUFFER_CNT];
+static motion_job_t		 mj[MF_JOB_CNT];
 
 
 motion_ctx_t 	  mctx;
@@ -89,6 +97,11 @@ void motion_engine_once(void)
 	srv_timer_callback_fast_add(motion_engine_tmr_endpos);
 
 	motion_scurve_test_all();
+}
+
+void 	motion_engine_job_init(motion_job_t * mj)
+{
+	memset(mj,0,sizeof(*mj));
 }
 
 void motion_engine_stop(uint32_t axis_mask,uint32_t abort_mask)
@@ -242,7 +255,7 @@ static int64_t  motion_engine_jerk_to_fract(float jerk_mm_s3,int32_t axis)
 
 
 
-void motion_engine_convert(uint32_t axis_idx,int32_t dist_001mm,int32_t pos_001mm,const motion_calc_t  * calc,const axis_params_t * axis,motion_timer_t * tmr)
+void motion_engine_convert(uint32_t axis_idx,int32_t dist_001mm,int32_t pos_001mm,const motion_calc_t  * calc,const axis_params_t * axis,motion_buffer_t * mbfr)
 {
 	int32_t pulse_concave;
 	int32_t pulse_line;
@@ -257,13 +270,13 @@ void motion_engine_convert(uint32_t axis_idx,int32_t dist_001mm,int32_t pos_001m
 	int64_t speed_lin_convex_fract;
 
 
-	tmr->accu  									 = 0;
-	tmr->phase 									 = MF_START_CONCAVE;
-	tmr->dir   									 = calc->dir;
+	mbfr->accu  									 = 0;
+	mbfr->phase 									 = MF_START_CONCAVE;
+	mbfr->dir   									 = calc->dir;
 
-	tmr->pos_next.pos_001mm    					 = pos_001mm + dist_001mm;
-	tmr->pos_next.pulse_count  					 = motion_engine_pos001mm_to_pulse(tmr->pos_next.pos_001mm,axis_idx);
-	tmr->pos_next.enc_count    					 = motion_engine_pos001mm_to_enc(tmr->pos_next.pos_001mm,axis_idx);
+	mbfr->pos_next.pos_001mm    					 = pos_001mm + dist_001mm;
+	mbfr->pos_next.pulse_count  					 = motion_engine_pos001mm_to_pulse(mbfr->pos_next.pos_001mm,axis_idx);
+	mbfr->pos_next.enc_count    					 = motion_engine_pos001mm_to_enc(mbfr->pos_next.pos_001mm,axis_idx);
 
 	speed_start_fract           				 = motion_engine_speed_to_fract(calc->speed_start,axis_idx);
 	speed_fract									 = motion_engine_speed_to_fract(calc->speed,axis_idx);
@@ -280,47 +293,47 @@ void motion_engine_convert(uint32_t axis_idx,int32_t dist_001mm,int32_t pos_001m
 
 	pulse_const									 = motion_engine_posmm_to_pulse(calc->T2_s,axis_idx);
 
-	tmr->mf[MF_START_CONCAVE].pulse_count_total  = pulse_concave;
-    tmr->mf[MF_START_CONCAVE].pulse_count 		 = pulse_concave;
-    tmr->mf[MF_START_CONCAVE].speed_fract 		 = speed_start_fract;
-    tmr->mf[MF_START_CONCAVE].accel_fract		 = 0;
-    tmr->mf[MF_START_CONCAVE].jerk_fract  		 = jerk_fract;
+	mbfr->mf[MF_START_CONCAVE].pulse_count_total  = pulse_concave;
+    mbfr->mf[MF_START_CONCAVE].pulse_count 		 = pulse_concave;
+    mbfr->mf[MF_START_CONCAVE].speed_fract 		 = speed_start_fract;
+    mbfr->mf[MF_START_CONCAVE].accel_fract		 = 0;
+    mbfr->mf[MF_START_CONCAVE].jerk_fract  		 = jerk_fract;
 
-	tmr->mf[MF_START_LINEAR].pulse_count_total   = pulse_line;
-    tmr->mf[MF_START_LINEAR].pulse_count 		 = pulse_line;
-    tmr->mf[MF_START_LINEAR].speed_fract 		 = speed_concave_lin_fract;
-    tmr->mf[MF_START_LINEAR].accel_fract		 = accel_fract;
-    tmr->mf[MF_START_LINEAR].jerk_fract  		 = 0;
+	mbfr->mf[MF_START_LINEAR].pulse_count_total   = pulse_line;
+    mbfr->mf[MF_START_LINEAR].pulse_count 		 = pulse_line;
+    mbfr->mf[MF_START_LINEAR].speed_fract 		 = speed_concave_lin_fract;
+    mbfr->mf[MF_START_LINEAR].accel_fract		 = accel_fract;
+    mbfr->mf[MF_START_LINEAR].jerk_fract  		 = 0;
 
-    tmr->mf[MF_START_CONVEX].pulse_count_total   = pulse_convex;
-    tmr->mf[MF_START_CONVEX].pulse_count 		 = pulse_convex;
-    tmr->mf[MF_START_CONVEX].speed_fract 		 = speed_lin_convex_fract;
-    tmr->mf[MF_START_CONVEX].accel_fract		 = accel_fract;
-    tmr->mf[MF_START_CONVEX].jerk_fract  		 = -jerk_fract;
+    mbfr->mf[MF_START_CONVEX].pulse_count_total   = pulse_convex;
+    mbfr->mf[MF_START_CONVEX].pulse_count 		 = pulse_convex;
+    mbfr->mf[MF_START_CONVEX].speed_fract 		 = speed_lin_convex_fract;
+    mbfr->mf[MF_START_CONVEX].accel_fract		 = accel_fract;
+    mbfr->mf[MF_START_CONVEX].jerk_fract  		 = -jerk_fract;
 
-    tmr->mf[MF_CONSTANT_SPEED].pulse_count_total = pulse_const;
-    tmr->mf[MF_CONSTANT_SPEED].pulse_count 		 = pulse_const;
-    tmr->mf[MF_CONSTANT_SPEED].speed_fract 		 = speed_fract;
-    tmr->mf[MF_CONSTANT_SPEED].accel_fract		 = 0;
-    tmr->mf[MF_CONSTANT_SPEED].jerk_fract  		 = 0;
+    mbfr->mf[MF_CONSTANT_SPEED].pulse_count_total = pulse_const;
+    mbfr->mf[MF_CONSTANT_SPEED].pulse_count 		 = pulse_const;
+    mbfr->mf[MF_CONSTANT_SPEED].speed_fract 		 = speed_fract;
+    mbfr->mf[MF_CONSTANT_SPEED].accel_fract		 = 0;
+    mbfr->mf[MF_CONSTANT_SPEED].jerk_fract  	 = 0;
 
-	tmr->mf[MF_STOP_CONVEX].pulse_count_total    = pulse_convex;
-    tmr->mf[MF_STOP_CONVEX].pulse_count 		 = pulse_convex;
-    tmr->mf[MF_STOP_CONVEX].speed_fract 		 = speed_fract;
-    tmr->mf[MF_STOP_CONVEX].accel_fract		 	 = 0;
-    tmr->mf[MF_STOP_CONVEX].jerk_fract  		 = -jerk_fract;
+	mbfr->mf[MF_STOP_CONVEX].pulse_count_total    = pulse_convex;
+    mbfr->mf[MF_STOP_CONVEX].pulse_count 		 = pulse_convex;
+    mbfr->mf[MF_STOP_CONVEX].speed_fract 		 = speed_fract;
+    mbfr->mf[MF_STOP_CONVEX].accel_fract		 = 0;
+    mbfr->mf[MF_STOP_CONVEX].jerk_fract  		 = -jerk_fract;
 
-	tmr->mf[MF_STOP_LINEAR].pulse_count_total    = pulse_line;
-    tmr->mf[MF_STOP_LINEAR].pulse_count 		 = pulse_line;
-    tmr->mf[MF_STOP_LINEAR].speed_fract 		 = speed_lin_convex_fract;
-    tmr->mf[MF_STOP_LINEAR].accel_fract		     = -accel_fract;
-    tmr->mf[MF_STOP_LINEAR].jerk_fract  		 = 0;
+	mbfr->mf[MF_STOP_LINEAR].pulse_count_total   = pulse_line;
+    mbfr->mf[MF_STOP_LINEAR].pulse_count 		 = pulse_line;
+    mbfr->mf[MF_STOP_LINEAR].speed_fract 		 = speed_lin_convex_fract;
+    mbfr->mf[MF_STOP_LINEAR].accel_fract		 = -accel_fract;
+    mbfr->mf[MF_STOP_LINEAR].jerk_fract  		 = 0;
 
-    tmr->mf[MF_STOP_CONCAVE].pulse_count_total   = pulse_concave;
-    tmr->mf[MF_STOP_CONCAVE].pulse_count 		 = pulse_concave;
-    tmr->mf[MF_STOP_CONCAVE].speed_fract 		 = speed_concave_lin_fract;
-    tmr->mf[MF_STOP_CONCAVE].accel_fract		 = -accel_fract;
-    tmr->mf[MF_STOP_CONCAVE].jerk_fract  		 = jerk_fract;
+    mbfr->mf[MF_STOP_CONCAVE].pulse_count_total  = pulse_concave;
+    mbfr->mf[MF_STOP_CONCAVE].pulse_count 		 = pulse_concave;
+    mbfr->mf[MF_STOP_CONCAVE].speed_fract 		 = speed_concave_lin_fract;
+    mbfr->mf[MF_STOP_CONCAVE].accel_fract		 = -accel_fract;
+    mbfr->mf[MF_STOP_CONCAVE].jerk_fract  		 = jerk_fract;
 
 
 
@@ -328,14 +341,14 @@ void motion_engine_convert(uint32_t axis_idx,int32_t dist_001mm,int32_t pos_001m
 
 void motion_engine_test(int32_t pos_001mm,motion_calc_t  * calc)
 {
-	motion_timer_t  mt;
+	motion_buffer_t  mb;
 
-	memset(&mt,0,sizeof(mt));
-	motion_engine_convert(0,pos_001mm,0,calc,&ppctx_nv->axis[0],&mt);
-	memset(&mt,0,sizeof(mt));
-	motion_engine_convert(1,pos_001mm,0,calc,&ppctx_nv->axis[1],&mt);
-	memset(&mt,0,sizeof(mt));
-	motion_engine_convert(1,pos_001mm,0,calc,&ppctx_nv->axis[2],&mt);
+	memset(&mb,0,sizeof(mb));
+	motion_engine_convert(0,pos_001mm,0,calc,&ppctx_nv->axis[0],&mb);
+	memset(&mb,0,sizeof(mb));
+	motion_engine_convert(1,pos_001mm,0,calc,&ppctx_nv->axis[1],&mb);
+	memset(&mb,0,sizeof(mb));
+	motion_engine_convert(1,pos_001mm,0,calc,&ppctx_nv->axis[2],&mb);
 }
 
 
@@ -344,50 +357,45 @@ void motion_engine_run(uint32_t axis_idx,int32_t pos_001mm,int32_t speed_001mm_s
 	motion_calc_t  calc;
 	int32_t		   dist_001mm;
 
-	// Abort the move if in progress
-	if((mctx.mt_active & (1<<axis_idx)) != 0)
-	{
-		motion_engine_stop(0,(1<<axis_idx));
-	}
-
 	dist_001mm = mctx.mt[axis_idx].pos_cur.pos_001mm - pos_001mm;
 
 	motion_scurve_calc(&calc,dist_001mm, ppctx_nv->axis[axis_idx].speed_safe_001mm_s,speed_001mm_s,accel_001mm_s2,jerk_001mm_s3);
 	motion_engine_convert(axis_idx,dist_001mm,pos_001mm,&calc,&ppctx_nv->axis[axis_idx],&mctx.mt[axis_idx]);
 	motion_engine_dir(axis_idx,calc.dir);
+
 	motion_engine_start(1<<axis_idx);
 }
 
 
 
-uint32_t motion_engine_step_axis(motion_timer_t * mt,uint32_t mask)
+uint32_t motion_engine_step_axis(motion_buffer_t * mbfr,uint32_t mask)
 {
 	uint64_t prev_accu;
 	uint32_t pulse = 0;
 
 next:
-	if(mt->mf[mt->phase].pulse_count > 0)
+	if(mbfr->mf[mbfr->phase].pulse_count > 0)
 	{
 
 
-		prev_accu = mt->accu;
-		mt->mf[mt->phase].accel_fract += mt->mf[mt->phase].jerk_fract;
-		mt->mf[mt->phase].speed_fract += mt->mf[mt->phase].accel_fract;
-		mt->accu += mt->mf[mt->phase].speed_fract;
+		prev_accu = mbfr->accu;
+		mbfr->mf[mbfr->phase].accel_fract += mbfr->mf[mbfr->phase].jerk_fract;
+		mbfr->mf[mbfr->phase].speed_fract += mbfr->mf[mbfr->phase].accel_fract;
+		mbfr->accu += mbfr->mf[mbfr->phase].speed_fract;
 
-		if(prev_accu >  mt->accu)
+		if(prev_accu >  mbfr->accu)
 		{
 			pulse = mask;
-			mt->mf[mt->phase].pulse_count--;
-			mt->pos_cur.pulse_count += mt->dir;
+			mbfr->mf[mbfr->phase].pulse_count--;
+			mbfr->pos_cur.pulse_count += mbfr->dir;
 		}
 	}
 	else
 	{
-		mt->accu = 0;
+		mbfr->accu = 0;
 
-		mt->phase++;
-		if(mt->phase != MF_PHASES_CNT)
+		mbfr->phase++;
+		if(mbfr->phase != MF_PHASES_CNT)
 		{
 			goto next;
 		}
@@ -425,6 +433,7 @@ void motion_engine_tmr_masks()
 		{
 			if(mctx.mt_active & (mctx.stop_mask & (1<<ii)))
 			{
+#if 0
 				switch(mctx.mt[ii].phase)
 				{
 					case MF_START_CONCAVE:
@@ -455,6 +464,7 @@ void motion_engine_tmr_masks()
 						// Already in stopping phase
 					}break;
 				}
+#endif
 			}
 		}
 		mctx.stop_mask = 0;
@@ -571,7 +581,7 @@ static void motion_engine_tmr_endpos(void)
 	{
 		if(mctx.mt_active & (1<<ii))
 		{
-			if(&mctx.mt[ii].dir ==0)
+			if(&mctx.mt[ii].dir == 0)
 			{
 				if( (inputs & ppctx_nv->axis[ii].endpos_max_mask) != 0)
 				{

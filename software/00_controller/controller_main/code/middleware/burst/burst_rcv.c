@@ -8,6 +8,8 @@
 #include "system.h"
 #include "services.h"
 #include "middleware.h"
+#include "tcpconn.h"
+
 
 #define BURST_MUX_TIMEOUT 1000
 
@@ -22,12 +24,14 @@ typedef struct
 
     uint32_t    serial_id;
 
+
 }burst_serial_data_t;
 
 typedef struct
 {
 	burst_serial_data_t  ch[CH_CNT];
-	xSemaphoreHandle    sema_recv;
+	int32_t			 	 ch_active;
+	xSemaphoreHandle     sema_recv;
 
 }burst_rcv_t;
 
@@ -41,6 +45,7 @@ extern void burst_rcv_usb_tx(char * msg,uint32_t msg_len);
 void burst_rcv_init()
 {
 	memset(&brcv,0,sizeof(brcv));
+	brcv.ch_active = -1;
 }
 
 
@@ -87,6 +92,8 @@ void burst_rcv_usb_rx(char * msg,uint32_t msg_len)
         // TODO - check if really interrupt context
 		xSemaphoreGiveFromISR(brcv.sema_recv,NULL);
 	}
+
+	brcv.ch_active = CH_USB;
 }
 
 void burst_rcv_eth_rx(const char * msg,uint32_t msg_len)
@@ -102,9 +109,10 @@ void burst_rcv_eth_rx(const char * msg,uint32_t msg_len)
         serial_ch->RxMsgCounter++;
         serial_ch->RxMsgOk = 1;
 
-        // TODO - check if really interrupt context
 		xSemaphoreGiveFromISR(brcv.sema_recv,NULL);
 	}
+
+	brcv.ch_active = CH_ETH;
 }
 
 
@@ -142,6 +150,9 @@ void burst_rcv_once()
 	// CH_ETH
 	// No configuration needed
 	brcv.ch[CH_ETH].serial_id 		= -1;
+	tcpconn_callback(burst_rcv_eth_rx);
+
+
 
 	xTaskCreate( burst_rcv_task, "Burst", 6 * configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY   + 1, NULL );
 }
@@ -178,7 +189,7 @@ void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,char * response, in
 
 			case CH_ETH:
 			{
-				burst_rcv_eth_tx(response,length);
+				tcpconn_send(response,length);
 			}break;
 
 
