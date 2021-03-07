@@ -18,9 +18,6 @@
 #define var_table_size     ((uint32_t)(__sermon_end__ - __sermon_start__))
 
 
-
-
-
 /*!
     \brief  Init function for burst module                              
                                     

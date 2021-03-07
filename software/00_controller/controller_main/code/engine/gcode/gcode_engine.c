@@ -162,6 +162,7 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 	int32_t 			pos_001mm;
 	int32_t				ii;
 	uint32_t			any;
+	motion_job_t 	  * mj;
 
 	result = gcode_parser_execute(&cmd,cmd_line);
 
@@ -176,20 +177,29 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 			case GCODE_F_G0:
 			case GCODE_F_G1:  // linear move
 			{
-				for(ii = GCODE_I_X; ii <= GCODE_I_Z;ii++)
+				if(motion_engine_job_init(&mj) == 0)
 				{
-					if(cmd.tokens_present_mask & (1<< ii))
+					for(ii = GCODE_I_X; ii <= GCODE_I_Z;ii++)
 					{
-						feedrate_001mm_s    = gcode_engine_feedrate(&cmd,ii,0);
-						accelerate_001mm_s2 = gcode_engine_accelerate(&cmd,ii,0);
-						jerk_001mm_s3       = gcode_engine_jerk(&cmd,ii,0);
+						if(cmd.tokens_present_mask & (1<< ii))
+						{
+							feedrate_001mm_s    = gcode_engine_feedrate(&cmd,ii,0);
+							accelerate_001mm_s2 = gcode_engine_accelerate(&cmd,ii,0);
+							jerk_001mm_s3       = gcode_engine_jerk(&cmd,ii,0);
 
-						pos_001mm   	    = gcode_engine_pos(&cmd,ii);
+							pos_001mm   	    = gcode_engine_pos(&cmd,ii);
 
-						motion_engine_run(ii,pos_001mm,feedrate_001mm_s,accelerate_001mm_s2,jerk_001mm_s3);
+							motion_engine_run(mj,ii,pos_001mm,feedrate_001mm_s,accelerate_001mm_s2,jerk_001mm_s3);
+						}
 					}
 
+					motion_engine_jobs_start();
 				}
+				else
+				{
+					//todo - process erro
+				}
+
 			}break;
 
 			case GCODE_F_G20: // units inch
@@ -204,18 +214,25 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 
 			case GCODE_F_G28: // home
 			{
-			    any = cmd.tokens_present_mask & ( (1<<GCODE_I_X) | (1<<GCODE_I_Y) | (1<<GCODE_I_Z));
-
-				for(ii = GCODE_I_X; ii <= GCODE_I_Z;ii++)
+				if(motion_engine_job_init(&mj) == 0)
 				{
-					if( (cmd.tokens_present_mask & (1<< ii)) || (any ==0))
-					{
-						feedrate_001mm_s     = gcode_engine_feedrate(&cmd,ii,0);
-						accelerate_001mm_s2  = gcode_engine_accelerate(&cmd,ii,0);
-						jerk_001mm_s3        = gcode_engine_jerk(&cmd,ii,0);
+					any = cmd.tokens_present_mask & ( (1<<GCODE_I_X) | (1<<GCODE_I_Y) | (1<<GCODE_I_Z));
 
-						motion_engine_run_home(ii,feedrate_001mm_s,accelerate_001mm_s2,jerk_001mm_s3);
+					for(ii = GCODE_I_X; ii <= GCODE_I_Z;ii++)
+					{
+						if( (cmd.tokens_present_mask & (1<< ii)) || (any ==0))
+						{
+							feedrate_001mm_s     = gcode_engine_feedrate(&cmd,ii,0);
+							accelerate_001mm_s2  = gcode_engine_accelerate(&cmd,ii,0);
+							jerk_001mm_s3        = gcode_engine_jerk(&cmd,ii,0);
+
+							motion_engine_run_home(mj,ii,feedrate_001mm_s,accelerate_001mm_s2,jerk_001mm_s3);
+						}
 					}
+				}
+				else
+				{
+					//todo - process erro
 				}
 			}break;
 

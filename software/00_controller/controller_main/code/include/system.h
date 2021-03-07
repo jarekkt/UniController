@@ -8,14 +8,13 @@
 #include <stdarg.h>
 #include <math.h>
 
-#ifndef SIMULATION
 #include "stm32h7xx.h"
 #include "stm32h7xx_hal.h"
-#endif
-
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "task.h"
+#include "portmacro.h"
+
 
 #include "system/debug/debug.h"
 
@@ -30,8 +29,5 @@
 
 #define ATTRIBUTE_IN_RAM __attribute__  ((section (".fast")))
 
-
-void bootloop_init();
-void bootloop_main();
 
 #endif

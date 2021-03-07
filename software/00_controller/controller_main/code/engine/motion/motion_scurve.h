@@ -7,9 +7,10 @@
 
 typedef struct
 {
-	float T1;  		   // Speed    increase
+	float T1;  		   // Speed  increase
 	float T2;  		   // Constant speed
-	//float T3;  	   // Speed    decrease - Note: equal to T1
+	//float T3;  	   // Speed  decrease - Note: equal to T1
+
 	float T11,T12,T13; // Concave, linear and convex period
 
 	float T11_s;	   // Distance for T11 phase

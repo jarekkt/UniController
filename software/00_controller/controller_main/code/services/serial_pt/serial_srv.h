@@ -21,10 +21,13 @@ void    srv_serial_init(void);
 void    srv_serial_once(void);
 
 
-typedef  void ( * serial_rec_char)(uint32_t port_id,uint8_t,portBASE_TYPE *);
+typedef  void (*serial_rec_charr)(void);
 
 
-void    srv_serial_rcv_callback(uint32_t port_id,serial_rec_char);
+typedef  void ( * serial_rec_char)(uint32_t port_id,uint8_t cc,portBASE_TYPE * pb);
+
+
+void    srv_serial_rcv_callback(uint32_t port_id,serial_rec_char fn);
 void    srv_serial_send(uint32_t port_id,const char * buffer,int length);
 void    srv_serial_puts(uint32_t port_id,const char * buffer,int length);
 void    srv_serial_baudrate(uint32_t port_id,uint32_t baudrate);

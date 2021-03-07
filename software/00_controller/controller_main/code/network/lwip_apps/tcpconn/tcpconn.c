@@ -13,6 +13,8 @@ typedef struct
 	uint32_t		 buf_tail;
 	uint32_t		 buf_head;
 
+	uint32_t 		 err_cnt;
+
 }tcpconn_data_t;
 
 
@@ -87,13 +89,26 @@ void tcpconn_process_outgoing(struct netconn * nc)
 		{
 			err = netconn_write(nc, &tctx.buf[tctx.buf_tail], head_flash - tctx.buf_tail, NETCONN_COPY);
 			tctx.buf_tail = head_flash;
+
+			if(err !=0)
+			{
+				tctx.err_cnt++;
+			}
 		}
 		else
 		{
 			err = netconn_write(nc, &tctx.buf[tctx.buf_tail], DIM(tctx.buf) - tctx.buf_tail, NETCONN_COPY);
 			tctx.buf_tail = 0;
+			if(err !=0)
+			{
+				tctx.err_cnt++;
+			}
 			err = netconn_write(nc, &tctx.buf[0], head_flash, NETCONN_COPY);
 			tctx.buf_tail = head_flash;
+			{
+				tctx.err_cnt++;
+			}
+
 		}
 	}
 }
