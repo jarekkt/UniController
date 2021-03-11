@@ -46,13 +46,18 @@ void motion_engine_init(void)
 	srv_nov_register(&mctx_nv,sizeof(mctx_nv),motion_engine_init_default);
 }
 
-void motion_engine_reconfig(void)
+void motion_engine_start_timer(void)
 {
 	// Pulse length calculation - step frequency to 0.1us step pulse units
 	srv_timer_pulse_period( (10*1000000 / mctx_nv.step_freq)/2);
 
 	// Step calculations generation
 	srv_timer_callback_step(mctx_nv.step_freq,motion_engine_tmr_step);
+}
+
+void motion_engine_stop_timer(void)
+{
+	srv_timer_callback_step_disable();
 }
 
 void motion_engine_once(void)
@@ -158,7 +163,7 @@ int32_t motion_engine_run_home
 		return -1;
 	}
 
-	mctx.home_axis		 |= (1<<axis_idx);
+	mj->args.home_axis	|= (1<<axis_idx);
 
 
 	// Calculate max possible distance, add 20% to travel range
@@ -166,13 +171,13 @@ int32_t motion_engine_run_home
 
 	if(speed_001mm_s < 0)
 	{
-		dist 				= -dist;
-		speed_001mm_s		= -speed_001mm_s;
-		mctx.home_axis_dir &= ~(1<<axis_idx);
+		dist 					= -dist;
+		speed_001mm_s			= -speed_001mm_s;
+		mj->args.home_axis_dir &= ~(1<<axis_idx);
 	}
 	else
 	{
-		mctx.home_axis_dir |= (1<<axis_idx);
+		mj->args.home_axis_dir |= (1<<axis_idx);
 	}
 
 	return motion_engine_run(mj,axis_idx,dist,speed_001mm_s,accel_001mm_s2,jerk_001mm_s3);
@@ -292,7 +297,24 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,int32_t pos_001mm
 
 static void motion_task_finish_job(uint32_t idx)
 {
-	//Currently nothing to do
+	 if(mctx.hit_active != 0)
+	 {
+		 // End position sensor hit
+		 if(mj_global[idx].args.home_axis != 0)
+		 {
+			 // It was homing move, make sure we hit proper sensor
+			 // TODO
+		 }
+		 else
+		 {
+			 // Unexpected end position sensor hit
+		 }
+	 }
+
+	 if(mctx.stop_active != 0)
+	 {
+		 // This was stop/abort request
+	 }
 }
 
 
@@ -304,9 +326,16 @@ static void motion_task_start_job(uint32_t idx)
 	for(ii =0; ii < AXIS_CNT;ii++)
 	{
 		// Process direction setup and changes
-		//motion_engine_dir(ii,)
+		if(mj_global[idx].mb_axis_head[ii] != NULL)
+		{
+			motion_engine_dir(ii,mj_global[idx].mb_axis_head[ii]->dir);
+		}
 	}
 
+	mctx.job = &mj_global[idx];
+
+	// TODO - make it lighter
+	motion_engine_start_timer();
 }
 
 
@@ -323,44 +352,31 @@ static void motion_task(void * params)
 		// Check for control requests
 		if(mctx.req_stop != 0)
 		{
-			// TODO
-
-			mctx.req_stop = 0;
+			// TODO - fix it as now it simply aborts
+			mctx.req_stop    = 0;
+			mctx.stop_active = 1;
 		}
 
-		// First process finished jobs
-		while( mctx.mj_g_tail != mctx.mj_g_run)
+		// Check if oldest job is finished
+		if( mctx.mj_g_tail != mctx.mj_g_run_head)
 		{
 			new_mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
-			if(new_mj_g_tail != mctx.mj_g_run)
+
+			// Check if  task is still running
+			if( ( mj_global[new_mj_g_tail].task_flags & MF_FLAG_DONE)!= 0)
 			{
-				// Finished for sure
 				motion_task_finish_job(new_mj_g_tail);
 				mctx.mj_g_tail = new_mj_g_tail;
 			}
-			else
-			{
-				// Check if last task is still running
-				if( ( mj_global[new_mj_g_tail].task_flags & MF_FLAG_DONE)!= 0)
-				{
-					motion_task_finish_job(new_mj_g_tail);
-					mctx.mj_g_tail = new_mj_g_tail;
-				}
-			}
 		}
 
-		//Run new jobs if needed
-		while(mctx.mj_g_run != mctx.mj_g_run_head)
+		//Check if oldest job needs start
+		if(mctx.mj_g_tail != mctx.mj_g_run_head)
 		{
-			if( (mj_global[mctx.mj_g_run].task_flags & MF_FLAG_RUNNING )== 0)
+			if( (mj_global[mctx.mj_g_tail].task_flags & MF_FLAG_RUNNING )== 0)
 			{
-				mj_global[mctx.mj_g_run].task_flags |= MF_FLAG_RUNNING;
-				motion_task_start_job(mctx.mj_g_run);
-				break;
-			}
-			else if ( (mj_global[mctx.mj_g_run].task_flags & MF_FLAG_DONE )!= 0)
-			{
-				mctx.mj_g_run = (mctx.mj_g_run + 1)% MF_JOB_CNT;
+				mj_global[mctx.mj_g_tail].task_flags |= MF_FLAG_RUNNING;
+				motion_task_start_job(mctx.mj_g_tail);
 			}
 		}
 	}
@@ -373,24 +389,31 @@ void motion_engine_tmr_step(void)
 {
 	int32_t active;
 
-	if(mctx.job != NULL)
+	active = 0;
+
+	if(motion_engine_step_axis(0,&mctx.job->mb_axis_head[0],&mctx.curr_pulse_pos[0],&mctx.curr_dir[0],&active) != 0)
 	{
-		active = 0;
-
-		if(motion_engine_step_axis(	&mctx.job->mb_axis_head[0],&mctx.curr_pulse_pos[0],&active) != 0)
-		{
-			TMR_TIRGGER_X();
-		}
-
-
-
-
-		if( (active == 0) || (mctx.hit_active != 0))
-		{
-			 mctx.job->tasks_flags |= MF_FLAG_DONE;
-			 mctx.job = NULL;
-		}
+		TMR_TIRGGER_X();
 	}
+
+	if(motion_engine_step_axis(1,&mctx.job->mb_axis_head[1],&mctx.curr_pulse_pos[1],&mctx.curr_dir[1],&active) != 0)
+	{
+		TMR_TIRGGER_Y();
+	}
+
+	if(motion_engine_step_axis(2,&mctx.job->mb_axis_head[2],&mctx.curr_pulse_pos[2],&mctx.curr_dir[2],&active) != 0)
+	{
+		TMR_TIRGGER_Z();
+	}
+
+	if( (active == 0) || (mctx.hit_active != 0) || (mctx.stop_active != 0) )
+	{
+		 mctx.job->task_flags |= MF_FLAG_DONE;
+
+		 motion_engine_stop_timer();
+		 xSemaphoreGive(mctx.motion_kick);
+	}
+
 }
 
 

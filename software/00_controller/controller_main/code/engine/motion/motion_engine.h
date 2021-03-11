@@ -65,8 +65,12 @@ typedef struct _motion_buffer_t
 
 typedef struct
 {
-	uint32_t			motion_type;
-	uint32_t			motion_flags;
+	struct
+	{
+		uint32_t		home_axis;
+		uint32_t		home_axis_dir;
+	}args;
+
 	uint32_t			task_flags;
 
 	int32_t				pos_beg001mm[AXIS_CNT];
@@ -86,9 +90,7 @@ typedef struct
 {
 	xSemaphoreHandle    motion_kick;
 
-	/* Special case - homing variables */
-	uint32_t			home_axis;
-	uint32_t			home_axis_dir;
+
 
 	/* Request commands */
 	uint32_t 			req_stop;
@@ -99,7 +101,6 @@ typedef struct
 
 	/* Buffer management - job management */
 	uint32_t 			mj_g_tail;
-	uint32_t 			mj_g_run;
 	uint32_t 			mj_g_run_head;
 	uint32_t 			mj_g_head;
 
@@ -112,10 +113,11 @@ typedef struct
 	/* Position - future */
 	int32_t	     		plan_pos001mm[AXIS_CNT];
 
-	/* End position sensors */
+	/* Flow control */
 	uint32_t		    hit_active;
 	uint32_t		    hit_mask;
 	uint32_t			endpos_hit_cntr;
+	uint32_t 			stop_active;
 
 	/* Current job */
 	motion_job_t	 * job;
@@ -172,9 +174,11 @@ int32_t	motion_engine_convert
 // motion_engine_pins.c
 void 	 motion_engine_dir(int32_t idx,int32_t dir);
 uint32_t motion_engine_step_axis(
-			motion_buffer_t ** p_mbfr,
-			int32_t * pulse_pos,
-			int32_t * active
+			int32_t					axis_idx,
+			motion_buffer_t 	 ** p_mbfr,
+			int32_t 		      * pulse_pos,
+			int32_t				  * dir,
+			int32_t 		 	  * active
 );
 
 

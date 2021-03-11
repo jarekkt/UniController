@@ -3,11 +3,11 @@
 
 
 
-uint32_t motion_engine_step_axis(motion_buffer_t ** p_mbfr,int32_t * pulse_pos,int32_t * active)
+uint32_t motion_engine_step_axis(int32_t axis_idx,motion_buffer_t ** p_mbfr,int32_t * pulse_pos,int32_t * dir,int32_t * active)
 {
-	uint64_t 		 prev_accu;
-	uint32_t 		 pulse = 0;
-	motion_buffer_t * mbfr
+	uint64_t 		  prev_accu;
+	uint32_t 		  pulse = 0;
+	motion_buffer_t * mbfr = *p_mbfr;
 
 	if(mbfr != NULL)
 	{
@@ -38,8 +38,12 @@ uint32_t motion_engine_step_axis(motion_buffer_t ** p_mbfr,int32_t * pulse_pos,i
 		}
 		else
 		{
-			// No more operation
-			// We just do not update 'active'
+			*p_mbfr = mbfr->next;
+			if(*p_mbfr!= NULL)
+			{
+				*dir = (*p_mbfr)->dir;
+				motion_engine_dir(axis_idx,*dir);
+			}
 		}
 	}
 
