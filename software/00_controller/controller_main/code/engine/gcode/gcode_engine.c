@@ -177,7 +177,7 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 			case GCODE_F_G0:
 			case GCODE_F_G1:  // linear move
 			{
-				if(motion_engine_job_init(&mj) == 0)
+				if(motion_engine_job_init(&mj,rcv_ctx) == 0)
 				{
 					for(ii = GCODE_I_X; ii <= GCODE_I_Z;ii++)
 					{
@@ -197,7 +197,7 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 				}
 				else
 				{
-					//todo - process erro
+					result = -1;
 				}
 
 			}break;
@@ -214,7 +214,7 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 
 			case GCODE_F_G28: // home
 			{
-				if(motion_engine_job_init(&mj) == 0)
+				if(motion_engine_job_init(&mj,rcv_ctx) == 0)
 				{
 					any = cmd.tokens_present_mask & ( (1<<GCODE_I_X) | (1<<GCODE_I_Y) | (1<<GCODE_I_Z));
 
@@ -232,7 +232,7 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 				}
 				else
 				{
-					//todo - process erro
+					result = -1;
 				}
 			}break;
 

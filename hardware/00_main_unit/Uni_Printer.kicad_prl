@@ -50,26 +50,24 @@
       20,
       21,
       22,
-      23,
       24,
+      25,
+      26,
       27,
       28,
-      29,
-      30,
-      31,
       32,
       33,
+      34,
+      35,
       37,
-      38,
-      39,
-      40
+      38
     ],
     "visible_layers": "ffcffff_ffffffff",
     "zone_display_mode": 1
   },
   "meta": {
     "filename": "Uni_Printer.kicad_prl",
-    "version": 2
+    "version": 3
   },
   "project": {
     "files": []

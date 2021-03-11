@@ -1,37 +1,45 @@
 #include "motion_engine.h"
 
-#define  HIT_LIMIT		5
 
 
-static uint32_t motion_engine_step_axis(motion_buffer_t * mbfr,int32_t * pulse_pos,int32_t * active)
+
+uint32_t motion_engine_step_axis(motion_buffer_t ** p_mbfr,int32_t * pulse_pos,int32_t * active)
 {
-	uint64_t prev_accu;
-	uint32_t pulse = 0;
+	uint64_t 		 prev_accu;
+	uint32_t 		 pulse = 0;
+	motion_buffer_t * mbfr
 
-next:
-	if(mbfr->mf[mbfr->phase].pulse_count > 0)
+	if(mbfr != NULL)
 	{
-		prev_accu = mbfr->accu;
-		mbfr->mf[mbfr->phase].accel_fract += mbfr->mf[mbfr->phase].jerk_fract;
-		mbfr->mf[mbfr->phase].speed_fract += mbfr->mf[mbfr->phase].accel_fract;
-		mbfr->accu += mbfr->mf[mbfr->phase].speed_fract;
-
-		if(prev_accu >  mbfr->accu)
+		if(mbfr->mf.tick_delay > 0)
 		{
-			pulse = 1;
-			mbfr->mf[mbfr->phase].pulse_count--;
-
-			*pulse_pos += mbfr->dir;
+			mbfr->mf.tick_delay--;
+			*active = 1;
 		}
-		*active = 1;
-	}
-	else
-	{
-		mbfr->accu = 0;
-		if(mbfr->phase != MF_PHASES_CNT - 1)
+		else if(mbfr->mf.pulse_count > 0)
 		{
-			mbfr->phase++;
-			goto next;
+			prev_accu = mbfr->mf.accu;
+			mbfr->mf.accel_fract += mbfr->mf.jerk_fract;
+			mbfr->mf.speed_fract += mbfr->mf.accel_fract;
+			mbfr->mf.accu += mbfr->mf.speed_fract;
+
+			if(prev_accu >  mbfr->mf.accu)
+			{
+				pulse = 1;
+				mbfr->mf.pulse_count--;
+
+				*pulse_pos += mbfr->dir;
+			}
+
+			if( mbfr->mf.pulse_count > 0)
+			{
+				*active = 1;
+			}
+		}
+		else
+		{
+			// No more operation
+			// We just do not update 'active'
 		}
 	}
 
@@ -85,36 +93,5 @@ void motion_engine_dir(int32_t idx,int32_t dir)
 
 
 
-
-int32_t  motion_engine_tmr_pins(int32_t * pulse_pos,motion_buffer_t * mbx,motion_buffer_t * mby,motion_buffer_t * mbz)
-{
-	int32_t active = 0;
-
-	if(mbx != NULL)
-	{
-		if(motion_engine_step_axis(mbx,pulse_pos++,&active) != 0)
-		{
-			TMR_TIRGGER_X();
-		}
-	}
-
-	if(mby != NULL)
-	{
-		if( motion_engine_step_axis(mby,pulse_pos++,&active)!=0)
-		{
-			TMR_TIRGGER_Y();
-		}
-	}
-
-	if(mbz != NULL)
-	{
-		if(motion_engine_step_axis(mbz,pulse_pos++,&active)!=0)
-		{
-			TMR_TIRGGER_Z();
-		}
-	}
-
-	return active;
-}
 
 

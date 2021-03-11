@@ -14,13 +14,9 @@
 #include "motion_scurve.h"
 
 
-
-
-
 typedef struct
 {
 	uint32_t 			step_freq;
-
 }motion_nv_data_t;
 
 
@@ -70,7 +66,7 @@ void motion_engine_once(void)
 }
 
 
-int32_t motion_engine_job_init(motion_job_t ** mj)
+int32_t motion_engine_job_init(motion_job_t ** mj,const burst_rcv_ctx_t * comm_ctx)
 {
 	int32_t result = -1;
 
@@ -89,6 +85,9 @@ int32_t motion_engine_job_init(motion_job_t ** mj)
 		{
 			(*mj)->pos_beg001mm[ii] = (*mj)->pos_end001mm[ii] = mctx.plan_pos001mm[ii];
 		}
+
+		memcpy( &(*mj)->comm_ctx,comm_ctx,sizeof(*comm_ctx));
+
 		result = 0;
 	}
 
@@ -98,7 +97,16 @@ int32_t motion_engine_job_init(motion_job_t ** mj)
 void motion_engine_jobs_start()
 {
 	// Advance with new jobs
+
 	mctx.mj_g_run_head = mctx.mj_g_head;
+	xSemaphoreGive(mctx.motion_kick);
+
+}
+
+void motion_engine_stop(uint32_t abort)
+{
+	mctx.req_stop = 1 + abort;
+	xSemaphoreGive(mctx.motion_kick);
 }
 
 void motion_engine_jobs_abort()
@@ -134,22 +142,12 @@ void motion_engine_jobs_abort()
 }
 
 
-
-void motion_engine_stop(uint32_t abort)
-{
-
-}
-
-
-
-
-
 int32_t motion_engine_run_home
-(	motion_job_t * mj,
-	uint32_t axis_idx,
-	int32_t speed_001mm_s,
-	int32_t accel_001mm_s2,
-	int32_t jerk_001mm_s3
+(	motion_job_t * 	mj,
+	uint32_t 		axis_idx,
+	int32_t 		speed_001mm_s,
+	int32_t 		accel_001mm_s2,
+	int32_t 		jerk_001mm_s3
 )
 {
 	int32_t dist;
@@ -183,15 +181,19 @@ int32_t motion_engine_run_home
 
 void motion_engine_test(int32_t pos_001mm,motion_calc_t  * calc)
 {
-	motion_buffer_t  mb;
+	motion_buffer_t  mb[7];
 
 	memset(&mb,0,sizeof(mb));
-	motion_engine_convert(0,pos_001mm,0,mctx_nv.step_freq,calc,&ppctx_nv->axis[0],&mb);
+	motion_engine_convert(0,pos_001mm,0,mctx_nv.step_freq,calc,&ppctx_nv->axis[0],mb,7);
 	memset(&mb,0,sizeof(mb));
-	motion_engine_convert(1,pos_001mm,0,mctx_nv.step_freq,calc,&ppctx_nv->axis[1],&mb);
+	motion_engine_convert(1,pos_001mm,0,mctx_nv.step_freq,calc,&ppctx_nv->axis[1],mb,7);
 	memset(&mb,0,sizeof(mb));
-	motion_engine_convert(1,pos_001mm,0,mctx_nv.step_freq,calc,&ppctx_nv->axis[2],&mb);
+	motion_engine_convert(1,pos_001mm,0,mctx_nv.step_freq,calc,&ppctx_nv->axis[2],mb,7);
 }
+
+
+
+
 
 
 int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,int32_t pos_001mm,int32_t speed_001mm_s,int32_t accel_001mm_s2,int32_t jerk_001mm_s3)
@@ -200,7 +202,12 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,int32_t pos_001mm
 	int32_t		   		dist_001mm;
 	int32_t		   		curr_pos001mm;
 	uint32_t       		new_mb_g_head;
-	motion_buffer_t	  * mb;
+	uint32_t       		org_mb_g_head;
+	int32_t				mb_used;
+	int32_t				ii;
+	motion_buffer_t  	mb[7];
+	motion_buffer_t  *	mb_curr;
+
 
 
 	// Calculate relative move
@@ -222,43 +229,58 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,int32_t pos_001mm
 		mj->mb_head = mj->mb_tail = mctx.mb_g_head;
 	}
 
-	new_mb_g_head = (mctx.mb_g_head + 1)% MF_BUFFER_CNT;
-
-	if(new_mb_g_head != mctx.mb_g_tail)
-	{
-		mb = &mb_global[mctx.mb_g_head];
-
-		memset(mb,0,sizeof(*mb));
-
-		mj->mb_head 	= new_mb_g_head;
-		mctx.mb_g_head = new_mb_g_head;
-	}
-	else
-	{
-		return -1;
-	}
 
 	// Calculate 3rd order S curve
 	motion_scurve_calc(&calc,dist_001mm, ppctx_nv->axis[axis_idx].speed_safe_001mm_s,speed_001mm_s,accel_001mm_s2,jerk_001mm_s3);
 
+
 	// Convert calculation for step engine format
-	motion_engine_convert(axis_idx,dist_001mm,pos_001mm,mctx_nv.step_freq,&calc,&ppctx_nv->axis[axis_idx],mb);
+	mb_used = motion_engine_convert(axis_idx,dist_001mm,pos_001mm,mctx_nv.step_freq,&calc,&ppctx_nv->axis[axis_idx],mb,DIM(mb));
 
-	// Attach motion to buffers
-	if(mj->mb_axis_head[axis_idx] == NULL)
+	if(mb_used > 0)
 	{
-		// Empty list
-		mj->mb_axis_head[axis_idx] = mb;
-		mj->mb_axis_tail[axis_idx] = mb;
-	}
-	else
-	{
-		// Attach new motion to the end of link list
-		mj->mb_axis_tail[axis_idx]->next = mb;
-		mj->mb_axis_tail[axis_idx] = mb;
-	}
+		// Inefficient way with copying - fix it later
+		// TODO
 
-	mctx.plan_pos001mm[axis_idx] = pos_001mm;
+		org_mb_g_head = mctx.mb_g_head;
+
+		for( ii = 0; ii < mb_used;ii++)
+		{
+			// Allocate new buffer
+			new_mb_g_head = (mctx.mb_g_head + 1)% MF_BUFFER_CNT;
+
+			if(new_mb_g_head != mctx.mb_g_tail)
+			{
+				mb_curr = &mb_global[mctx.mb_g_head];
+
+				memcpy(mb_curr,&mb[ii],sizeof(*mb_curr));
+
+				mj->mb_head    = new_mb_g_head;
+				mctx.mb_g_head = new_mb_g_head;
+			}
+			else
+			{
+				// Recover allocations
+				mj->mb_head = org_mb_g_head;
+				return -1;
+			}
+
+			// Attach motion to buffers
+			if(mj->mb_axis_head[axis_idx] == NULL)
+			{
+				// Empty list
+				mj->mb_axis_head[axis_idx] = mb_curr;
+				mj->mb_axis_tail[axis_idx] = mb_curr;
+				mb_curr->next = NULL;
+			}
+			else
+			{
+				// Attach new motion to the end of link list
+				mj->mb_axis_tail[axis_idx]->next = mb_curr;
+				mj->mb_axis_tail[axis_idx] 		 = mb_curr;
+			}
+		}
+	}
 
 	return 0;
 }
@@ -267,105 +289,121 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,int32_t pos_001mm
 
 
 
-uint32_t motion_engine_run_status(void)
+
+static void motion_task_finish_job(uint32_t idx)
 {
-	//return mctx.mt_active;
-	return 0;
+	//Currently nothing to do
+}
+
+
+
+static void motion_task_start_job(uint32_t idx)
+{
+	int32_t ii;
+
+	for(ii =0; ii < AXIS_CNT;ii++)
+	{
+		// Process direction setup and changes
+		//motion_engine_dir(ii,)
+	}
+
 }
 
 
 
 static void motion_task(void * params)
 {
+	uint32_t	new_mj_g_tail;
+
+
 	while(1)
 	{
 		xSemaphoreTake(mctx.motion_kick,portMAX_DELAY);
 
-
-
-
-	}
-}
-
-
-
-
-
-
-
-#if 0
-void motion_engine_tmr_masks()
-{
-	int ii;
-
-	mctx.mt_active   &= mctx.abort_mask;
-	mctx.mt_active   |= mctx.start_mask;
-	mctx.abort_mask  = 0;
-	mctx.start_mask  = 0;
-
-	if(mctx.stop_mask != 0)
-	{
-		for(ii = 0; ii < AXIS_CNT;ii++)
+		// Check for control requests
+		if(mctx.req_stop != 0)
 		{
-			if(mctx.mt_active & (mctx.stop_mask & (1<<ii)))
+			// TODO
+
+			mctx.req_stop = 0;
+		}
+
+		// First process finished jobs
+		while( mctx.mj_g_tail != mctx.mj_g_run)
+		{
+			new_mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
+			if(new_mj_g_tail != mctx.mj_g_run)
 			{
-#if 0
-				switch(mctx.mt[ii].phase)
+				// Finished for sure
+				motion_task_finish_job(new_mj_g_tail);
+				mctx.mj_g_tail = new_mj_g_tail;
+			}
+			else
+			{
+				// Check if last task is still running
+				if( ( mj_global[new_mj_g_tail].task_flags & MF_FLAG_DONE)!= 0)
 				{
-					case MF_START_CONCAVE:
-					{
-
-					}break;
-
-					case MF_START_LINEAR:
-					{
-
-					}break;
-
-					case MF_START_CONVEX:
-					{
-
-					}break;
-
-					case MF_CONSTANT_SPEED:
-					{
-
-					}break;
-
-					case MF_STOP_CONVEX:
-					case MF_STOP_LINEAR:
-					case MF_STOP_CONCAVE:
-					case MF_PHASES_CNT:
-					{
-						// Already in stopping phase
-					}break;
+					motion_task_finish_job(new_mj_g_tail);
+					mctx.mj_g_tail = new_mj_g_tail;
 				}
-#endif
 			}
 		}
-		mctx.stop_mask = 0;
+
+		//Run new jobs if needed
+		while(mctx.mj_g_run != mctx.mj_g_run_head)
+		{
+			if( (mj_global[mctx.mj_g_run].task_flags & MF_FLAG_RUNNING )== 0)
+			{
+				mj_global[mctx.mj_g_run].task_flags |= MF_FLAG_RUNNING;
+				motion_task_start_job(mctx.mj_g_run);
+				break;
+			}
+			else if ( (mj_global[mctx.mj_g_run].task_flags & MF_FLAG_DONE )!= 0)
+			{
+				mctx.mj_g_run = (mctx.mj_g_run + 1)% MF_JOB_CNT;
+			}
+		}
 	}
 }
-#endif
+
+
+
 
 void motion_engine_tmr_step(void)
 {
+	int32_t active;
 
+	if(mctx.job != NULL)
+	{
+		active = 0;
+
+		if(motion_engine_step_axis(	&mctx.job->mb_axis_head[0],&mctx.curr_pulse_pos[0],&active) != 0)
+		{
+			TMR_TIRGGER_X();
+		}
+
+
+
+
+		if( (active == 0) || (mctx.hit_active != 0))
+		{
+			 mctx.job->tasks_flags |= MF_FLAG_DONE;
+			 mctx.job = NULL;
+		}
+	}
 }
 
 
 void motion_engine_tmr_endpos(void)
 {
-
-#if 0
 	uint32_t inputs;
-	uint32_t is_hit = 0;
+	uint32_t is_hit   = 0;
+	uint32_t hit_mask = 0;
 	uint32_t ii;
 
-	mctx.encoders[0] = srv_timer_quad_get(0);
-	mctx.encoders[1] = srv_timer_quad_get(1);
 
-	if(mctx.mt_active == 0)
+	// Check if motion engine active at all
+	if(mctx.job == NULL)
 	{
 		mctx.endpos_hit_cntr = 0;
 		return;
@@ -376,13 +414,14 @@ void motion_engine_tmr_endpos(void)
 
 	for(ii =0; ii < 3;ii++)
 	{
-		if(mctx.mt_active & (1<<ii))
+		if(mctx.active_dir[ii] != 0)
 		{
-			if(&mctx.mt[ii].dir == 0)
+			if(mctx.active_dir[ii] > 0)
 			{
 				if( (inputs & ppctx_nv->axis[ii].endpos_max_mask) != 0)
 				{
 					is_hit = 1;
+					hit_mask |= ppctx_nv->axis[ii].endpos_max_mask;
 				}
 			}
 			else
@@ -390,6 +429,7 @@ void motion_engine_tmr_endpos(void)
 				if( (inputs & ppctx_nv->axis[ii].endpos_min_mask) != 0)
 				{
 					is_hit = 1;
+					hit_mask |= ppctx_nv->axis[ii].endpos_min_mask;
 				}
 			}
 		}
@@ -399,6 +439,7 @@ void motion_engine_tmr_endpos(void)
 	if( (inputs & ppctx_nv->estop_mask )!= 0)
 	{
 		is_hit = 1;
+		hit_mask |= ppctx_nv->estop_mask;
 	}
 
 	if(is_hit != 0)
@@ -409,18 +450,17 @@ void motion_engine_tmr_endpos(void)
 		}
 		else
 		{
-			mctx.abort_mask |= mctx.mt_active;
-			mctx.irq_mask 	= 1;
+			mctx.hit_active = 1;
+			mctx.hit_mask   = hit_mask;
 		}
 	}
 	else
 	{
-		if(mctx.endpos_hit_cntr >0)
+		if(mctx.endpos_hit_cntr > 0)
 		{
 			mctx.endpos_hit_cntr--;
 		}
 	}
-#endif
 }
 
 
