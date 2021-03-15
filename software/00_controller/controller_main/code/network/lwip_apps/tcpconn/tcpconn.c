@@ -169,6 +169,10 @@ static void tcpconn_thread(void *arg)
       netconn_close(newconn);
       netconn_delete(newconn);
     }
+    else
+    {
+    	vTaskDelay(50);
+    }
   }
 }
 

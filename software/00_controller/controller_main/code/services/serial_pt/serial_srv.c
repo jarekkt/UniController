@@ -198,7 +198,7 @@ void ATTRIBUTE_IN_RAM USART1_IRQHandler(void)
 }
 
 
-void ATTRIBUTE_IN_RAM UART6_IRQHandler(void)
+void ATTRIBUTE_IN_RAM USART6_IRQHandler(void)
 {
     UARTx_IRQHandler(SRV_SERIAL_UxART6_ID,&serial_pt.u6);
 }

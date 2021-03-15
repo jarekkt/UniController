@@ -1,0 +1,2 @@
+- USB lines reversed
+- configuration resistor on LED 2 - 10k to GND
