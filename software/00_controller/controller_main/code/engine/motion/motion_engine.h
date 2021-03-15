@@ -68,7 +68,7 @@ typedef struct
 	struct
 	{
 		uint32_t		home_axis;
-		uint32_t		home_axis_dir;
+		uint32_t		home_axis_mask;
 	}args;
 
 	uint32_t			task_flags;
@@ -162,8 +162,8 @@ void 	 motion_engine_tmr_endpos(void);
 // motion_engine_calc.c
 int32_t	motion_engine_convert
 (			uint32_t 				axis_idx,
-			int32_t 				dist_001mm,
-			int32_t					pos_001mm,
+			int32_t 				from_pos_001mm,
+			int32_t 				to_pos_001mm,
 			uint32_t 			    step_freq,
 			const motion_calc_t   * calc,
 			const axis_params_t   * axis,
@@ -172,12 +172,13 @@ int32_t	motion_engine_convert
 );
 
 // motion_engine_pins.c
-void 	 motion_engine_dir(int32_t idx,int32_t dir);
+void 	 motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir);
 uint32_t motion_engine_step_axis(
 			int32_t					axis_idx,
 			motion_buffer_t 	 ** p_mbfr,
 			int32_t 		      * pulse_pos,
 			int32_t				  * dir,
+			int32_t				  * active_dir,
 			int32_t 		 	  * active
 );
 

@@ -3,7 +3,7 @@
 
 
 
-uint32_t motion_engine_step_axis(int32_t axis_idx,motion_buffer_t ** p_mbfr,int32_t * pulse_pos,int32_t * dir,int32_t * active)
+uint32_t motion_engine_step_axis(int32_t axis_idx,motion_buffer_t ** p_mbfr,int32_t * pulse_pos,int32_t * dir,int32_t * active_dir,int32_t * active)
 {
 	uint64_t 		  prev_accu;
 	uint32_t 		  pulse = 0;
@@ -42,7 +42,7 @@ uint32_t motion_engine_step_axis(int32_t axis_idx,motion_buffer_t ** p_mbfr,int3
 			if(*p_mbfr!= NULL)
 			{
 				*dir = (*p_mbfr)->dir;
-				motion_engine_dir(axis_idx,*dir);
+				motion_engine_dir(axis_idx,*dir,active_dir);
 			}
 		}
 	}
@@ -52,10 +52,12 @@ uint32_t motion_engine_step_axis(int32_t axis_idx,motion_buffer_t ** p_mbfr,int3
 
 
 
-void motion_engine_dir(int32_t idx,int32_t dir)
+void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 {
-		switch(idx)
-		{
+	active_dir[idx] = dir;
+
+	switch(idx)
+	{
 			case AXIS_X:
 			{
 				if(dir > 0)
