@@ -13,28 +13,41 @@ typedef enum
 	AXIS_X,
 	AXIS_Y,
 	AXIS_Z,
+	AXIS_A,
+	AXIS_U,
+	AXIS_V,
+	AXIS_W,
+	AXIS_B,
 	AXIS_CNT
 }axis_idx_e;
 
 typedef struct
 {
-	int32_t   pulses_step_100mm;
-	int32_t   pulses_enc_100mm;
+	float   speed_mm_s;
+	float   accel_mm_s2;
+	float   jerk_mm_s3;
+}path_params_t;
+
+
+typedef struct
+{
+	uint32_t  pulses_step_m;
+	uint32_t  pulses_enc_m;
 
 	uint32_t  endpos_min_mask;
 	uint32_t  endpos_park_mask;
 	uint32_t  endpos_max_mask;
 
-	int32_t   endpos_min_value;
-	uint32_t  endpos_park_value;
-	int32_t   endpos_max_value;
+	float     endpos_min_value;
+	float     endpos_park_value;
+	float     endpos_max_value;
 
-	int32_t   speed_001mm_s;
-	int32_t   speed_home_001mm_s;
-	uint32_t  speed_safe_001mm_s;
+	float     speed_mm_s;
+	float     speed_home_mm_s;
+	float     speed_safe_mm_s;
 
-	int32_t   accel_001mm_s2;
-	int32_t   jerk_001mm_s3;
+	float     accel_mm_s2;
+	float     jerk_mm_s3;
 
 }axis_params_t;
 
@@ -43,8 +56,9 @@ typedef struct
 typedef struct
 {
 	axis_params_t 		axis[AXIS_CNT];
+	path_params_t		path_initial_m;
 	uint32_t			estop_mask;
-	uint32_t 			dupa;
+	uint32_t			geometry;
 }params_nv_ctx_t;
 
 

@@ -48,7 +48,7 @@ typedef struct
 {
 	int32_t     		pulse_count;
 	int32_t     		enc_count;
-	int32_t				pos_001mm;
+	float				pos_mm;
 }motion_pos_t;
 
 
@@ -73,8 +73,8 @@ typedef struct
 
 	uint32_t			task_flags;
 
-	int32_t				pos_beg001mm[AXIS_CNT];
-	int32_t				pos_end001mm[AXIS_CNT];
+	float				pos_beg_mm[AXIS_CNT];
+	float				pos_end_mm[AXIS_CNT];
 
 	uint32_t 			mb_tail;
 	uint32_t 			mb_head;
@@ -111,7 +111,7 @@ typedef struct
 
 
 	/* Position - future */
-	int32_t	     		plan_pos001mm[AXIS_CNT];
+	float	     		plan_pos_mm[AXIS_CNT];
 
 	/* Flow control */
 	uint32_t		    hit_active;
@@ -137,18 +137,18 @@ void	motion_engine_jobs_abort();
 int32_t motion_engine_run
 (			motion_job_t * mj,
 			uint32_t axis_idx,
-			int32_t pos_001mm,
-			int32_t speed_001mm_s,
-			int32_t accel_001mm_s2,
-			int32_t jerk_001mm_s3
+			float pos_mm,
+			float speed_mm_s,
+			float accel_mm_s2,
+			float jerk_mm_s3
 );
 
 int32_t  motion_engine_run_home
 (			motion_job_t * mj,
 			uint32_t axis_idx,
-			int32_t speed_001mm_s,
-			int32_t accel_001mm_s2,
-			int32_t jerk_001mm_s3
+			float speed_mm_s,
+			float accel_mm_s2,
+			float jerk_mm_s3
 );
 
 void 	 motion_engine_stop(uint32_t abort);
@@ -162,8 +162,8 @@ void 	 motion_engine_tmr_endpos(void);
 // motion_engine_calc.c
 int32_t	motion_engine_convert
 (			uint32_t 				axis_idx,
-			int32_t 				from_pos_001mm,
-			int32_t 				to_pos_001mm,
+			float 	    			from_pos_mm,
+			float   				to_pos_mm,
 			uint32_t 			    step_freq,
 			const motion_calc_t   * calc,
 			const axis_params_t   * axis,

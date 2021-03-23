@@ -23,6 +23,7 @@ typedef struct
 {
 	char 		fn_letter;
 	uint32_t 	fn_number;
+	uint32_t 	fn_sub_number;
 	gcode_fn_e  fn_id;
 
 	gcode_table_token_t tokens[GCODE_I_CNT];
@@ -38,22 +39,32 @@ typedef struct
 gcode_parse_table_t  parse_table[] =
 {
 		{
-			'G',0, GCODE_F_G0,
+			'G',0,0, GCODE_F_G0,
 			{
 				{ 'X' , GCODE_I_X, GCODE_V_FLOAT} ,
 				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
 				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
+				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
+				{ 'U' , GCODE_I_U, GCODE_V_FLOAT} ,
+				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
+				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
+				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
 				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
 			}
 		},
 		{
-			'G',1, GCODE_F_G1,
+			'G',1,0, GCODE_F_G1,
 			{
 				{ 'X' , GCODE_I_X, GCODE_V_FLOAT} ,
 				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
 				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
+				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
+				{ 'U' , GCODE_I_U, GCODE_V_FLOAT} ,
+				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
+				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
+				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
 				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
@@ -61,23 +72,43 @@ gcode_parse_table_t  parse_table[] =
 			}
 		},
 		{
-			'G',20, GCODE_F_G20,
+			'G',20, 0,GCODE_F_G20,
 		},
 		{
-			'G',21, GCODE_F_G21,
+			'G',21, 0,GCODE_F_G21,
 		},
 		{
-			'G',28, GCODE_F_G28,
+			'G',28, 0,GCODE_F_G28,
 			{
-				{ 'X' , GCODE_I_X, GCODE_V_NONE} ,
-				{ 'Y' , GCODE_I_Y, GCODE_V_NONE} ,
-				{ 'Z' , GCODE_I_Z, GCODE_V_NONE} ,
+				{ 'X' , GCODE_I_X, GCODE_V_FLOAT} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
+				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
+				{ 'U' , GCODE_I_U, GCODE_V_FLOAT} ,
+				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
+				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
+				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
 				{ 'F' , GCODE_I_F, GCODE_V_NONE} ,
 				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
 			}
 		},
-
+		{
+			'M',115, 0,GCODE_F_M115,
+		},
+		{
+			'M',204, 0,GCODE_F_M201,
+		 	 {
+				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
+		 	 }
+		}
+		,
+		{
+			'M',204, 3,GCODE_F_M201_3,
+		 	 {
+				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
+		 	 }
+		}
 };
 
 gcode_pasres_ctx_t gctx;
@@ -96,12 +127,20 @@ int32_t  gcode_parse_fn(gcode_command_t * cmd,const char * chunk)
 {
 	int    ii;
 	long   num;
+	long   subnum = 0;
+
 	char * endptr = NULL;
 
 	num  = strtol(&chunk[1], &endptr, 10);
+
+	if(*endptr == '.')
+	{
+		subnum  = strtol(endptr+1, &endptr, 10);
+	}
+
 	if (*endptr != '\0')
 	{
-	  sprintf(gctx.error_message,"Wrong/missing number in %s",chunk);
+	  sprintf(gctx.error_message,"Wrong/missing number/sub number in %s",chunk);
 	  return -1;
 	}
 
@@ -111,7 +150,7 @@ int32_t  gcode_parse_fn(gcode_command_t * cmd,const char * chunk)
 		{
 			if(chunk[1]!= '\x0')
 			{
-				if(num == parse_table[ii].fn_number)
+				if( (num == parse_table[ii].fn_number) && (subnum == parse_table[ii].fn_sub_number) )
 				{
 					cmd->fn = parse_table[ii].fn_id;
 					gctx.parse_fn_idx = ii;

@@ -14,36 +14,23 @@
 #include "motion_scurve.h"
 
 
-static int32_t  motion_engine_pos001mm_to_pulse(int32_t pos_001mm,int32_t axis)
+
+int32_t  motion_engine_units_to_pulse(float units_mm,int32_t axis)
 {
-	int64_t result;
+	double  result;
 
-
-	result =  ((int64_t)pos_001mm) * ((int64_t)ppctx_nv->axis[axis].pulses_step_100mm);
-	result = result / (100*1000);
-
-	return (int32_t)result;
-}
-
-static int32_t  motion_engine_posmm_to_pulse(float posmm,int32_t axis)
-{
-	int64_t result;
-
-
-	result =  ((int64_t)(posmm*1000)) * ((int64_t)ppctx_nv->axis[axis].pulses_step_100mm);
-	result = result / (100*1000);
+	result =  (units_mm * ((double)ppctx_nv->axis[axis].pulses_step_m)) / 1000;
 
 	return (int32_t)result;
 }
 
 
 
-static int32_t  motion_engine_pos001mm_to_enc(int32_t pos_001mm,int32_t axis)
+int32_t  motion_engine_units_to_enc(float units_mm,int32_t axis)
 {
-	int64_t result;
+	double  result;
 
-	result =  ((int64_t)pos_001mm) * ((int64_t)ppctx_nv->axis[axis].pulses_enc_100mm);
-	result =   result / (100*1000);
+	result =  (units_mm * ((double)ppctx_nv->axis[axis].pulses_enc_m)) / 1000;
 
 	return (int32_t)result;
 }
@@ -51,13 +38,9 @@ static int32_t  motion_engine_pos001mm_to_enc(int32_t pos_001mm,int32_t axis)
 
 static int64_t  motion_engine_speed_to_fract(float speed_mm_s,int32_t axis,uint32_t step_freq)
 {
-	int32_t		speed_001mm_s;
 	int64_t	    result;
 
-	speed_001mm_s	= (int32_t)(1000*speed_mm_s);
-
-
-	result 			= ((int64_t)motion_engine_pos001mm_to_pulse(speed_001mm_s,axis)) << 32;
+	result 			= ((int64_t)motion_engine_units_to_pulse(speed_mm_s,axis)) << 32;
 	result 			= result / ((int64_t)step_freq);
 
 	return result << 32;
@@ -67,13 +50,10 @@ static int64_t  motion_engine_speed_to_fract(float speed_mm_s,int32_t axis,uint3
 
 static int64_t  motion_engine_accel_to_fract(float accel_mm_s2,int32_t axis,uint32_t step_freq)
 {
-	int32_t		accel_001mm_s2;
+
 	int64_t	    result;
 
-	accel_001mm_s2	= (int32_t)(1000*accel_mm_s2);
-
-
-	result 			= ((int64_t)motion_engine_pos001mm_to_pulse(accel_001mm_s2,axis)) << 32;
+	result 			= ((int64_t)motion_engine_units_to_pulse(accel_mm_s2,axis)) << 32;
 	result 			= result / ((int64_t)step_freq);
 	result 			= result << 32;
 	result 			= result / ((int64_t)step_freq);
@@ -85,13 +65,9 @@ static int64_t  motion_engine_accel_to_fract(float accel_mm_s2,int32_t axis,uint
 
 static int64_t  motion_engine_jerk_to_fract(float jerk_mm_s3,int32_t axis,uint32_t step_freq)
 {
-	int32_t		jerk_001mm_s3;
 	int64_t	    result;
 
-	jerk_001mm_s3	= (int32_t)(1000*jerk_mm_s3);
-
-
-	result 			= ((int64_t)motion_engine_pos001mm_to_pulse(jerk_001mm_s3,axis)) << 32;
+	result 			= ((int64_t)motion_engine_units_to_pulse(jerk_mm_s3,axis)) << 32;
 	result 			= result / ((int64_t)step_freq);
 	result 			= result << 32;
 	result 			= result / ((int64_t)step_freq);
@@ -107,8 +83,8 @@ static int64_t  motion_engine_jerk_to_fract(float jerk_mm_s3,int32_t axis,uint32
 
 int32_t motion_engine_convert(
 		uint32_t 				axis_idx,
-		int32_t 				from_pos_001mm,
-		int32_t 				to_pos_001mm,
+		float 					from_pos_mm,
+		float 					to_pos_mm,
 		uint32_t 				step_freq,
 		const motion_calc_t   * calc,
 		const axis_params_t   * axis,
@@ -146,22 +122,20 @@ int32_t motion_engine_convert(
 
 	jerk_fract				= motion_engine_jerk_to_fract(calc->jerk,axis_idx,step_freq);
 
-	pulse_concave[0] 		= motion_engine_posmm_to_pulse(calc->T11_s,axis_idx);
+	pulse_concave[0] 		= motion_engine_units_to_pulse(calc->T11_s,axis_idx);
 	pulse_concave[1]		= pulse_concave[0];
 
-	pulse_line[0] 			= motion_engine_posmm_to_pulse(calc->T12_s,axis_idx);
+	pulse_line[0] 			= motion_engine_units_to_pulse(calc->T12_s,axis_idx);
 	pulse_line[1]			= pulse_line[0];
 
-	pulse_convex[0] 		= motion_engine_posmm_to_pulse(calc->T13_s,axis_idx);
+	pulse_convex[0] 		= motion_engine_units_to_pulse(calc->T13_s,axis_idx);
 	pulse_convex[1]			= pulse_convex[0];
 
-	pulse_const				= motion_engine_posmm_to_pulse(calc->T2_s,axis_idx);
+	pulse_const				= motion_engine_units_to_pulse(calc->T2_s,axis_idx);
 
-
-
-	pulse_from 				= motion_engine_posmm_to_pulse( ((float)from_pos_001mm) / 1000,axis_idx);
-	pulse_to 				= motion_engine_posmm_to_pulse( ((float)to_pos_001mm) / 1000,axis_idx);
-	pulse_budget   			= labs(pulse_to - pulse_from);
+	pulse_from 				= motion_engine_units_to_pulse(from_pos_mm,axis_idx);
+	pulse_to 				= motion_engine_units_to_pulse(to_pos_mm,axis_idx);
+	pulse_budget   			= (int32_t)fabsf(pulse_to - pulse_from);
 
 
 	pulse_budget 		    -=  (pulse_concave[0] + pulse_line[0] + pulse_convex[0]);

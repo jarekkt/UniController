@@ -88,7 +88,7 @@ int32_t motion_engine_job_init(motion_job_t ** mj,const burst_rcv_ctx_t * comm_c
 		// Initialize positions
 		for(ii =0; ii< AXIS_CNT;ii++)
 		{
-			(*mj)->pos_beg001mm[ii] = (*mj)->pos_end001mm[ii] = mctx.plan_pos001mm[ii];
+			(*mj)->pos_beg_mm[ii] = (*mj)->pos_end_mm[ii] = mctx.plan_pos_mm[ii];
 		}
 
 		memcpy( &(*mj)->comm_ctx,comm_ctx,sizeof(*comm_ctx));
@@ -126,7 +126,7 @@ void motion_engine_jobs_abort()
 	{
 		for(ii =0; ii< AXIS_CNT;ii++)
 		{
-			mctx.plan_pos001mm[ii]  =  mj_global[mj_g_run_head].pos_beg001mm[ii];
+			mctx.plan_pos_mm[ii]  =  mj_global[mj_g_run_head].pos_beg_mm[ii];
 		}
 	}
 
@@ -150,12 +150,12 @@ void motion_engine_jobs_abort()
 int32_t motion_engine_run_home
 (	motion_job_t * 	mj,
 	uint32_t 		axis_idx,
-	int32_t 		speed_001mm_s,
-	int32_t 		accel_001mm_s2,
-	int32_t 		jerk_001mm_s3
+	float 			speed_mm_s,
+	float 			accel_mm_s2,
+	float	 		jerk_mm_s3
 )
 {
-	int32_t dist;
+	float dist;
 
 	if(axis_idx >AXIS_CNT)
 	{
@@ -167,12 +167,12 @@ int32_t motion_engine_run_home
 
 
 	// Calculate max possible distance, add 20% to travel range
-	dist = 12 *(ppctx_nv->axis[axis_idx].endpos_max_value - ppctx_nv->axis[axis_idx].endpos_min_value) / 10;
+	dist = 1.2 *(ppctx_nv->axis[axis_idx].endpos_max_value - ppctx_nv->axis[axis_idx].endpos_min_value);
 
-	if(speed_001mm_s < 0)
+	if(speed_mm_s < 0)
 	{
 		dist 					= -dist;
-		speed_001mm_s			= -speed_001mm_s;
+		speed_mm_s				= -speed_mm_s;
 		mj->args.home_axis_mask |= ppctx_nv->axis[axis_idx].endpos_min_mask;
 	}
 	else
@@ -180,7 +180,7 @@ int32_t motion_engine_run_home
 		mj->args.home_axis_mask |= ppctx_nv->axis[axis_idx].endpos_max_mask;
 	}
 
-	return motion_engine_run(mj,axis_idx,dist,speed_001mm_s,accel_001mm_s2,jerk_001mm_s3);
+	return motion_engine_run(mj,axis_idx,dist,speed_mm_s,accel_mm_s2,jerk_mm_s3);
 }
 
 
@@ -201,11 +201,11 @@ void motion_engine_test(int32_t pos_001mm,motion_calc_t  * calc)
 
 
 
-int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,int32_t pos_001mm,int32_t speed_001mm_s,int32_t accel_001mm_s2,int32_t jerk_001mm_s3)
+int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,float speed_mm_s,float accel_mm_s2,float jerk_mm_s3)
 {
 	motion_calc_t  		calc;
-	int32_t		   		dist_001mm;
-	int32_t		   		curr_pos001mm;
+	float		   		dist_mm;
+	float		   		curr_pos_mm;
 	uint32_t       		new_mb_g_head;
 	uint32_t       		org_mb_g_head;
 	int32_t				mb_used;
@@ -216,11 +216,11 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,int32_t pos_001mm
 
 
 	// Calculate relative move
-	curr_pos001mm = mctx.plan_pos001mm[axis_idx];
-	dist_001mm	  = curr_pos001mm - pos_001mm;
+	curr_pos_mm = mctx.plan_pos_mm[axis_idx];
+	dist_mm	 	= curr_pos_mm - pos_mm;
 
 	// Update new target position
-	mctx.plan_pos001mm[axis_idx] = pos_001mm;
+	mctx.plan_pos_mm[axis_idx] = pos_mm;
 
 
 	// Get motion buffer for the move
@@ -236,11 +236,11 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,int32_t pos_001mm
 
 
 	// Calculate 3rd order S curve
-	motion_scurve_calc(&calc,dist_001mm, ppctx_nv->axis[axis_idx].speed_safe_001mm_s,speed_001mm_s,accel_001mm_s2,jerk_001mm_s3);
+	motion_scurve_calc(&calc,dist_mm, ppctx_nv->axis[axis_idx].speed_safe_mm_s,speed_mm_s,accel_mm_s2,jerk_mm_s3);
 
 
 	// Convert calculation for step engine format
-	mb_used = motion_engine_convert(axis_idx,curr_pos001mm,pos_001mm,mctx_nv.step_freq,&calc,&ppctx_nv->axis[axis_idx],mb,DIM(mb));
+	mb_used = motion_engine_convert(axis_idx,curr_pos_mm,pos_mm,mctx_nv.step_freq,&calc,&ppctx_nv->axis[axis_idx],mb,DIM(mb));
 
 	if(mb_used > 0)
 	{
