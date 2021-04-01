@@ -29,6 +29,17 @@ typedef enum
 	MF_PHASES_CNT
 }motion_phases_e;
 
+typedef enum
+{
+	JCMD_OK,
+	JCMD_FAIL,
+	JCMD_MOTION,
+	JCMD_COORDS,
+	JCMD_FWINFO,
+	JCMD_SENSORS,
+	JCMD_OUTPUTS
+}jcmd_e;
+
 typedef struct
 {
 	uint32_t			pulse_count_total;
@@ -65,10 +76,13 @@ typedef struct _motion_buffer_t
 
 typedef struct
 {
+	jcmd_e			jcmd;
+
 	struct
 	{
 		uint32_t		home_axis;
 		uint32_t		home_axis_mask;
+		uint32_t		cmd_args[2];
 	}args;
 
 	uint32_t			task_flags;
@@ -90,8 +104,6 @@ typedef struct
 {
 	xSemaphoreHandle    motion_kick;
 
-
-
 	/* Request commands */
 	uint32_t 			req_stop;
 
@@ -112,6 +124,7 @@ typedef struct
 
 	/* Position - future */
 	float	     		plan_pos_mm[AXIS_CNT];
+	float	     		offset_pos_mm[AXIS_CNT];
 
 	/* Flow control */
 	uint32_t		    hit_active;
@@ -122,6 +135,9 @@ typedef struct
 	/* Current job */
 	motion_job_t	 * job;
 
+	/* Command response buffer */
+	char			    resp_buffer[256];
+
 }motion_ctx_t;
 
 
@@ -130,6 +146,7 @@ void 	motion_engine_init(void);
 void 	motion_engine_once(void);
 
 int32_t motion_engine_job_init(motion_job_t ** mj,const burst_rcv_ctx_t * comm_ctx);
+void    motion_engine_ack(motion_job_t * mj,int32_t result);
 void	motion_engine_jobs_start();
 void	motion_engine_jobs_abort();
 
@@ -160,6 +177,11 @@ void 	 motion_engine_tmr_endpos(void);
 
 
 // motion_engine_calc.c
+float    motion_engine_pulse_to_units(int32_t pulses,int32_t axis);
+int32_t  motion_engine_units_to_pulse(float units_mm,int32_t axis);
+int32_t  motion_engine_units_to_enc(float units_mm,int32_t axis);
+
+
 int32_t	motion_engine_convert
 (			uint32_t 				axis_idx,
 			float 	    			from_pos_mm,

@@ -25,6 +25,17 @@ int32_t  motion_engine_units_to_pulse(float units_mm,int32_t axis)
 }
 
 
+float  motion_engine_pulse_to_units(int32_t pulses,int32_t axis)
+{
+	float  result;
+
+	result =  ((double)pulses*1000) /((double)ppctx_nv->axis[axis].pulses_step_m);
+
+	return result;
+}
+
+
+
 
 int32_t  motion_engine_units_to_enc(float units_mm,int32_t axis)
 {

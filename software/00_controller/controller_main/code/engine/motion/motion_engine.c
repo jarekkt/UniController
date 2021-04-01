@@ -9,6 +9,7 @@
 #include "services.h"
 #include "middleware.h"
 #include "engine.h"
+#include "version.h"
 
 #include "motion_engine.h"
 #include "motion_scurve.h"
@@ -30,7 +31,6 @@ motion_ctx_t 	  mctx;
 motion_nv_data_t  mctx_nv VAR_NV_ATTR;
 
 
-//static void motion_engine_tmr_endpos(void);
 static void motion_task(void * params);
 
 void motion_engine_init_default(void)
@@ -135,8 +135,7 @@ void motion_engine_jobs_abort()
 	{
 		if( mj_global[mj_g_run_head].mb_head != mj_global[mj_g_run_head].mb_tail)
 		{
-			mctx.mb_g_head = mj_global[mj_g_run_head].mb_tail;
-
+			mctx.mb_g_head = mj_global[mj_g_run_head].mb_head;
 			break;
 		}
 		mj_g_run_head = (mj_g_run_head + 1)%MF_JOB_CNT;
@@ -164,7 +163,6 @@ int32_t motion_engine_run_home
 	}
 
 	mj->args.home_axis	|= (1<<axis_idx);
-
 
 	// Calculate max possible distance, add 20% to travel range
 	dist = 1.2 *(ppctx_nv->axis[axis_idx].endpos_max_value - ppctx_nv->axis[axis_idx].endpos_min_value);
@@ -222,7 +220,6 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 	// Update new target position
 	mctx.plan_pos_mm[axis_idx] = pos_mm;
 
-
 	// Get motion buffer for the move
 	if(mj->mb_head != mj->mb_tail)
 	{
@@ -234,10 +231,8 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 		mj->mb_head = mj->mb_tail = mctx.mb_g_head;
 	}
 
-
 	// Calculate 3rd order S curve
 	motion_scurve_calc(&calc,dist_mm, ppctx_nv->axis[axis_idx].speed_safe_mm_s,speed_mm_s,accel_mm_s2,jerk_mm_s3);
-
 
 	// Convert calculation for step engine format
 	mb_used = motion_engine_convert(axis_idx,curr_pos_mm,pos_mm,mctx_nv.step_freq,&calc,&ppctx_nv->axis[axis_idx],mb,DIM(mb));
@@ -287,74 +282,196 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 		}
 	}
 
+
+
 	return 0;
 }
 
 
 
+void  motion_engine_ack(motion_job_t * mj,int32_t result)
+{
+	uint32_t 	length;
+	int32_t	 	idx;
+	const char  axes[]="XYZAUVWB";
+
+	switch(mj->jcmd)
+	{
+		case JCMD_OK:
+		{
+			 length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok");
+		}break;
+
+		case JCMD_MOTION:
+		{
+			 if(result == 0)
+			 {
+				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok");
+			 }
+			 else
+			 {
+				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail");
+			 }
+		}break;
+
+		case JCMD_COORDS:
+		{
+			 length = 0;
+
+			 length += snprintf(&mctx.resp_buffer[length],sizeof(mctx.resp_buffer)-length,"C: ");
+
+			 for(idx = 0; idx < AXIS_CNT;idx++)
+			 {
+				 length += snprintf(&mctx.resp_buffer[length],
+						  	  	    sizeof(mctx.resp_buffer)-length,
+									"%c: %8.3f",
+									axes[idx],
+									motion_engine_pulse_to_units(mctx.curr_pulse_pos[idx],idx) - mctx.offset_pos_mm[idx]);
+			 }
+		}break;
+
+		case JCMD_FWINFO:
+		{
+			result = snprintf(mctx.resp_buffer,
+						 sizeof(mctx.resp_buffer),
+						 "ok PROTOCOL_VERSION: 1.0 "
+						 "FIRMWARE_NAME: UniController %d.%d "
+						 "FIRMWARE_URL: https://github.com/jarekkt/UniController "
+						 "FIRMWARE_GITHASH: %s \r\n",
+						 0,1,
+						 git_hash_short
+			);
+		}break;
+
+		case JCMD_SENSORS:
+		{
+			//TODO
+			length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail");
+		}break;
+
+		case JCMD_OUTPUTS:
+		{
+			//TODO
+			if(result == 0)
+			{
+				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok");
+			}
+			else
+			{
+				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail");
+			}
+		}break;
+
+
+		default:
+		case JCMD_FAIL:
+		{
+			length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail");
+		}break;
+
+	}
+
+	burst_rcv_send_response(&mj->comm_ctx,mctx.resp_buffer,length);
+}
+
 
 static void  motion_task_abort_job(uint32_t idx)
 {
-
+	mctx.mb_g_head = mj_global[idx].mb_head;
+	motion_engine_ack(&mj_global[idx],-1);
 }
 
 static int32_t  motion_task_finish_job(uint32_t idx)
 {
 	int32_t result = -1;
 
-	if(mctx.hit_active != 0)
+	if(mj_global[idx].jcmd == JCMD_MOTION)
 	{
-	   // End position sensor hit
-	   if(mj_global[idx].args.home_axis != 0)
-	   {
-	      // It was homing move, make sure we hit proper sensor
-		  if( (mj_global[idx].args.home_axis_mask & mctx.hit_mask ) == mj_global[idx].args.home_axis_mask)
-		  {
-			  // OK, we got what we wanted
-			  result = 0;
-		  }
-	   }
-	   else
-	   {
-			 // Unexpected end position sensor hit
-	   }
+		if(mctx.hit_active != 0)
+		{
+		   // End position sensor hit
+		   if(mj_global[idx].args.home_axis != 0)
+		   {
+			  // It was homing move, make sure we hit proper sensor
+			  // TODO
+			  if( (mj_global[idx].args.home_axis_mask & mctx.hit_mask ) == mj_global[idx].args.home_axis_mask)
+			  {
+				  // OK, we got what we wanted
+				  result = 0;
+			  }
+		   }
+		   else
+		   {
+			   // Unexpected end position sensor hit
+			   result = -1;
+		   }
 
-	   mctx.hit_active = 0;
-	   mctx.hit_mask   = 0;
-	}
-	else if(mctx.stop_active != 0)
-	{
-		 // This was stop/abort request
+		   mctx.hit_active = 0;
+		   mctx.hit_mask   = 0;
+		}
+		else if(mctx.stop_active != 0)
+		{
+			// This was stop/abort request
+			result = -1;
+		}
+		else
+		{
+			//
+			result = 0;
+		}
+
+		if(mj_global[idx].args.home_axis != 0)
+		{
+			// Only homing moves are acknowledged
+			// Ordinary moves get ack immediately after entering the queue
+			motion_engine_ack(&mj_global[idx],result);
+		}
 	}
 	else
 	{
-		 //
 		result = 0;
+		motion_engine_ack(&mj_global[idx],result);
 	}
+
+
+
+
 
 	return result;
 }
 
 
 
-static void motion_task_start_job(uint32_t idx)
+static uint32_t motion_task_start_job(uint32_t idx)
 {
-	int32_t ii;
+	int32_t 	ii;
+	uint32_t	again = 0;
 
-	for(ii =0; ii < AXIS_CNT;ii++)
+	if(mj_global[idx].jcmd == JCMD_MOTION)
 	{
-		// Process direction setup and changes
-		if(mj_global[idx].mb_axis_head[ii] != NULL)
+		for(ii =0; ii < AXIS_CNT;ii++)
 		{
-			motion_engine_dir(ii,mj_global[idx].mb_axis_head[ii]->dir,mctx.active_dir);
+			// Process direction setup and changes
+			if(mj_global[idx].mb_axis_head[ii] != NULL)
+			{
+				motion_engine_dir(ii,mj_global[idx].mb_axis_head[ii]->dir,mctx.active_dir);
+			}
 		}
+
+		mctx.job = &mj_global[idx];
+
+		// TODO - check end sensors first
+		// TODO - make it lighter
+		motion_engine_start_timer();
+	}
+	else
+	{
+		// non-motion job, mark immediately as done - will be processed in motion_task_finish_job()
+		mj_global[idx].task_flags |= MF_FLAG_DONE;
+		again = 1;
 	}
 
-	mctx.job = &mj_global[idx];
-
-	// TODO - check end sensors first
-	// TODO - make it lighter
-	motion_engine_start_timer();
+	return again;
 }
 
 
@@ -362,51 +479,57 @@ static void motion_task_start_job(uint32_t idx)
 static void motion_task(void * params)
 {
 	uint32_t	new_mj_g_tail;
+	uint32_t	again;
 
 
 	while(1)
 	{
 		xSemaphoreTake(mctx.motion_kick,portMAX_DELAY);
 
-		// Check for control requests
-		if(mctx.req_stop != 0)
+		do
 		{
-			// TODO - fix it as now it simply aborts
-			mctx.req_stop    = 0;
-			mctx.stop_active = 1;
-		}
+			again = 0;
 
-		// Check if oldest job is finished
-		if( mctx.mj_g_tail != mctx.mj_g_run_head)
-		{
-			new_mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
-
-			// Check if  task is still running
-			if( ( mj_global[new_mj_g_tail].task_flags & MF_FLAG_DONE)!= 0)
+			// Check for control requests
+			if(mctx.req_stop != 0)
 			{
-				mctx.mj_g_tail = new_mj_g_tail;
-				if(motion_task_finish_job(new_mj_g_tail) != 0)
+				// TODO - fix it as now it simply aborts
+				mctx.req_stop    = 0;
+				mctx.stop_active = 1;
+			}
+
+			// Check if oldest job is finished
+			if( mctx.mj_g_tail != mctx.mj_g_run_head)
+			{
+				new_mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
+
+				// Check if  task is still running
+				if( ( mj_global[new_mj_g_tail].task_flags & MF_FLAG_DONE)!= 0)
 				{
-					// Error which causes remaining jobs to be aborted
-					while( mctx.mj_g_tail != mctx.mj_g_run_head)
+					mctx.mj_g_tail = new_mj_g_tail;
+					if(motion_task_finish_job(new_mj_g_tail) != 0)
 					{
-						mctx.mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
-						motion_task_abort_job(mctx.mj_g_tail);
+						// Error which causes remaining jobs to be aborted
+						while( mctx.mj_g_tail != mctx.mj_g_run_head)
+						{
+							mctx.mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
+							motion_task_abort_job(mctx.mj_g_tail);
+						}
 					}
+
 				}
-
 			}
-		}
 
-		//Check if oldest job needs start
-		if(mctx.mj_g_tail != mctx.mj_g_run_head)
-		{
-			if( (mj_global[mctx.mj_g_tail].task_flags & MF_FLAG_RUNNING )== 0)
+			//Check if oldest job needs start
+			if(mctx.mj_g_tail != mctx.mj_g_run_head)
 			{
-				mj_global[mctx.mj_g_tail].task_flags |= MF_FLAG_RUNNING;
-				motion_task_start_job(mctx.mj_g_tail);
+				if( (mj_global[mctx.mj_g_tail].task_flags & MF_FLAG_RUNNING )== 0)
+				{
+					mj_global[mctx.mj_g_tail].task_flags |= MF_FLAG_RUNNING;
+					again = motion_task_start_job(mctx.mj_g_tail);
+				}
 			}
-		}
+		}while(again != 0);
 	}
 }
 

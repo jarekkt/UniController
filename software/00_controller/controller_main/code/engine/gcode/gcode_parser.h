@@ -6,13 +6,18 @@ typedef enum
 {
    GCODE_F_G0,
    GCODE_F_G1,
+   GCODE_F_G4,
    GCODE_F_G20,
    GCODE_F_G21,
    GCODE_F_G28,
-   GCODE_F_M101,
+   GCODE_F_G92,
+   GCODE_F_M42,
+   GCODE_F_M105,
+   GCODE_F_M114,
    GCODE_F_M115,
-   GCODE_F_M201,
-   GCODE_F_M201_3,
+   GCODE_F_M204,
+   GCODE_F_M204_3,
+   GCODE_F_M400,
    GCODE_F_CNT
 }gcode_fn_e;
 
@@ -32,6 +37,8 @@ typedef enum
 	GCODE_I_G,
 	GCODE_I_H,
 	GCODE_I_S,
+	GCODE_I_P,
+	GCODE_I_T,
 	GCODE_I_NONE,
 	GCODE_I_CNT
 }gcode_item_e;

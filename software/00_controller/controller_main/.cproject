@@ -75,6 +75,8 @@
                                     									
                                     <listOptionValue builtIn="false" value="STM32"/>
                                     									
+                                    <listOptionValue builtIn="false" value="DATA_IN_D2_SRAM"/>
+                                    									
                                     <listOptionValue builtIn="false" value="USE_FULL_LL_DRIVER"/>
                                     									
                                     <listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>

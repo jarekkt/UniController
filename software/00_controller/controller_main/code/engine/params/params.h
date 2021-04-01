@@ -58,7 +58,7 @@ typedef struct
 	axis_params_t 		axis[AXIS_CNT];
 	path_params_t		path_initial_m;
 	uint32_t			estop_mask;
-	uint32_t			geometry;
+	uint32_t			axis_used_mask;
 }params_nv_ctx_t;
 
 

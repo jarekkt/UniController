@@ -72,6 +72,12 @@ gcode_parse_table_t  parse_table[] =
 			}
 		},
 		{
+			'G',4, 0,GCODE_F_G4,
+		 	 {
+				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
+		 	 }
+		},
+		{
 			'G',20, 0,GCODE_F_G20,
 		},
 		{
@@ -88,27 +94,62 @@ gcode_parse_table_t  parse_table[] =
 				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
 				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
-				{ 'F' , GCODE_I_F, GCODE_V_NONE} ,
+				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
 			}
 		},
 		{
+			'G',92, 0,GCODE_F_G92,
+			{
+				{ 'X' , GCODE_I_X, GCODE_V_FLOAT} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
+				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
+				{ 'U' , GCODE_I_U, GCODE_V_FLOAT} ,
+				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
+				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
+				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
+				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
+				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
+				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
+			}
+		},
+		{
+			'M',42, 0,GCODE_F_M42,
+			 {
+				{ 'S' , GCODE_I_S, GCODE_V_UINT} ,
+				{ 'P' , GCODE_I_P, GCODE_V_UINT} ,
+			 }
+		},
+		{
+			'M',105, 0,GCODE_F_M105,
+			 {
+				{ 'T' , GCODE_I_T, GCODE_V_UINT} ,
+			 }
+		},
+		{
+			'M',114, 0,GCODE_F_M114,
+		},
+		{
 			'M',115, 0,GCODE_F_M115,
 		},
 		{
-			'M',204, 0,GCODE_F_M201,
+			'M',204, 0,GCODE_F_M204,
 		 	 {
 				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
 		 	 }
 		}
 		,
 		{
-			'M',204, 3,GCODE_F_M201_3,
+			'M',204, 3,GCODE_F_M204_3,
 		 	 {
 				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
 		 	 }
-		}
+		},
+		{
+			'M',400, 0,GCODE_F_M400,
+		},
 };
 
 gcode_pasres_ctx_t gctx;

@@ -41,10 +41,10 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "y_pulses_enc_m",		   	&pctx_nv.axis[AXIS_Y].pulses_enc_m 		    ,E_VA_UINT_FREE  },
   { "y_endpos_min_mask",   		&pctx_nv.axis[AXIS_Y].endpos_min_mask       ,E_VA_UINT_FREE  },
   { "y_endpos_park_mask",   	&pctx_nv.axis[AXIS_Y].endpos_park_mask      ,E_VA_UINT_FREE  },
-  { "y_endpos_may_mask",   		&pctx_nv.axis[AXIS_Y].endpos_max_mask       ,E_VA_UINT_FREE  },
+  { "y_endpos_max_mask",   		&pctx_nv.axis[AXIS_Y].endpos_max_mask       ,E_VA_UINT_FREE  },
   { "y_endpos_min_value",   	&pctx_nv.axis[AXIS_Y].endpos_min_value      ,E_VA_FLT_FREE   },
   { "y_endpos_park_value",   	&pctx_nv.axis[AXIS_Y].endpos_park_value     ,E_VA_FLT_FREE   },
-  { "y_endpos_may_value",   	&pctx_nv.axis[AXIS_Y].endpos_max_value      ,E_VA_FLT_FREE   },
+  { "y_endpos_max_value",   	&pctx_nv.axis[AXIS_Y].endpos_max_value      ,E_VA_FLT_FREE   },
   { "y_speed_mm_s", 			&pctx_nv.axis[AXIS_Y].speed_mm_s       		,E_VA_FLT_FREE   },
   { "y_speed_home_mm_s", 		&pctx_nv.axis[AXIS_Y].speed_home_mm_s  		,E_VA_FLT_FREE   },
   { "y_speed_safe_mm_s",   		&pctx_nv.axis[AXIS_Y].speed_safe_mm_s    	,E_VA_FLT_FREE   },
@@ -55,10 +55,10 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "z_pulses_enc_m",   		&pctx_nv.axis[AXIS_Z].pulses_enc_m 		    ,E_VA_UINT_FREE  },
   { "z_endpos_min_mask",   		&pctx_nv.axis[AXIS_Z].endpos_min_mask       ,E_VA_UINT_FREE  },
   { "z_endpos_park_mask",   	&pctx_nv.axis[AXIS_Z].endpos_park_mask      ,E_VA_UINT_FREE  },
-  { "z_endpos_maz_mask",   		&pctx_nv.axis[AXIS_Z].endpos_max_mask       ,E_VA_UINT_FREE  },
+  { "z_endpos_max_mask",   		&pctx_nv.axis[AXIS_Z].endpos_max_mask       ,E_VA_UINT_FREE  },
   { "z_endpos_min_value",   	&pctx_nv.axis[AXIS_Z].endpos_min_value      ,E_VA_FLT_FREE   },
   { "z_endpos_park_value",   	&pctx_nv.axis[AXIS_Z].endpos_park_value     ,E_VA_FLT_FREE   },
-  { "z_endpos_maz_value",   	&pctx_nv.axis[AXIS_Z].endpos_max_value      ,E_VA_FLT_FREE   },
+  { "z_endpos_max_value",   	&pctx_nv.axis[AXIS_Z].endpos_max_value      ,E_VA_FLT_FREE   },
   { "z_speed_mm_s",  			&pctx_nv.axis[AXIS_Z].speed_mm_s       		,E_VA_FLT_FREE   },
   { "z_speed_home_mm_s", 		&pctx_nv.axis[AXIS_Z].speed_home_mm_s  		,E_VA_FLT_FREE   },
   { "z_speed_safe_mm_s",   		&pctx_nv.axis[AXIS_Z].speed_safe_mm_s    	,E_VA_FLT_FREE   },
@@ -69,10 +69,10 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "a_pulses_enc_m",   		&pctx_nv.axis[AXIS_A].pulses_enc_m 		    ,E_VA_UINT_FREE  },
   { "a_endpos_min_mask",   		&pctx_nv.axis[AXIS_A].endpos_min_mask       ,E_VA_UINT_FREE  },
   { "a_endpos_park_mask",   	&pctx_nv.axis[AXIS_A].endpos_park_mask      ,E_VA_UINT_FREE  },
-  { "a_endpos_maa_mask",   		&pctx_nv.axis[AXIS_A].endpos_max_mask       ,E_VA_UINT_FREE  },
+  { "a_endpos_max_mask",   		&pctx_nv.axis[AXIS_A].endpos_max_mask       ,E_VA_UINT_FREE  },
   { "a_endpos_min_value",   	&pctx_nv.axis[AXIS_A].endpos_min_value      ,E_VA_FLT_FREE   },
   { "a_endpos_park_value",   	&pctx_nv.axis[AXIS_A].endpos_park_value     ,E_VA_FLT_FREE   },
-  { "a_endpos_maa_value",   	&pctx_nv.axis[AXIS_A].endpos_max_value      ,E_VA_FLT_FREE   },
+  { "a_endpos_max_value",   	&pctx_nv.axis[AXIS_A].endpos_max_value      ,E_VA_FLT_FREE   },
   { "a_speed_mm_s",  			&pctx_nv.axis[AXIS_A].speed_mm_s       		,E_VA_FLT_FREE   },
   { "a_speed_home_mm_s", 		&pctx_nv.axis[AXIS_A].speed_home_mm_s  		,E_VA_FLT_FREE   },
   { "a_speed_safe_mm_s",   		&pctx_nv.axis[AXIS_A].speed_safe_mm_s    	,E_VA_FLT_FREE   },
@@ -97,10 +97,10 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "v_pulses_enc_m",		   	&pctx_nv.axis[AXIS_V].pulses_enc_m 		    ,E_VA_UINT_FREE  },
   { "v_endpos_min_mask",   		&pctx_nv.axis[AXIS_V].endpos_min_mask       ,E_VA_UINT_FREE  },
   { "v_endpos_park_mask",   	&pctx_nv.axis[AXIS_V].endpos_park_mask      ,E_VA_UINT_FREE  },
-  { "v_endpos_may_mask",   		&pctx_nv.axis[AXIS_V].endpos_max_mask       ,E_VA_UINT_FREE  },
+  { "v_endpos_max_mask",   		&pctx_nv.axis[AXIS_V].endpos_max_mask       ,E_VA_UINT_FREE  },
   { "v_endpos_min_value",   	&pctx_nv.axis[AXIS_V].endpos_min_value      ,E_VA_FLT_FREE   },
   { "v_endpos_park_value",   	&pctx_nv.axis[AXIS_V].endpos_park_value     ,E_VA_FLT_FREE   },
-  { "v_endpos_may_value",   	&pctx_nv.axis[AXIS_V].endpos_max_value      ,E_VA_FLT_FREE   },
+  { "v_endpos_max_value",   	&pctx_nv.axis[AXIS_V].endpos_max_value      ,E_VA_FLT_FREE   },
   { "v_speed_mm_s", 			&pctx_nv.axis[AXIS_V].speed_mm_s       		,E_VA_FLT_FREE   },
   { "v_speed_home_mm_s", 		&pctx_nv.axis[AXIS_V].speed_home_mm_s  		,E_VA_FLT_FREE   },
   { "v_speed_safe_mm_s",   		&pctx_nv.axis[AXIS_V].speed_safe_mm_s    	,E_VA_FLT_FREE   },
@@ -111,10 +111,10 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "w_pulses_enc_m",   		&pctx_nv.axis[AXIS_W].pulses_enc_m 		    ,E_VA_UINT_FREE  },
   { "w_endpos_min_mask",   		&pctx_nv.axis[AXIS_W].endpos_min_mask       ,E_VA_UINT_FREE  },
   { "w_endpos_park_mask",   	&pctx_nv.axis[AXIS_W].endpos_park_mask      ,E_VA_UINT_FREE  },
-  { "w_endpos_maz_mask",   		&pctx_nv.axis[AXIS_W].endpos_max_mask       ,E_VA_UINT_FREE  },
+  { "w_endpos_max_mask",   		&pctx_nv.axis[AXIS_W].endpos_max_mask       ,E_VA_UINT_FREE  },
   { "w_endpos_min_value",   	&pctx_nv.axis[AXIS_W].endpos_min_value      ,E_VA_FLT_FREE   },
   { "w_endpos_park_value",   	&pctx_nv.axis[AXIS_W].endpos_park_value     ,E_VA_FLT_FREE   },
-  { "w_endpos_maz_value",   	&pctx_nv.axis[AXIS_W].endpos_max_value      ,E_VA_FLT_FREE   },
+  { "w_endpos_max_value",   	&pctx_nv.axis[AXIS_W].endpos_max_value      ,E_VA_FLT_FREE   },
   { "w_speed_mm_s",  			&pctx_nv.axis[AXIS_W].speed_mm_s       		,E_VA_FLT_FREE   },
   { "w_speed_home_mm_s", 		&pctx_nv.axis[AXIS_W].speed_home_mm_s  		,E_VA_FLT_FREE   },
   { "w_speed_safe_mm_s",   		&pctx_nv.axis[AXIS_W].speed_safe_mm_s    	,E_VA_FLT_FREE   },
@@ -125,10 +125,10 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "b_pulses_enc_m",   		&pctx_nv.axis[AXIS_B].pulses_enc_m 		    ,E_VA_UINT_FREE  },
   { "b_endpos_min_mask",   		&pctx_nv.axis[AXIS_B].endpos_min_mask       ,E_VA_UINT_FREE  },
   { "b_endpos_park_mask",   	&pctx_nv.axis[AXIS_B].endpos_park_mask      ,E_VA_UINT_FREE  },
-  { "b_endpos_maa_mask",   		&pctx_nv.axis[AXIS_B].endpos_max_mask       ,E_VA_UINT_FREE  },
+  { "b_endpos_max_mask",   		&pctx_nv.axis[AXIS_B].endpos_max_mask       ,E_VA_UINT_FREE  },
   { "b_endpos_min_value",   	&pctx_nv.axis[AXIS_B].endpos_min_value      ,E_VA_FLT_FREE   },
   { "b_endpos_park_value",   	&pctx_nv.axis[AXIS_B].endpos_park_value     ,E_VA_FLT_FREE   },
-  { "b_endpos_maa_value",   	&pctx_nv.axis[AXIS_B].endpos_max_value      ,E_VA_FLT_FREE   },
+  { "b_endpos_max_value",   	&pctx_nv.axis[AXIS_B].endpos_max_value      ,E_VA_FLT_FREE   },
   { "b_speed_mm_s",  			&pctx_nv.axis[AXIS_B].speed_mm_s       		,E_VA_FLT_FREE   },
   { "b_speed_home_mm_s", 		&pctx_nv.axis[AXIS_B].speed_home_mm_s  		,E_VA_FLT_FREE   },
   { "b_speed_safe_mm_s",   		&pctx_nv.axis[AXIS_B].speed_safe_mm_s    	,E_VA_FLT_FREE   },
@@ -139,7 +139,7 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "p_accel_mm_s2",   			&pctx_nv.path_initial_m.accel_mm_s2     	,E_VA_FLT_FREE   },
   { "p_jerk_mm_s3",   			&pctx_nv.path_initial_m.jerk_mm_s3      	,E_VA_FLT_FREE   },
 
-  { "motion_geometry",   		&pctx_nv.geometry  					    	,E_VA_UINT_FREE  },
+  { "motion_axis_mask", 		&pctx_nv.axis_used_mask						,E_VA_UINT_FREE  },
 };
 
 
@@ -177,6 +177,9 @@ void params_init_default(void)
 	pctx_nv.path_initial_m.speed_mm_s    	= 1000;
 	pctx_nv.path_initial_m.accel_mm_s2   	= 1000;
 	pctx_nv.path_initial_m.jerk_mm_s3    	= 10000;
+
+	/* Axis enabled */
+	pctx_nv.axis_used_mask					= (1<< AXIS_X) | (1<<AXIS_Y) | (1<< AXIS_Z);
 
 }
 
