@@ -317,7 +317,24 @@ int32_t gcode_engine_motion(motion_job_t * mj,float * axis, float F,float G,floa
 
 int32_t   gcode_engine_motion_G92(const burst_rcv_ctx_t * rcv_ctx,const gcode_command_t *	cmd)
 {
-	int32_t result = -1;
+	int32_t 		    result = 0;
+	int32_t				ii;
+	float 				axis[GCODE_I_LAST_AXIS+1];
+
+	// Axis tokens
+	for(ii=0;ii<=GCODE_I_LAST_AXIS;ii++)
+	{
+		if(cmd->tokens_present_mask & (1<< ii))
+		{
+			axis[ii] = gcode_engine_units(cmd->tokens[ii].value.val_float);
+		}
+		else
+		{
+			axis[ii] = NAN;
+		}
+	}
+
+	motion_engine_offset_coords(axis,GCODE_I_LAST_AXIS);
 
 
 	return result;
@@ -387,4 +404,19 @@ int32_t   gcode_engine_motion_G0G1(const burst_rcv_ctx_t * rcv_ctx,const gcode_c
 
 	return result;
 }
+
+int32_t   gcode_engine_motion_G4(const burst_rcv_ctx_t * rcv_ctx,uint32_t ms_delay)
+{
+	motion_job_t * mj;
+	int32_t		   result = 0;
+
+	if(motion_engine_job_init(&mj,rcv_ctx) == 0)
+	{
+
+	}
+
+
+	return result;
+}
+
 

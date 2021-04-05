@@ -10,8 +10,6 @@ void lwip_apps_init()
 {
    netbiosns_init();
    netbiosns_set_name("uni_controller");
-
    httpd_init();
-
    tcpconn_init();
 }

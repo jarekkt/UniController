@@ -43,7 +43,8 @@ MEMORY
   DTCMRAM    		(xrw)  : ORIGIN = 0x20000000,   LENGTH = 128K
   ITCMRAM    		(xrw)  : ORIGIN = 0x00000000,   LENGTH = 64K
   RAM_D1    		(xrw)  : ORIGIN = 0x24000000,   LENGTH = 512K
-  RAM_D2    		(xrw)  : ORIGIN = 0x30000000,   LENGTH = 256K
+  RAM_D2    		(xrw)  : ORIGIN = 0x30000000,   LENGTH = 224K
+  RAM_D2_FOR_DMA    (xrw)  : ORIGIN = 0x30038000,   LENGTH = 32K
   RAM_D2_FOR_ETH    (xrw)  : ORIGIN = 0x30040000,   LENGTH = 32K
   RAM_D3    		(xrw)  : ORIGIN = 0x38000000,   LENGTH = 64K
   FLASH_A    		(rx)   : ORIGIN = 0x8000000,    LENGTH = 1024K
@@ -206,6 +207,10 @@ SECTIONS
     *(.RxArraySection) 
   } >RAM_D2_FOR_ETH
 
+  .dma_sec	(NOLOAD):
+  {
+    *(.dma*);
+  }>RAM_D2_FOR_DMA 
 
   /* User_heap_stack section, used to check that there is enough "RAM_D1" Ram  type memory left */
   ._user_heap_stack :

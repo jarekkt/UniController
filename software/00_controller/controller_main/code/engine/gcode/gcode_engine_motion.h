@@ -8,7 +8,7 @@
 
 int32_t   gcode_engine_motion_G0G1(const burst_rcv_ctx_t * rcv_ctx,const gcode_command_t *	cmd);
 int32_t   gcode_engine_motion_G92(const burst_rcv_ctx_t * rcv_ctx,const gcode_command_t *	cmd);
-
+int32_t   gcode_engine_motion_G4(const burst_rcv_ctx_t * rcv_ctx,uint32_t ms_delay);
 
 
 #endif // GCODE_ENGINE_H

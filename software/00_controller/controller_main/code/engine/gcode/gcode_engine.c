@@ -105,7 +105,20 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 
 			case GCODE_F_G4:
 			{
-				//TODO
+				if(  (cmd.tokens_present_mask & (1<< GCODE_I_S) ))
+				{
+					args[0] = 1000 * cmd.tokens[GCODE_I_S].value.val_float;
+					result = gcode_engine_motion_G4(rcv_ctx,args[0]);
+				}
+				else
+				{
+					result = -1;
+				}
+
+				if(result != 0)
+				{
+					gcode_engine_command_execute(JCMD_FAIL,rcv_ctx,0,0);
+				}
 			}break;
 
 			case GCODE_F_G20:
@@ -128,6 +141,10 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 				if(result != 0)
 				{
 					gcode_engine_command_execute(JCMD_FAIL,rcv_ctx,0,0);
+				}
+				else
+				{
+					gcode_engine_command_execute(JCMD_OK,rcv_ctx,0,0);
 				}
 			}break;
 

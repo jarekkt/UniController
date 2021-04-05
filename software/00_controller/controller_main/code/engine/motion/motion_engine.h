@@ -9,8 +9,10 @@
 
 
 
-#define  MF_BUFFER_CNT	4096
-#define  MF_JOB_CNT		 256
+
+#define  MF_JOB_CNT		300
+
+#define  MF_BUFFER_CNT	(MF_JOB_CNT * 2 * 7)
 
 #define  MF_FLAG_RUNNING 0x0001
 #define  MF_FLAG_DONE	 0x0002
@@ -168,6 +170,15 @@ int32_t  motion_engine_run_home
 			float jerk_mm_s3
 );
 
+int32_t motion_engine_delay
+(			motion_job_t * mj,
+			uint32_t	   delay_ms
+);
+
+
+void  	 motion_engine_offset_coords(float * axis,uint32_t axis_cnt);
+
+
 void 	 motion_engine_stop(uint32_t abort);
 
 
@@ -206,8 +217,8 @@ uint32_t motion_engine_step_axis(
 
 
 
-
-
-
+// motion_engine_io.c
+int32_t  motion_engine_io(uint32_t pin,uint32_t value);
+int32_t  motion_engine_io_analog(char * buffer,uint32_t length);
 
 #endif // MOTION_ENGINE_H

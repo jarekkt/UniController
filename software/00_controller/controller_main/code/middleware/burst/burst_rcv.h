@@ -29,9 +29,9 @@ typedef enum
 
 typedef struct
 {
-	ch_idx_e 		channel;
-	rcv_frame_e		frame_format;
-	uint32_t		address;
+	uint32_t 		channel:8;
+	uint32_t		frame_format:8;
+	uint32_t		address:16;
 }burst_rcv_ctx_t;
 
 void burst_rcv_init();

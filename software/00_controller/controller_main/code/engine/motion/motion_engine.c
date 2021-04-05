@@ -214,11 +214,12 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 
 
 	// Calculate relative move
-	curr_pos_mm = mctx.plan_pos_mm[axis_idx];
-	dist_mm	 	= curr_pos_mm - pos_mm;
+	curr_pos_mm = mctx.plan_pos_mm[axis_idx] ;
+	dist_mm	 	= curr_pos_mm - mctx.offset_pos_mm[axis_idx] - pos_mm;
+
 
 	// Update new target position
-	mctx.plan_pos_mm[axis_idx] = pos_mm;
+	mctx.plan_pos_mm[axis_idx] = pos_mm + mctx.offset_pos_mm[axis_idx];
 
 	// Get motion buffer for the move
 	if(mj->mb_head != mj->mb_tail)
@@ -287,6 +288,45 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 	return 0;
 }
 
+int32_t motion_engine_delay
+(			motion_job_t * mj,
+			uint32_t	   delay_ms
+)
+{
+	int 				result = 0;
+	uint32_t   			new_mb_g_head;
+	motion_buffer_t  *	mb_curr;
+
+	mj->mb_head = mj->mb_tail = mctx.mb_g_head;
+	new_mb_g_head = (mctx.mb_g_head + 1)% MF_BUFFER_CNT;
+
+	if(new_mb_g_head != mctx.mb_g_tail)
+	{
+		mb_curr 	   = &mb_global[mctx.mb_g_head];
+		mj->mb_head    = new_mb_g_head;
+		mctx.mb_g_head = new_mb_g_head;
+	}
+	else
+	{
+		return -1;
+	}
+
+	// Empty list
+	mj->mb_axis_head[0] = mb_curr;
+	mj->mb_axis_tail[0] = mb_curr;
+	mb_curr->next 		= NULL;
+
+	mb_curr->dir = 0;
+
+	memset(&mb_curr->mf,0,sizeof(mb_curr->mf));
+
+	// TODO - range check ??
+	mb_curr->mf.tick_delay = (mctx_nv.step_freq * delay_ms) / 1000;
+
+
+	return result;
+}
+
 
 
 void  motion_engine_ack(motion_job_t * mj,int32_t result)
@@ -345,13 +385,13 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 		case JCMD_SENSORS:
 		{
-			//TODO
-			length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail");
+			length = motion_engine_io_analog(mctx.resp_buffer, sizeof(mctx.resp_buffer));
 		}break;
 
 		case JCMD_OUTPUTS:
 		{
-			//TODO
+			result = motion_engine_io(mj->args.cmd_args[0],mj->args.cmd_args[1]);
+
 			if(result == 0)
 			{
 				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok");
@@ -370,6 +410,7 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 		}break;
 
 	}
+
 
 	burst_rcv_send_response(&mj->comm_ctx,mctx.resp_buffer,length);
 }
@@ -440,6 +481,26 @@ static int32_t  motion_task_finish_job(uint32_t idx)
 	return result;
 }
 
+void  motion_engine_offset_coords
+(
+			float 		* axis,
+			uint32_t	  axis_cnt
+)
+{
+	int32_t				ii;
+	float				pos_abs;
+
+	// Axis tokens
+	for(ii=0;ii<=axis_cnt;ii++)
+	{
+		if(axis[ii] != NAN)
+		{
+			pos_abs = motion_engine_pulse_to_units(mctx.curr_pulse_pos[ii],ii);
+
+			mctx.offset_pos_mm[ii] = pos_abs - axis[ii];
+		}
+	}
+}
 
 
 static uint32_t motion_task_start_job(uint32_t idx)

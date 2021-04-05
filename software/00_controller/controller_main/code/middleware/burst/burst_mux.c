@@ -36,6 +36,7 @@ void burst_mux_init()
 
 void burst_mux_once()
 {
+
 }
 
 
@@ -109,7 +110,7 @@ int32_t burst_mux_process_enc_addr(char ** fstart,char * fend,burst_rcv_ctx_t *r
 
 		case CH_USB:
 		{
-			if( (bmux.address == rcv_ctx->address) || (bmux.address + 1 == rcv_ctx->address) )
+			if( bmux.address == rcv_ctx->address)
 			{
 				is_our =0;
 			}
@@ -150,7 +151,7 @@ int32_t burst_mux_process_enc_req(char * fstart,char * fend,burst_rcv_ctx_t *rcv
 	int				  ii;
 
 
-	//  Check agains	R/W request
+	//  Check against	R/W request
 	/*
 			Find separator '='
 	*/
@@ -183,7 +184,7 @@ int32_t burst_mux_process_enc_req(char * fstart,char * fend,burst_rcv_ctx_t *rcv
 		}
 		else
 		{
-			resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"<%02lX%s=%s:$$>\r\n",rcv_ctx->address,var_name,resp_value);
+			resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"<%02X%s=%s:$$>\r\n",rcv_ctx->address,var_name,resp_value);
 
 		    if(resp_len >=6 )
 		    {
@@ -227,29 +228,45 @@ int32_t  burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len)
 {
 	int32_t             execute_store = -1;
 	burst_rcv_ctx_t		rcv_ctx;
+	int32_t				curr = 0;
+	int32_t				next = 0;
+	char 			  * fstart;
+	char 		      * fend;
 
 	buffer[len] = 0;
 
-	char * fstart;
-	char * fend;
-
-	rcv_ctx.channel	= idx;
-
-	fstart = strchr(buffer,'<');
-	fend = strchr(buffer,'>');
-
-	if( (fstart != NULL) && (fend != NULL))
+	while(curr < len)
 	{
-		// Got standard encapsulated frame
-		rcv_ctx.frame_format = RCV_FRAME_ENCAPSULATED;
-		execute_store = burst_mux_process_enc(fstart+1,fend,&rcv_ctx);
-	}
-	else
-	{
-		// Try for pure gcode - direct message
-		rcv_ctx.frame_format = RCV_FRAME_DIRECT;
-		rcv_ctx.address		 = -1;
-		gcode_engine_command(buffer,&rcv_ctx);
+		while(next<len)
+		{
+			if( (buffer[next] == '\n') || (buffer[next] == '&') )
+			{
+				buffer[next++] = 0;
+				break;
+			}
+			next++;
+		}
+
+		rcv_ctx.channel	= idx;
+
+		fstart = strchr(&buffer[curr],'<');
+		fend  = strchr(&buffer[curr],'>');
+
+		if( (fstart != NULL) && (fend != NULL))
+		{
+			// Got standard encapsulated frame
+			rcv_ctx.frame_format = RCV_FRAME_ENCAPSULATED;
+			execute_store = burst_mux_process_enc(fstart+1,fend,&rcv_ctx);
+		}
+		else
+		{
+			// Try for pure gcode - direct message
+			rcv_ctx.frame_format = RCV_FRAME_DIRECT;
+			rcv_ctx.address		 = -1;
+			gcode_engine_command(&buffer[curr],&rcv_ctx);
+		}
+
+		curr = next;
 	}
 
 	return execute_store;

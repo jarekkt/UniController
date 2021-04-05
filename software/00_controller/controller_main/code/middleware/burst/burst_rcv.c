@@ -16,7 +16,7 @@
 
 typedef struct
 {
-    char    	RxBuffer[512];
+    char    	RxBuffer[2048];
     int      	RxCnt;
     int      	RxMsgCounter;
     int      	RxMsgOk;
@@ -80,11 +80,11 @@ void burst_rcv_usb_rx(char * msg,uint32_t msg_len)
 {
 	burst_serial_data_t	  * serial_ch;
 
+
 	serial_ch   = &brcv.ch[CH_USB];
 
 	if(msg_len < sizeof(serial_ch->RxBuffer))
 	{
-		memcpy(serial_ch->RxBuffer,msg,msg_len);
 		serial_ch->RxCnt = msg_len;
         serial_ch->RxMsgCounter++;
         serial_ch->RxMsgOk = 1;

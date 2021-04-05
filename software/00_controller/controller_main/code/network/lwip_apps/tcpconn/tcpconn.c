@@ -171,7 +171,7 @@ static void tcpconn_thread(void *arg)
     }
     else
     {
-    	vTaskDelay(50);
+    	vTaskDelay(100);
     }
   }
 }
