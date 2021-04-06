@@ -182,6 +182,11 @@ void tcpconn_init(void)
 
   tctx.callback_fn = callback_null;
 
-  sys_thread_new("tcpconn", tcpconn_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 }
+
+void tcpconn_once(void)
+{
+   sys_thread_new("tcpconn", tcpconn_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+}
+
 

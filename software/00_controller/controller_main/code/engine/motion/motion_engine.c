@@ -331,7 +331,7 @@ int32_t motion_engine_delay
 
 void  motion_engine_ack(motion_job_t * mj,int32_t result)
 {
-	uint32_t 	length;
+	uint32_t 	length = 0;
 	int32_t	 	idx;
 	const char  axes[]="XYZAUVWB";
 

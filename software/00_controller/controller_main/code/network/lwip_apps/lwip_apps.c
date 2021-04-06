@@ -8,8 +8,14 @@
 
 void lwip_apps_init()
 {
+   tcpconn_init();
+}
+
+void lwip_apps_once()
+{
    netbiosns_init();
    netbiosns_set_name("uni_controller");
    httpd_init();
-   tcpconn_init();
+
+   tcpconn_once();
 }

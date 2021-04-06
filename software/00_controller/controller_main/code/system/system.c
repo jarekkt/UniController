@@ -19,6 +19,8 @@ void system_main_init()
   srv_nov_init();
   srv_nov_start();
 
+  lwip_apps_init();
+
   /* Now final phase of services initialization - storage is present now */
   srv_once(); 
   mwr_once();
@@ -28,6 +30,6 @@ void system_main_init()
   srv_nov_print_info(burst_log_printf);
 
   /* High level network services */
-  lwip_apps_init();
+  lwip_apps_once();
 
 }

@@ -377,16 +377,29 @@ int32_t   gcode_engine_motion_G0G1(const burst_rcv_ctx_t * rcv_ctx,const gcode_c
 		{
 			F = gcode_engine_units(cmd->tokens[GCODE_I_F].value.val_float);
 		}
+		else
+		{
+			F = NAN;
+		}
 
 		if(cmd->tokens_present_mask & (1<< GCODE_I_G))
 		{
 			G = gcode_engine_units(cmd->tokens[GCODE_I_G].value.val_float);
+		}
+		else
+		{
+			G = NAN;
 		}
 
 		if(cmd->tokens_present_mask & (1<< GCODE_I_H))
 		{
 			H = gcode_engine_units(cmd->tokens[GCODE_I_H].value.val_float);
 		}
+		else
+		{
+			H = NAN;
+		}
+
 
 		if(gcode_engine_motion(mj,axis,F,G,H,is_homing) != 0)
 		{

@@ -4,7 +4,7 @@
 
 void mwr_init(void)
 {
-   // logging & database communication
+   // Logging & database communication
    mwr_burst_init();
 
    // Periodic task server

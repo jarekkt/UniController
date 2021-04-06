@@ -8,7 +8,7 @@
 #include "system.h"
 #include "services.h"
 #include "middleware.h"
-#include "tcpconn.h"
+#include "tcpconn/tcpconn.h"
 
 
 #define BURST_MUX_TIMEOUT 1000
