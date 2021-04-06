@@ -55,6 +55,7 @@ void UsageFault_Handler(void);
 void DebugMon_Handler(void);
 void DMA1_Stream0_IRQHandler(void);
 void TIM8_UP_TIM13_IRQHandler(void);
+void TIM8_TRG_COM_TIM14_IRQHandler(void);
 void ETH_IRQHandler(void);
 void OTG_FS_IRQHandler(void);
 void BDMA_Channel0_IRQHandler(void);
