@@ -117,9 +117,9 @@ void MX_LWIP_Init(void)
 
 /* USER CODE BEGIN 3 */
 #ifdef USE_MY_CODE
-   extern void lwip_apps_init(void);
+   extern void lwip_apps_start(void);
 
-   lwip_apps_init();
+   lwip_apps_start();
 #endif
 
 /* USER CODE END 3 */

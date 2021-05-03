@@ -13,6 +13,11 @@ void lwip_apps_init()
 
 void lwip_apps_once()
 {
+
+}
+
+void lwip_apps_start()
+{
    netbiosns_init();
    netbiosns_set_name("uni_controller");
    httpd_init();

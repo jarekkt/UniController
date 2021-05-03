@@ -53,18 +53,18 @@ void tcpconn_send(const char * msg,uint32_t msg_len)
 		msg_len = free_count;
 	}
 
-	if( tctx.buf_head + free_count >  DIM(tctx.buf))
+	if( tctx.buf_head + msg_len >=  DIM(tctx.buf))
 	{
 		part_count = DIM(tctx.buf) - tctx.buf_head;
 
 		memcpy(&tctx.buf[tctx.buf_head],msg,part_count);
-		memcpy(&tctx.buf[0],&msg[part_count],free_count - part_count);
-		tctx.buf_head =  free_count - part_count;
+		memcpy(&tctx.buf[0],&msg[part_count],msg_len - part_count);
+		tctx.buf_head =  msg_len - part_count;
 	}
 	else
 	{
-		memcpy(&tctx.buf[tctx.buf_head],msg,free_count);
-		tctx.buf_head = (tctx.buf_head + free_count) % DIM(tctx.buf);
+		memcpy(&tctx.buf[tctx.buf_head],msg,msg_len);
+		tctx.buf_head = tctx.buf_head + msg_len;
 	}
 }
 

@@ -372,7 +372,7 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 		case JCMD_FWINFO:
 		{
-			result = snprintf(mctx.resp_buffer,
+			length = snprintf(mctx.resp_buffer,
 						 sizeof(mctx.resp_buffer),
 						 "ok PROTOCOL_VERSION: 1.0 "
 						 "FIRMWARE_NAME: UniController %d.%d "
@@ -541,6 +541,7 @@ static void motion_task(void * params)
 {
 	uint32_t	new_mj_g_tail;
 	uint32_t	again;
+	int32_t     result;
 
 
 	while(1)
@@ -565,16 +566,18 @@ static void motion_task(void * params)
 				new_mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
 
 				// Check if  task is still running
-				if( ( mj_global[new_mj_g_tail].task_flags & MF_FLAG_DONE)!= 0)
+				if( ( mj_global[mctx.mj_g_tail].task_flags & MF_FLAG_DONE)!= 0)
 				{
+					result = motion_task_finish_job(mctx.mj_g_tail);
 					mctx.mj_g_tail = new_mj_g_tail;
-					if(motion_task_finish_job(new_mj_g_tail) != 0)
+
+					if(result != 0)
 					{
 						// Error which causes remaining jobs to be aborted
 						while( mctx.mj_g_tail != mctx.mj_g_run_head)
 						{
-							mctx.mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
 							motion_task_abort_job(mctx.mj_g_tail);
+							mctx.mj_g_tail = (mctx.mj_g_tail + 1)% MF_JOB_CNT;
 						}
 					}
 
