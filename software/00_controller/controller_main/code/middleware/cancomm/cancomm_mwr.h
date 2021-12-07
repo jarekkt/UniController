@@ -17,12 +17,19 @@
 #include "cancomm_task_can1.h"
 
 
-
+typedef struct
+{
+    uint32_t  can_id;
+    uint32_t  can_dlc;
+    uint8_t  data[64];
+}can_frame_t;
 
 void mwr_cancomm_init();
 void mwr_cancomm_once(void);
-void mwr_cancomm_test(uint32_t ch);
+void mwr_cancomm_test(void);
 
+int mwr_cancomm_receive(can_frame_t * raw_frame);
+void mwr_cancomm_send(can_frame_t * raw_frame,uint32_t wait4ready);
 
 
 

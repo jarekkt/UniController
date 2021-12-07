@@ -25,7 +25,6 @@
 #include "dma.h"
 #include "fdcan.h"
 #include "i2c.h"
-#include "lptim.h"
 #include "lwip.h"
 #include "spi.h"
 #include "tim.h"
@@ -125,7 +124,6 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM8_Init();
   MX_TIM12_Init();
-  MX_LPTIM1_Init();
   MX_TIM17_Init();
   MX_TIM16_Init();
   MX_USART1_UART_Init();
@@ -297,6 +295,7 @@ void MPU_Config(void)
   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 
 }
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM14 interrupt took place, inside

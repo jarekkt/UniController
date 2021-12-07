@@ -1,4 +1,4 @@
-(kicad_pcb (version 20210126) (generator pcbnew)
+(kicad_pcb (version 20210228) (generator pcbnew)
 
   (general
     (thickness 1.635)
@@ -38,6 +38,7 @@
       (copper_finish "None")
       (dielectric_constraints no)
     )
+    (pad_to_mask_clearance 0)
     (aux_axis_origin 77.5 131)
     (pcbplotparams
       (layerselection 0x00010f8_ffffffff)
@@ -3236,7 +3237,7 @@
   (dimension (type aligned) (layer "Eco1.User") (tstamp 4d715713-d39d-4bc1-95d0-d16b1822449e)
     (pts (xy 145.9 131) (xy 77.5 131))
     (height -2)
-    (gr_text "68.4 mm" (at 111.7 134.15) (layer "Eco1.User") (tstamp 4d715713-d39d-4bc1-95d0-d16b1822449e)
+    (gr_text "68.4 mm" (at 111.7 131.85) (layer "Eco1.User") (tstamp 4d715713-d39d-4bc1-95d0-d16b1822449e)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (format (units 2) (units_format 1) (precision 1))
@@ -3245,7 +3246,7 @@
   (dimension (type aligned) (layer "Eco1.User") (tstamp f5ed98e2-2fb6-4747-83b7-93f619c06505)
     (pts (xy 94 35.2) (xy 94 131))
     (height 20.2)
-    (gr_text "95.8000 mm" (at 72.65 83.1 270) (layer "Eco1.User") (tstamp f5ed98e2-2fb6-4747-83b7-93f619c06505)
+    (gr_text "95.8000 mm" (at 72.65 83.1 90) (layer "Eco1.User") (tstamp f5ed98e2-2fb6-4747-83b7-93f619c06505)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (format (units 2) (units_format 1) (precision 4))

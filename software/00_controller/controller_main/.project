@@ -145,11 +145,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/i2c.h</locationURI>
 		</link>
 		<link>
-			<name>cube/Core/Inc/lptim.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/lptim.h</locationURI>
-		</link>
-		<link>
 			<name>cube/Core/Inc/main.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/main.h</locationURI>
@@ -213,11 +208,6 @@
 			<name>cube/Core/Src/i2c.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/i2c.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Core/Src/lptim.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/lptim.c</locationURI>
 		</link>
 		<link>
 			<name>cube/Core/Src/main.c</name>
@@ -748,11 +738,6 @@
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_lptim.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_lptim.c</locationURI>
 		</link>
 		<link>
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c</name>

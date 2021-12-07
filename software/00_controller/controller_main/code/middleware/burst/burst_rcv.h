@@ -36,6 +36,7 @@ typedef struct
 
 void burst_rcv_init();
 void burst_rcv_once();
+void burst_rcv_can_message();
 void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,char * response, int length);
 
 void burst_rcv_usb_rx(char * msg,uint32_t msg_len);

@@ -55,15 +55,13 @@ void mwr_cancomm_callback_can1(void)
 
 void mwr_cancomm_execute_can1_app(void)
 {
-/*
+	can_frame_t frame;
 
-    while(mwr_cancomm_receive(CANCOMM_TASK1_CAN_ID,&frame) == 0)
+    while(mwr_cancomm_receive(&frame) == 0)
     {
 
 
     }
-*/
-
 }
 
 

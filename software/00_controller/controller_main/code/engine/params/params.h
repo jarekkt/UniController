@@ -14,11 +14,12 @@ typedef enum
 	AXIS_Y,
 	AXIS_Z,
 	AXIS_A,
-	AXIS_U,
+	AXIS_LOCAL_CNT,
+	AXIS_U = AXIS_LOCAL_CNT,
 	AXIS_V,
 	AXIS_W,
 	AXIS_B,
-	AXIS_CNT
+	AXIS_GLOBAL_CNT
 }axis_idx_e;
 
 typedef struct
@@ -55,7 +56,7 @@ typedef struct
 
 typedef struct
 {
-	axis_params_t 		axis[AXIS_CNT];
+	axis_params_t 		axis[AXIS_GLOBAL_CNT];
 	path_params_t		path_initial_m;
 	uint32_t			estop_mask;
 	uint32_t			axis_used_mask;

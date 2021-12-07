@@ -31,8 +31,8 @@ typedef struct
 {
 	burst_serial_data_t  ch[CH_CNT];
 	int32_t			 	 ch_active;
+	int32_t				 can_ready;
 	xSemaphoreHandle     sema_recv;
-
 }burst_rcv_t;
 
 
@@ -130,6 +130,9 @@ static void burst_rcv_cc_rs485(uint32_t portId,uint8_t cc,portBASE_TYPE * woken)
 
 
 
+
+
+
 void burst_rcv_once()
 {
 	vSemaphoreCreateBinary(brcv.sema_recv);
@@ -213,6 +216,12 @@ static void burst_rcv_serial_process(ch_idx_e idx)
 	}
 }
 
+void burst_rcv_can_message()
+{
+	brcv.can_ready = 1;
+	xSemaphoreGive(brcv.sema_recv);
+}
+
 
 static void burst_rcv_serial_rcv(void)
 {
@@ -231,10 +240,21 @@ static void burst_rcv_serial_rcv(void)
 			{
 				burst_rcv_serial_process(idx);
 				cnt++;
+
+				brcv.ch[idx].RxCnt 	= 0;
+				brcv.ch[idx].RxMsgOk = 0;
 			}
-			brcv.ch[idx].RxCnt 	= 0;
-			brcv.ch[idx].RxMsgOk = 0;
 		}
+
+		if(brcv.can_ready != 0)
+		{
+			brcv.can_ready = 0;
+			burst_mux_can_process();
+			cnt++;
+
+		}
+
+
     }while (cnt != 0);
 
 }

@@ -74,31 +74,53 @@ typedef struct _motion_buffer_t
 	struct _motion_buffer_t  *  next;
 }motion_buffer_t;
 
+typedef struct _motion_remote_buffer_t
+{
+	float dist_mm;
+	float safe_speed_mm_s;
+	float speed_mm_s;
+	float accel_mm_s2;
+	float jerk_mm_s3;
 
+	struct _motion_remote_buffer_t  *  next;
+}motion_remote_buffer_t;
 
 typedef struct
 {
-	jcmd_e			jcmd;
+	uint32_t dev_status;
+
+	uint32_t inputs;
+	float    inputs_analog[2];
+
+}motion_remote_status_t;
+
+typedef struct
+{
+	jcmd_e					jcmd;
 
 	struct
 	{
-		uint32_t		home_axis;
-		uint32_t		home_axis_mask;
-		uint32_t		cmd_args[2];
+		uint32_t			home_axis;
+		uint32_t			home_axis_mask;
+		uint32_t			cmd_args[2];
 	}args;
 
-	uint32_t			task_flags;
+	uint32_t				task_flags;
 
-	float				pos_beg_mm[AXIS_CNT];
-	float				pos_end_mm[AXIS_CNT];
+	float					pos_beg_mm[AXIS_LOCAL_CNT];
+	float					pos_end_mm[AXIS_LOCAL_CNT];
 
-	uint32_t 			mb_tail;
-	uint32_t 			mb_head;
+	uint32_t 				mb_tail;
+	uint32_t 				mb_head;
 
-	burst_rcv_ctx_t		comm_ctx;
+	burst_rcv_ctx_t			comm_ctx;
 
-	motion_buffer_t   *	mb_axis_head[AXIS_CNT];
-	motion_buffer_t   *	mb_axis_tail[AXIS_CNT];
+	motion_buffer_t   	*	mb_axis_head[AXIS_LOCAL_CNT];
+	motion_buffer_t   	*	mb_axis_tail[AXIS_LOCAL_CNT];
+
+	motion_remote_buffer_t  mbr_axis[AXIS_GLOBAL_CNT-AXIS_LOCAL_CNT];
+	uint32_t				mbr_axis_mask;
+
 }motion_job_t;
 
 
@@ -119,20 +141,27 @@ typedef struct
 	uint32_t 			mj_g_head;
 
 	/* Pulse position (current) */
-	int32_t 			curr_pulse_pos[AXIS_CNT];
-	int32_t				curr_dir[AXIS_CNT];
-	int32_t				active_dir[AXIS_CNT];
-
+	int32_t 			curr_pulse_pos[AXIS_LOCAL_CNT];
+	int32_t				curr_dir[AXIS_LOCAL_CNT];
+	int32_t				active_dir[AXIS_LOCAL_CNT];
 
 	/* Position - future */
-	float	     		plan_pos_mm[AXIS_CNT];
-	float	     		offset_pos_mm[AXIS_CNT];
+	float	     		plan_pos_mm[AXIS_LOCAL_CNT];
+
+
+	/* Common - global and remote */
+
+	float	     		offset_pos_mm[AXIS_GLOBAL_CNT];
+	float				curr_pos[AXIS_GLOBAL_CNT];
+
+
 
 	/* Flow control */
 	uint32_t		    hit_active;
 	uint32_t		    hit_mask;
 	uint32_t			endpos_hit_cntr;
 	uint32_t 			stop_active;
+	uint32_t 			remote_failure;
 
 	/* Current job */
 	motion_job_t	 * job;
@@ -220,5 +249,16 @@ uint32_t motion_engine_step_axis(
 // motion_engine_io.c
 int32_t  motion_engine_io(uint32_t pin,uint32_t value);
 int32_t  motion_engine_io_analog(char * buffer,uint32_t length);
+
+// motion_engine_remote.c
+
+void	 motion_remote_process(void);
+int32_t  motion_remote_send(uint32_t remote_axis_idx,const motion_remote_buffer_t * buffer,uint32_t run_mask);
+int32_t  motion_remote_send_output(uint32_t mask,uint32_t value);
+int32_t  motion_remote_send_pwm(uint32_t idx,uint32_t value);
+int32_t  motion_remote_receive(motion_remote_status_t * status);
+
+
+
 
 #endif // MOTION_ENGINE_H

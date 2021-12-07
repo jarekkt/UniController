@@ -99,6 +99,8 @@ void Error_Handler(void);
 #define OUT_CPU3_GPIO_Port GPIOD
 #define OUT_CPU2_Pin GPIO_PIN_11
 #define OUT_CPU2_GPIO_Port GPIOD
+#define MID_IO4_DIR4_Pin GPIO_PIN_12
+#define MID_IO4_DIR4_GPIO_Port GPIOD
 #define I2C3_SDA_Pin GPIO_PIN_9
 #define I2C3_SDA_GPIO_Port GPIOC
 #define I2C3_SCL_Pin GPIO_PIN_8

@@ -162,19 +162,13 @@ void mwr_cancomm_once(void)
 }
 
 
-void mwr_cancomm_test(uint32_t ch_idx)
+void mwr_cancomm_test()
 {
 
     mwr_cancomm_channel_t * ch;
 
-
-
-    if(ch_idx >= MWR_CANCOMM_CH_CNT)
-    {
-    	return;
-    }
     
-    ch    = &ccm.canCh[ch_idx];
+    ch    = &ccm.canCh[0];
 
     /* Prepare Tx Header */
     ch->TxHeader.Identifier 		 = 0x321;
@@ -195,7 +189,7 @@ void mwr_cancomm_test(uint32_t ch_idx)
     ch->TxData[3]     = ch->ovrerr_cntr;
     ch->TxData[4]     = ch->rcv_cntr;
     ch->TxData[5]     = ch->err_cntr;
-    ch->TxData[6]     = ch_idx;
+    ch->TxData[6]     = 0;
 
     ch->TxHeader.DataLength 		 = FDCAN_DLC_BYTES_8;
           
@@ -205,35 +199,21 @@ void mwr_cancomm_test(uint32_t ch_idx)
    
 }
 
-void mwr_cancomm_send(uint32_t ch_idx,can_frame_t * raw_frame,uint32_t wait4ready)
+void mwr_cancomm_send(can_frame_t * raw_frame,uint32_t wait4ready)
 {
     mwr_cancomm_channel_t * ch;
 
-
-    if(ch_idx >= MWR_CANCOMM_CH_CNT)
-    {
-    	return;
-    }
-
-    ch    = &ccm.canCh[ch_idx];
-
+    ch    = &ccm.canCh[0];
 
     ch->TxHeader.Identifier 		 = raw_frame->can_id;
     ch->TxHeader.TxFrameType 		 = FDCAN_DATA_FRAME;
-    if( (raw_frame->can_id & (1<<31)) != 0)
-    {
-    	ch->TxHeader.IdType  = FDCAN_EXTENDED_ID;
-    }
-    else
-    {
-    	ch->TxHeader.IdType = FDCAN_STANDARD_ID;
-    }
+   	ch->TxHeader.IdType  			 = FDCAN_EXTENDED_ID;
     ch->TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
     ch->TxHeader.BitRateSwitch 		 = FDCAN_BRS_OFF;
-    ch->TxHeader.FDFormat 			 = FDCAN_CLASSIC_CAN;
+    ch->TxHeader.FDFormat 			 = FDCAN_FD_CAN;
     ch->TxHeader.TxEventFifoControl  = FDCAN_NO_TX_EVENTS;
     ch->TxHeader.MessageMarker 		 = 0;
-    ch->TxHeader.DataLength 		 = (raw_frame->can_dlc) << 16;
+    ch->TxHeader.DataLength 		 = raw_frame->can_dlc;
 
 
     HAL_FDCAN_AddMessageToTxFifoQ(ch->CanHandle, &ch->TxHeader, ch->TxData);
@@ -258,16 +238,12 @@ static void mwr_cancomm_task_can1(void * params)
 
 
 
-int mwr_cancomm_receive(uint32_t ch_idx,can_frame_t * raw_frame)
+int mwr_cancomm_receive(can_frame_t * raw_frame)
 {
    mwr_cancomm_channel_t * ch;
 
-   if(ch_idx >= MWR_CANCOMM_CH_CNT)
-   {
-   	  return -1;
-   }
 
-   ch    = &ccm.canCh[ch_idx];
+   ch    = &ccm.canCh[0];
 
 
    if(ch->cring_head == ch->cring_tail)

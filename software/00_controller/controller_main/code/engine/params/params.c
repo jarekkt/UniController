@@ -151,7 +151,7 @@ void params_init_default(void)
 
 	memset(&pctx_nv,0,sizeof(pctx_nv));
 
-	for(ii =0; ii < AXIS_CNT;ii++)
+	for(ii = 0; ii < AXIS_GLOBAL_CNT;ii++)
 	{
 		pctx_nv.axis[ii].pulses_step_m		= 20000;
 		pctx_nv.axis[ii].pulses_enc_m  		= 0;
