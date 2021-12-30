@@ -17,7 +17,5 @@ void burst_mux_once();
 
 int32_t burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len);
 
-void    burst_mux_can_process(void);
-
 
 #endif //BURST_MUX_H

@@ -5,11 +5,10 @@
 
 #include "services.h"
 #include "middleware.h"
-#include "cancomm_task_can1.h"
-#include "cancomm_prv.h"
+
 
 #define  MWR_CANCOMM_CH_CNT				1
-#define  MWR_CANCOMM_RING_SIZE         10
+#define  MWR_CANCOMM_RING_SIZE         20
 
 
 typedef struct
@@ -92,14 +91,14 @@ static void mwr_cancomm_config(void)
   hfdcan1.Init.StdFiltersNbr = 1;
   hfdcan1.Init.ExtFiltersNbr = 0;
   hfdcan1.Init.RxFifo0ElmtsNbr = 8;
-  hfdcan1.Init.RxFifo0ElmtSize = FDCAN_DATA_BYTES_8;
+  hfdcan1.Init.RxFifo0ElmtSize = FDCAN_DATA_BYTES_64;
   hfdcan1.Init.RxFifo1ElmtsNbr = 0;
   hfdcan1.Init.RxBuffersNbr = 0;
   hfdcan1.Init.TxEventsNbr = 0;
   hfdcan1.Init.TxBuffersNbr = 0;
   hfdcan1.Init.TxFifoQueueElmtsNbr = 8;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
-  hfdcan1.Init.TxElmtSize = FDCAN_DATA_BYTES_8;
+  hfdcan1.Init.TxElmtSize = FDCAN_DATA_BYTES_64;
   if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
   {
 	/* Initialization Error */
@@ -147,8 +146,6 @@ void mwr_cancomm_init(void)
 
 
     mwr_cancomm_config();
-    mwr_cancomm_init_can1_task();
-
     srv_sermon_register(mwr_cancomm_var_ptable,DIM(mwr_cancomm_var_ptable));
 
 }
@@ -233,7 +230,6 @@ static void mwr_cancomm_task_can1(void * params)
 	    Error_Handler();
 	}
 
-    mwr_cancomm_execute_can1_task();   
 }
 
 
@@ -310,8 +306,6 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 			 {
 				ch->ovrerr_cntr++;
 			 }
-
-			 mwr_cancomm_callback_can1();
 		}
 
 

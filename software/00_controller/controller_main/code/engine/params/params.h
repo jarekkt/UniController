@@ -14,11 +14,9 @@ typedef enum
 	AXIS_Y,
 	AXIS_Z,
 	AXIS_A,
-	AXIS_LOCAL_CNT,
-	AXIS_U = AXIS_LOCAL_CNT,
-	AXIS_V,
-	AXIS_W,
 	AXIS_B,
+	AXIS_C,
+	AXIS_D,
 	AXIS_GLOBAL_CNT
 }axis_idx_e;
 
@@ -36,11 +34,9 @@ typedef struct
 	uint32_t  pulses_enc_m;
 
 	uint32_t  endpos_min_mask;
-	uint32_t  endpos_park_mask;
 	uint32_t  endpos_max_mask;
 
 	float     endpos_min_value;
-	float     endpos_park_value;
 	float     endpos_max_value;
 
 	float     speed_mm_s;

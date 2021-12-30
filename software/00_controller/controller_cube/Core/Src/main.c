@@ -22,11 +22,8 @@
 #include "cmsis_os.h"
 #include "adc.h"
 #include "bdma.h"
-#include "dma.h"
 #include "fdcan.h"
-#include "i2c.h"
 #include "lwip.h"
-#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "usb_device.h"
@@ -116,8 +113,6 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC3_Init();
   MX_FDCAN1_Init();
-  MX_I2C3_Init();
-  MX_SPI4_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -126,7 +121,6 @@ int main(void)
   MX_TIM12_Init();
   MX_TIM17_Init();
   MX_TIM16_Init();
-  MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -349,4 +343,3 @@ void assert_failed(uint8_t *file, uint32_t line)
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

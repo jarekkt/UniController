@@ -106,6 +106,42 @@ void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 					GPIO_Clr(MID_IO4_DIR4);
 				}
 			}break;
+
+			case AXIS_B:
+			{
+				if(dir > 0)
+				{
+					//GPIO_Set(MID_IO4_DIR4);
+				}
+				else
+				{
+					//GPIO_Clr(MID_IO4_DIR4);
+				}
+			}break;
+
+			case AXIS_C:
+			{
+				if(dir > 0)
+				{
+					//GPIO_Set(MID_IO4_DIR4);
+				}
+				else
+				{
+					//GPIO_Clr(MID_IO4_DIR4);
+				}
+			}break;
+
+			case AXIS_D:
+			{
+				if(dir > 0)
+				{
+					//GPIO_Set(MID_IO4_DIR4);
+				}
+				else
+				{
+					//GPIO_Clr(MID_IO4_DIR4);
+				}
+			}break;
 		}
 }
 

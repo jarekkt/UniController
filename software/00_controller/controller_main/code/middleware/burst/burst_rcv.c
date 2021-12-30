@@ -31,7 +31,6 @@ typedef struct
 {
 	burst_serial_data_t  ch[CH_CNT];
 	int32_t			 	 ch_active;
-	int32_t				 can_ready;
 	xSemaphoreHandle     sema_recv;
 }burst_rcv_t;
 
@@ -216,11 +215,6 @@ static void burst_rcv_serial_process(ch_idx_e idx)
 	}
 }
 
-void burst_rcv_can_message()
-{
-	brcv.can_ready = 1;
-	xSemaphoreGive(brcv.sema_recv);
-}
 
 
 static void burst_rcv_serial_rcv(void)
@@ -246,13 +240,8 @@ static void burst_rcv_serial_rcv(void)
 			}
 		}
 
-		if(brcv.can_ready != 0)
-		{
-			brcv.can_ready = 0;
-			burst_mux_can_process();
-			cnt++;
 
-		}
+
 
 
     }while (cnt != 0);

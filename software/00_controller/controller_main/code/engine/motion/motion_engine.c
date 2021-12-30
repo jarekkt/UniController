@@ -86,7 +86,7 @@ int32_t motion_engine_job_init(motion_job_t ** mj,const burst_rcv_ctx_t * comm_c
 		mctx.mj_g_head = new_mj_g_head;
 
 		// Initialize positions
-		for(ii =0; ii< AXIS_LOCAL_CNT;ii++)
+		for(ii =0; ii< AXIS_GLOBAL_CNT;ii++)
 		{
 			(*mj)->pos_beg_mm[ii] = (*mj)->pos_end_mm[ii] = mctx.plan_pos_mm[ii];
 		}
@@ -124,7 +124,7 @@ void motion_engine_jobs_abort()
 	// Restore planned position
 	if(mj_g_run_head != mctx.mj_g_head)
 	{
-		for(ii =0; ii< AXIS_LOCAL_CNT;ii++)
+		for(ii =0; ii< AXIS_GLOBAL_CNT;ii++)
 		{
 			mctx.plan_pos_mm[ii]  =  mj_global[mj_g_run_head].pos_beg_mm[ii];
 		}
@@ -197,6 +197,47 @@ void motion_engine_test(int32_t pos_001mm,motion_calc_t  * calc)
 
 
 
+int32_t motion_engine_allocate(motion_job_t * mj,uint32_t axis_idx, motion_buffer_t  **	mb_curr)
+{
+	uint32_t       		new_mb_g_head;
+
+	// Allocate new buffer
+	new_mb_g_head = (mctx.mb_g_head + 1)% MF_BUFFER_CNT;
+
+	if(new_mb_g_head != mctx.mb_g_tail)
+	{
+		*mb_curr = &mb_global[mctx.mb_g_head];
+
+		mj->mb_head    = new_mb_g_head;
+		mctx.mb_g_head = new_mb_g_head;
+	}
+	else
+	{
+		// Failure allocations
+		return -1;
+	}
+
+	// Attach motion to buffers
+	if(mj->mb_axis_head[axis_idx] == NULL)
+	{
+		// Empty list
+		mj->mb_axis_head[axis_idx] = *mb_curr;
+		mj->mb_axis_tail[axis_idx] = *mb_curr;
+	}
+	else
+	{
+		// Attach new motion to the end of link list
+		mj->mb_axis_tail[axis_idx]->next = *mb_curr;
+		mj->mb_axis_tail[axis_idx] 		 = *mb_curr;
+	}
+
+	(*mb_curr)->next = NULL;
+
+	return 0;
+}
+
+
+
 
 
 int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,float speed_mm_s,float accel_mm_s2,float jerk_mm_s3)
@@ -204,56 +245,39 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 	motion_calc_t  		calc;
 	float		   		dist_mm;
 	float		   		curr_pos_mm;
-	uint32_t       		new_mb_g_head;
-	uint32_t       		org_mb_g_head;
 	int32_t				mb_used;
 	int32_t				ii;
 	motion_buffer_t  	mb[7];
 	motion_buffer_t  *	mb_curr;
+	uint32_t       		org_mb_g_head;
+	int32_t 			result = 0;
 
 
+	// Calculate relative move
+	curr_pos_mm = mctx.plan_pos_mm[axis_idx] ;
+	dist_mm	 	= curr_pos_mm - mctx.offset_pos_mm[axis_idx] - pos_mm;
 
-	if(axis_idx > AXIS_LOCAL_CNT)
+
+	// Update new target position
+	mctx.plan_pos_mm[axis_idx] = pos_mm + mctx.offset_pos_mm[axis_idx];
+
+	// Get motion buffer for the move
+	if(mj->mb_head != mj->mb_tail)
 	{
-		if( (mj->mbr_axis_mask & (1<<axis_idx)) == 0)
-		{
-			dist_mm	 	= mctx.curr_pos[axis_idx] - mctx.offset_pos_mm[axis_idx] - pos_mm;
-
-			mj->mbr_axis[axis_idx - AXIS_LOCAL_CNT].dist_mm 			= dist_mm;
-			mj->mbr_axis[axis_idx - AXIS_LOCAL_CNT].safe_speed_mm_s     = ppctx_nv->axis[axis_idx].speed_safe_mm_s;
-			mj->mbr_axis[axis_idx - AXIS_LOCAL_CNT].speed_mm_s			= speed_mm_s;
-			mj->mbr_axis[axis_idx - AXIS_LOCAL_CNT].accel_mm_s2			= accel_mm_s2;
-			mj->mbr_axis[axis_idx - AXIS_LOCAL_CNT].jerk_mm_s3			= jerk_mm_s3;
-			mj->mbr_axis[axis_idx - AXIS_LOCAL_CNT].next			    = NULL;
-			mj->mbr_axis_mask |= (1<<axis_idx);
-		}
-		else
-		{
-			// chained requests not yet supported
-			fw_assert(0);
-		}
+		// We already have some buffers
 	}
 	else
 	{
+		// No buffers yet
+		mj->mb_head = mj->mb_tail = mctx.mb_g_head;
+	}
 
-		// Calculate relative move
-		curr_pos_mm = mctx.plan_pos_mm[axis_idx] ;
-		dist_mm	 	= curr_pos_mm - mctx.offset_pos_mm[axis_idx] - pos_mm;
+	org_mb_g_head = mctx.mb_g_head;
 
 
-		// Update new target position
-		mctx.plan_pos_mm[axis_idx] = pos_mm + mctx.offset_pos_mm[axis_idx];
-
-		// Get motion buffer for the move
-		if(mj->mb_head != mj->mb_tail)
-		{
-			// We already have some buffers
-		}
-		else
-		{
-			// No buffers yet
-			mj->mb_head = mj->mb_tail = mctx.mb_g_head;
-		}
+	if(axis_idx < AXIS_GLOBAL_CNT)
+	{
+		// Local controller movement
 
 		// Calculate 3rd order S curve
 		motion_scurve_calc(&calc,dist_mm, ppctx_nv->axis[axis_idx].speed_safe_mm_s,speed_mm_s,accel_mm_s2,jerk_mm_s3);
@@ -261,54 +285,53 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 		// Convert calculation for step engine format
 		mb_used = motion_engine_convert(axis_idx,curr_pos_mm,pos_mm,mctx_nv.step_freq,&calc,&ppctx_nv->axis[axis_idx],mb,DIM(mb));
 
+
 		if(mb_used > 0)
 		{
 			// Inefficient way with copying - fix it later
 			// TODO
-
-			org_mb_g_head = mctx.mb_g_head;
-
 			for( ii = 0; ii < mb_used;ii++)
 			{
-				// Allocate new buffer
-				new_mb_g_head = (mctx.mb_g_head + 1)% MF_BUFFER_CNT;
-
-				if(new_mb_g_head != mctx.mb_g_tail)
+				if(motion_engine_allocate(mj,axis_idx, &mb_curr)==0)
 				{
-					mb_curr = &mb_global[mctx.mb_g_head];
-
 					memcpy(mb_curr,&mb[ii],sizeof(*mb_curr));
-
-					mj->mb_head    = new_mb_g_head;
-					mctx.mb_g_head = new_mb_g_head;
 				}
 				else
 				{
-					// Recover allocations
-					mj->mb_head = org_mb_g_head;
-					return -1;
-				}
-
-				// Attach motion to buffers
-				if(mj->mb_axis_head[axis_idx] == NULL)
-				{
-					// Empty list
-					mj->mb_axis_head[axis_idx] = mb_curr;
-					mj->mb_axis_tail[axis_idx] = mb_curr;
-					mb_curr->next = NULL;
-				}
-				else
-				{
-					// Attach new motion to the end of link list
-					mj->mb_axis_tail[axis_idx]->next = mb_curr;
-					mj->mb_axis_tail[axis_idx] 		 = mb_curr;
+					result = -1;
+					break;
 				}
 			}
 		}
 	}
+	else
+	{
+		// Remote controller movement
 
+		if(motion_engine_allocate(mj,axis_idx, &mb_curr)==0)
+		{
 
-	return 0;
+			dist_mm	 	= mctx.curr_pos[axis_idx] - mctx.offset_pos_mm[axis_idx] - pos_mm;
+
+			mb_curr->mfr.dist_mm 			= dist_mm;
+			mb_curr->mfr.safe_speed_mm_s    = ppctx_nv->axis[axis_idx].speed_safe_mm_s;
+			mb_curr->mfr.speed_mm_s			= speed_mm_s;
+			mb_curr->mfr.accel_mm_s2		= accel_mm_s2;
+			mb_curr->mfr.jerk_mm_s3			= jerk_mm_s3;
+		}
+		else
+		{
+			result = -1;
+		}
+	}
+
+	if(result != 0)
+	{
+		// Recover allocations
+		mctx.mb_g_head = org_mb_g_head;
+	}
+
+	return result;
 }
 
 int32_t motion_engine_delay
@@ -383,7 +406,7 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 			 length += snprintf(&mctx.resp_buffer[length],sizeof(mctx.resp_buffer)-length,"C: ");
 
-			 for(idx = 0; idx < AXIS_LOCAL_CNT;idx++)
+			 for(idx = 0; idx < AXIS_GLOBAL_CNT;idx++)
 			 {
 				 length += snprintf(&mctx.resp_buffer[length],
 						  	  	    sizeof(mctx.resp_buffer)-length,
@@ -531,12 +554,11 @@ void  motion_engine_offset_coords
 static uint32_t motion_task_start_job(uint32_t idx)
 {
 	int32_t 	ii;
-	int32_t     remote_status;
 	uint32_t	again = 0;
 
 	if(mj_global[idx].jcmd == JCMD_MOTION)
 	{
-		for(ii =0; ii < AXIS_LOCAL_CNT;ii++)
+		for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
 		{
 			// Process direction setup and changes
 			if(mj_global[idx].mb_axis_head[ii] != NULL)
@@ -547,26 +569,6 @@ static uint32_t motion_task_start_job(uint32_t idx)
 
 		mctx.job = &mj_global[idx];
 
-		mctx.remote_failure = 0;
-		for(; ii < AXIS_GLOBAL_CNT;ii++)
-		{
-			remote_status = motion_remote_send(ii - AXIS_LOCAL_CNT,&mctx.job->mbr_axis[ii - AXIS_LOCAL_CNT],mctx.job->mbr_axis_mask<<AXIS_LOCAL_CNT);
-
-			if(remote_status != 0)
-			{
-				// Mark failure and job as done
-				mctx.remote_failure = -1;
-				mj_global[idx].task_flags |= MF_FLAG_DONE;
-				again = 1;
-			}
-		}
-
-		if(mctx.remote_failure == 0)
-		{
-			// TODO - check end sensors first
-			// TODO - make it lighter
-			motion_engine_start_timer();
-		}
 	}
 	else
 	{
@@ -645,6 +647,8 @@ static void motion_task(void * params)
 
 void motion_engine_tmr_step(void)
 {
+	static uint32_t  divider = 0;
+
 	int32_t active;
 
 	active = 0;
@@ -664,20 +668,45 @@ void motion_engine_tmr_step(void)
 		TMR_TIRGGER_Z();
 	}
 
-	if(motion_engine_step_axis(3,&mctx.job->mb_axis_head[3],&mctx.curr_pulse_pos[3],&mctx.curr_dir[3],mctx.active_dir,&active) != 0)
+	if( ((divider ++) & 0x01) == 0 )
 	{
-		TMR_TIRGGER_A();
+		// A/B/C/D run  half the speed
+
+		if(motion_engine_step_axis(3,&mctx.job->mb_axis_head[3],&mctx.curr_pulse_pos[3],&mctx.curr_dir[3],mctx.active_dir,&active) != 0)
+		{
+			GPIO_STEP_SET_A();
+		}
+
+		if(motion_engine_step_axis(4,&mctx.job->mb_axis_head[4],&mctx.curr_pulse_pos[4],&mctx.curr_dir[4],mctx.active_dir,&active) != 0)
+		{
+			GPIO_STEP_SET_B();
+		}
+
+		if(motion_engine_step_axis(5,&mctx.job->mb_axis_head[5],&mctx.curr_pulse_pos[5],&mctx.curr_dir[5],mctx.active_dir,&active) != 0)
+		{
+			GPIO_STEP_SET_C();
+		}
+
+		if(motion_engine_step_axis(6,&mctx.job->mb_axis_head[6],&mctx.curr_pulse_pos[6],&mctx.curr_dir[6],mctx.active_dir,&active) != 0)
+		{
+			GPIO_STEP_SET_D();
+		}
 	}
-
-
-	if( (active == 0) || (mctx.hit_active != 0) || (mctx.stop_active != 0) )
+	else
 	{
-		 mctx.job->task_flags |= MF_FLAG_DONE;
+		GPIO_STEP_CLR_A();
+		GPIO_STEP_CLR_B();
+		GPIO_STEP_CLR_C();
+		GPIO_STEP_CLR_D();
 
-		 motion_engine_stop_timer();
-		 xSemaphoreGiveFromISR(mctx.motion_kick,NULL);
+		if( (active == 0) || (mctx.hit_active != 0) || (mctx.stop_active != 0) )
+		{
+			 mctx.job->task_flags |= MF_FLAG_DONE;
+
+			 motion_engine_stop_timer();
+			 xSemaphoreGiveFromISR(mctx.motion_kick,NULL);
+		}
 	}
-
 }
 
 
@@ -703,7 +732,7 @@ void motion_engine_tmr_endpos(void)
 	inputs = srv_gpio_get_io();
 
 
-	for(ii =0; ii < AXIS_LOCAL_CNT;ii++)
+	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
 	{
 		if(mctx.active_dir[ii] != 0)
 		{
@@ -753,7 +782,7 @@ void motion_engine_tmr_endpos(void)
 		}
 	}
 
-	for(ii =0; ii < AXIS_LOCAL_CNT;ii++)
+	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
 	{
 		mctx.curr_pos[ii] = motion_engine_pulse_to_units(mctx.curr_pulse_pos[ii],ii);
 	}

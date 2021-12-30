@@ -71,6 +71,14 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define LWIP_SO_RCVTIMEO 1
+#define SCK4_IO_STEP5_Pin GPIO_PIN_2
+#define SCK4_IO_STEP5_GPIO_Port GPIOE
+#define NSS4_IO_DIR5_Pin GPIO_PIN_4
+#define NSS4_IO_DIR5_GPIO_Port GPIOE
+#define MISO4_IO_STEP6_Pin GPIO_PIN_5
+#define MISO4_IO_STEP6_GPIO_Port GPIOE
+#define MOSI_DIR6_Pin GPIO_PIN_6
+#define MOSI_DIR6_GPIO_Port GPIOE
 #define IN_CPU5_ADC1_18_Pin GPIO_PIN_4
 #define IN_CPU5_ADC1_18_GPIO_Port GPIOA
 #define IN_CPU6_ADC1_19_Pin GPIO_PIN_5
@@ -87,10 +95,10 @@ void Error_Handler(void);
 #define IN_CPU3_GPIO_Port GPIOE
 #define IN_CPU4_Pin GPIO_PIN_12
 #define IN_CPU4_GPIO_Port GPIOE
-#define MID_IO1_Pin GPIO_PIN_14
-#define MID_IO1_GPIO_Port GPIOE
-#define MID_IO2_Pin GPIO_PIN_15
-#define MID_IO2_GPIO_Port GPIOE
+#define MID_IO1_STEP7_Pin GPIO_PIN_14
+#define MID_IO1_STEP7_GPIO_Port GPIOE
+#define MID_IO2_DIR7_Pin GPIO_PIN_15
+#define MID_IO2_DIR7_GPIO_Port GPIOE
 #define OUT_DIR3_Pin GPIO_PIN_8
 #define OUT_DIR3_GPIO_Port GPIOD
 #define OUT_CPU4_Pin GPIO_PIN_9
@@ -101,10 +109,10 @@ void Error_Handler(void);
 #define OUT_CPU2_GPIO_Port GPIOD
 #define MID_IO4_DIR4_Pin GPIO_PIN_12
 #define MID_IO4_DIR4_GPIO_Port GPIOD
-#define I2C3_SDA_Pin GPIO_PIN_9
-#define I2C3_SDA_GPIO_Port GPIOC
-#define I2C3_SCL_Pin GPIO_PIN_8
-#define I2C3_SCL_GPIO_Port GPIOA
+#define TX1_IN10_CPU_Pin GPIO_PIN_9
+#define TX1_IN10_CPU_GPIO_Port GPIOA
+#define RX1_IN9_CPU_Pin GPIO_PIN_10
+#define RX1_IN9_CPU_GPIO_Port GPIOA
 #define OUT_CPU1_Pin GPIO_PIN_3
 #define OUT_CPU1_GPIO_Port GPIOD
 #define OUT_DIR1_Pin GPIO_PIN_6
@@ -122,5 +130,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

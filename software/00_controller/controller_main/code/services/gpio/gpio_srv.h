@@ -19,6 +19,17 @@
 #define GPIO_Get(name_)        HAL_GPIO_ReadPin(GPIO_PORT(name_),GPIO_PIN(name_))
 #define GPIO_TestMode(val_)    gpio_test_mode = val_;
 
+#define GPIO_STEP_SET_A()
+#define GPIO_STEP_SET_B()
+#define GPIO_STEP_SET_C()
+#define GPIO_STEP_SET_D()
+
+#define GPIO_STEP_CLR_A()
+#define GPIO_STEP_CLR_B()
+#define GPIO_STEP_CLR_C()
+#define GPIO_STEP_CLR_D()
+
+
 
 
 volatile extern int32_t gpio_test_mode;

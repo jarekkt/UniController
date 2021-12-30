@@ -343,5 +343,3 @@ void burst_rcv_usb_tx(char * msg,uint32_t msg_len)
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

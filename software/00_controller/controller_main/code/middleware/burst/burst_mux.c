@@ -225,12 +225,6 @@ int32_t burst_mux_process_enc(char * fstart,char * fend,burst_rcv_ctx_t *rcv_ctx
 }
 
 
-void burst_mux_can_process(void)
-{
-	// CAN bypasses GCODE processor and goes directly to motion engine
-	motion_remote_process();
-}
-
 
 int32_t  burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len)
 {
