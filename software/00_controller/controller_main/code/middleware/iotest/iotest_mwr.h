@@ -20,7 +20,6 @@
 
 void mwr_iotest_init();
 void mwr_iotest_once(void);
-void mwr_iotest_set_mode(unit_mode_e mode);
 
 
 

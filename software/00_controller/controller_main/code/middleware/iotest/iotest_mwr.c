@@ -43,9 +43,9 @@ const mwr_gpio_sequence_t mwr_test_pins[] =
   /* 04 */ { GPIO_SEQ_PIN(OUT_DIR1)},
   /* 05 */ { GPIO_SEQ_PIN(OUT_DIR2)},
   /* 06 */ { GPIO_SEQ_PIN(OUT_DIR3)},
-  /* 07 */ { GPIO_SEQ_PIN(MID_IO1)},
-
-  /* 08 */ { GPIO_SEQ_PIN(MID_IO2)},
+//  /* 07 */ { GPIO_SEQ_PIN(MID_IO1)},
+//
+//  /* 08 */ { GPIO_SEQ_PIN(MID_IO2)},
 
 };
 

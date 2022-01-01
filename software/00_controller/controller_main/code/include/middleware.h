@@ -8,7 +8,7 @@
 #include "middleware/burst/burst_mwr.h"
 #include "middleware/periodic/periodic_mwr.h"
 #include "middleware/iotest/iotest_mwr.h"
-#include "middleware/cancomm/cancomm_mwr.h"
+
 
 
 

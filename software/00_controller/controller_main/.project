@@ -190,11 +190,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/dma.c</locationURI>
 		</link>
 		<link>
-			<name>cube/Core/Src/fdcan.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/fdcan.c</locationURI>
-		</link>
-		<link>
 			<name>cube/Core/Src/freertos.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/freertos.c</locationURI>
@@ -213,11 +208,6 @@
 			<name>cube/Core/Src/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/main.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Core/Src/spi.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/spi.c</locationURI>
 		</link>
 		<link>
 			<name>cube/Core/Src/stm32h7xx_hal_msp.c</name>
@@ -705,11 +695,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c</locationURI>
 		</link>
 		<link>
-			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fdcan.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fdcan.c</locationURI>
-		</link>
-		<link>
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c</locationURI>
@@ -773,16 +758,6 @@
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_spi_ex.c</locationURI>
 		</link>
 		<link>
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c</name>

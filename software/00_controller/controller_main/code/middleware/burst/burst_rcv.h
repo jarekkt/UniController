@@ -14,7 +14,6 @@
 typedef enum
 {
 	CH_DEBUG,
-	CH_RS485,
 	CH_USB,
 	CH_ETH,
 	CH_CNT
@@ -31,7 +30,6 @@ typedef struct
 {
 	uint32_t 		channel:8;
 	uint32_t		frame_format:8;
-	uint32_t		address:16;
 }burst_rcv_ctx_t;
 
 void burst_rcv_init();

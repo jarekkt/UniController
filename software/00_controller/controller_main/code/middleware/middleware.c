@@ -17,8 +17,6 @@ void mwr_init(void)
    // Iotest
    mwr_iotest_init();
 
-   // Can
-   mwr_cancomm_init();
 
 
 }
@@ -29,6 +27,5 @@ void mwr_once(void)
   mwr_periodic_once();
   tsk_storage_once();
   mwr_iotest_once();
-  mwr_cancomm_once();
 
 }

@@ -122,14 +122,6 @@ static void burst_rcv_cc_debug(uint32_t portId,uint8_t cc,portBASE_TYPE * woken)
 	burst_rcv_cc(cc,CH_DEBUG,woken);
 }
 
-static void burst_rcv_cc_rs485(uint32_t portId,uint8_t cc,portBASE_TYPE * woken)
-{
-	burst_rcv_cc(cc,CH_RS485,woken);
-}
-
-
-
-
 
 
 void burst_rcv_once()
@@ -139,11 +131,6 @@ void burst_rcv_once()
 	// CH_DEBUG
 	brcv.ch[CH_DEBUG].serial_id	= SRV_SERIAL_DEBUG;
 	srv_serial_rcv_callback(SRV_SERIAL_DEBUG,burst_rcv_cc_debug);
-
-	// CH_RS485
-	brcv.ch[CH_RS485].serial_id	= SRV_SERIAL_RS485;
-	srv_serial_485_rcv_callback(SRV_SERIAL_RS485,burst_rcv_cc_rs485);
-	srv_serial_485_enable(SRV_SERIAL_RS485,1);
 
 	// CH_USB
 	// No configuration needed
@@ -174,11 +161,6 @@ void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,char * response, in
 
     switch(rcv_ctx->channel)
     {
-			case CH_RS485:
-			{
-				srv_serial_485_send(brcv.ch[rcv_ctx->channel].serial_id,response,length);
-			}break;
-
 			case CH_USB:
 			{
 				burst_rcv_usb_tx(response,length);

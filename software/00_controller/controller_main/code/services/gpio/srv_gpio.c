@@ -112,6 +112,7 @@ uint32_t  srv_gpio_get_io(void)
 		io |= 0x80;
 	}
 
+#if 0
 	if(GPIO_Get(MID_IO1)!=0)
 	{
 		io |= 0x100;
@@ -121,7 +122,7 @@ uint32_t  srv_gpio_get_io(void)
 	{
 		io |= 0x200;
 	}
-
+#endif
 
 
 	return io;
@@ -204,7 +205,7 @@ void      srv_gpio_set_io(uint32_t mask,uint32_t value)
 		}
 	}
 
-
+#if 0
 	if(mask & 0x40)
 	{
 		if(value & 0x40)
@@ -228,7 +229,7 @@ void      srv_gpio_set_io(uint32_t mask,uint32_t value)
 			GPIO_Clr(MID_IO2);
 		}
 	}
-
+#endif
 
 
 }
