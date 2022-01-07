@@ -185,11 +185,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/dma.c</locationURI>
 		</link>
 		<link>
-			<name>cube/Core/Src/fdcan.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/fdcan.c</locationURI>
-		</link>
-		<link>
 			<name>cube/Core/Src/freertos.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/freertos.c</locationURI>
@@ -693,11 +688,6 @@
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fdcan.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fdcan.c</locationURI>
 		</link>
 		<link>
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c</name>

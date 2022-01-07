@@ -33,7 +33,7 @@ static void iotest_io_special(uint32_t io_special)
 {
     if( (io_special & 0x01) != 0)
     {
-    	srv_serial_485_send(SRV_SERIAL_RS485,"PORT RS485\r\n",0);
+
     }
 
 
