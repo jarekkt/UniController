@@ -86,55 +86,6 @@ int32_t burst_mux_process_enc_crc(char * fstart,char ** fend)
 }
 
 
-int32_t burst_mux_process_enc_addr(char ** fstart,char * fend,burst_rcv_ctx_t *rcv_ctx)
-{
-    char              var_name_addr[4];
-    int				  is_our = -1;
-
-
-	var_name_addr[0] = (*fstart)[0];
-	var_name_addr[1] = (*fstart)[1];
-	var_name_addr[2] = 0;
-
-	fstart += 2;
-
-	rcv_ctx->address  = strtol(var_name_addr,NULL,16);
-
-	switch(rcv_ctx->channel)
-	{
-		case CH_ETH:
-		case CH_DEBUG:
-		{
-			is_our = 0;
-		}break;
-
-		case CH_USB:
-		{
-			if( bmux.address == rcv_ctx->address)
-			{
-				is_our =0;
-			}
-		}break;
-
-		case CH_RS485:
-		{
-			if( bmux.address == rcv_ctx->address)
-			{
-				is_our = 0;
-			}
-		}break;
-
-
-		default:
-		{
-		}break;
-
-	}
-
-
-	return is_our;
-}
-
 
 int32_t burst_mux_process_enc_req(char * fstart,char * fend,burst_rcv_ctx_t *rcv_ctx)
 {
@@ -184,7 +135,7 @@ int32_t burst_mux_process_enc_req(char * fstart,char * fend,burst_rcv_ctx_t *rcv
 		}
 		else
 		{
-			resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"<%02X%s=%s:$$>\r\n",rcv_ctx->address,var_name,resp_value);
+			resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"<%s=%s:$$>\r\n",var_name,resp_value);
 
 		    if(resp_len >=6 )
 		    {
@@ -214,10 +165,7 @@ int32_t burst_mux_process_enc(char * fstart,char * fend,burst_rcv_ctx_t *rcv_ctx
 
 	if(burst_mux_process_enc_crc(fstart,&fend)== 0)
 	{
-		if(burst_mux_process_enc_addr(&fstart,fend,rcv_ctx) == 0)
-		{
-			execute_store = burst_mux_process_enc_req(fstart,fend,rcv_ctx);
-		}
+		execute_store = burst_mux_process_enc_req(fstart,fend,rcv_ctx);
 	}
 
 	return execute_store;
@@ -264,7 +212,6 @@ int32_t  burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len)
 		{
 			// Try for pure gcode - direct message
 			rcv_ctx.frame_format = RCV_FRAME_DIRECT;
-			rcv_ctx.address		 = -1;
 			gcode_engine_command(&buffer[curr],&rcv_ctx);
 		}
 

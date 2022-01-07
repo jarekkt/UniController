@@ -1,4 +1,4 @@
-28954446521022
+30562729997885
 Biblioteki
 CONN-TE-MICROMATCH-4X2-PTH
 
@@ -111,6 +111,13 @@ Integrated Circuit
 0
 8
 8
+Biblioteki
+PhoenixContact_MC-G_10x3.50mm_Angled
+Generic Phoenix Contact connector footprint for series: MC-G; number of pins: 10; pin pitch: 3.50mm; Angled || order number: 1844294 8A 160V
+phoenix_contact connector MC_01x10_G_3.5mm
+0
+10
+10
 Biblioteki
 Pressure_sensor_v2
 

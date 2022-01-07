@@ -476,12 +476,8 @@
       "Processor"
     ],
     [
-      "00000000-0000-0000-0000-00005c929e60",
-      "RS485 / CAN"
-    ],
-    [
       "00000000-0000-0000-0000-00005c921a83",
-      "Analod / Digital IO"
+      "Analog  Digital IO"
     ],
     [
       "00000000-0000-0000-0000-00005e711988",
@@ -498,10 +494,6 @@
     [
       "6e32f2aa-aff0-4978-a4c5-4354c79bd585",
       "Connectors"
-    ],
-    [
-      "aaf6b8be-3cd5-40aa-861d-a1bd427c6a24",
-      "midboard"
     ]
   ],
   "text_variables": {}

@@ -52,26 +52,32 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, SCK4_IO_STEP5_Pin|NSS4_IO_DIR5_Pin|MISO4_IO_STEP6_Pin|MOSI_DIR6_Pin
-                          |MID_IO1_STEP7_Pin|IO_LED_Pin|GPIO_PIN_1, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, SCK4_OUT_STEP5_Pin|NSS4_OUT_DIR5_Pin|MISO4_OUT_STEP6_Pin|MOSI_OUT_DIR6_Pin
+                          |IO_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, OUT_DIR3_Pin|OUT_CPU4_Pin|OUT_CPU3_Pin|OUT_CPU2_Pin
-                          |MID_IO4_DIR4_Pin|OUT_CPU1_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin, GPIO_PIN_RESET);
+                          |OUT_STEP4_Pin|OUT_CPU1_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, OUT_STEP7_Pin|OUT_DIR7_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(OUT_DIR4_GPIO_Port, OUT_DIR4_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PEPin PEPin PEPin PEPin
-                           PEPin PEPin PE1 */
-  GPIO_InitStruct.Pin = SCK4_IO_STEP5_Pin|NSS4_IO_DIR5_Pin|MISO4_IO_STEP6_Pin|MOSI_DIR6_Pin
-                          |MID_IO1_STEP7_Pin|IO_LED_Pin|GPIO_PIN_1;
+                           PEPin */
+  GPIO_InitStruct.Pin = SCK4_OUT_STEP5_Pin|NSS4_OUT_DIR5_Pin|MISO4_OUT_STEP6_Pin|MOSI_OUT_DIR6_Pin
+                          |IO_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PEPin PEPin PEPin PEPin
-                           PEPin */
+                           PEPin PEPin */
   GPIO_InitStruct.Pin = IN_CPU1_Pin|IN_CPU2_Pin|IN_CPU3_Pin|IN_CPU4_Pin
-                          |MID_IO2_DIR7_Pin;
+                          |IN_CPU10_Pin|IN_CPU9_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
@@ -79,17 +85,25 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pins : PDPin PDPin PDPin PDPin
                            PDPin PDPin PDPin PDPin */
   GPIO_InitStruct.Pin = OUT_DIR3_Pin|OUT_CPU4_Pin|OUT_CPU3_Pin|OUT_CPU2_Pin
-                          |MID_IO4_DIR4_Pin|OUT_CPU1_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin;
+                          |OUT_STEP4_Pin|OUT_CPU1_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA8 PAPin PAPin */
-  GPIO_InitStruct.Pin = GPIO_PIN_8|TX1_IN10_CPU_Pin|RX1_IN9_CPU_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  /*Configure GPIO pins : PAPin PAPin */
+  GPIO_InitStruct.Pin = OUT_STEP7_Pin|OUT_DIR7_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PtPin */
+  GPIO_InitStruct.Pin = OUT_DIR4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(OUT_DIR4_GPIO_Port, &GPIO_InitStruct);
 
 }
 
