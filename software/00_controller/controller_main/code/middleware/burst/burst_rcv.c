@@ -11,7 +11,7 @@
 #include "tcpconn/tcpconn.h"
 
 
-#define BURST_MUX_TIMEOUT 1000
+#define BURST_MUX_TIMEOUT 100
 
 
 typedef struct
@@ -29,6 +29,7 @@ typedef struct
 	burst_serial_data_t  ch[CH_CNT];
 	int32_t			 	 ch_active;
 	xSemaphoreHandle     sema_recv;
+	uint32_t			 usb_open_activated;
 }burst_rcv_t;
 
 
@@ -36,7 +37,7 @@ static void burst_rcv_task(void * params);
 
 burst_rcv_t  brcv;
 
-extern void burst_rcv_usb_tx(char * msg,uint32_t msg_len);
+extern void burst_rcv_usb_tx(const char * msg,uint32_t msg_len);
 
 void burst_rcv_init()
 {
@@ -46,23 +47,55 @@ void burst_rcv_init()
 
 void burst_rcv_usb_open()
 {
+	brcv.usb_open_activated = 1000 / BURST_MUX_TIMEOUT;
+}
 
+void burst_rcv_usb_welcome()
+{
+	if(brcv.usb_open_activated > 0)
+	{
+		brcv.usb_open_activated--;
+		if(brcv.usb_open_activated == 0)
+		{
+			burst_rcv_usb_tx("Welcome to Unicontroller\r\n",26);
+		}
+	}
 }
 
 
+uint32_t	burst_rcv_add_msg(burst_serial_data_t * ch,const char * msg,uint32_t msg_len)
+{
+	uint32_t	eom = 0;
+	uint32_t	idx;
 
-void burst_rcv_usb_rx(char * msg,uint32_t msg_len)
+	for(idx = ch->RxCnt ;idx < ch->RxCnt + msg_len;idx++ )
+	{
+		ch->RxBuffer[idx] = *msg;
+		if( (*msg == '\n') || (*msg == '\r'))
+		{
+			eom = 1;
+		}
+		msg++;
+	}
+	ch->RxCnt += msg_len;
+
+	return eom;
+}
+
+
+void burst_rcv_usb_rx(const char * msg,uint32_t msg_len)
 {
 	burst_serial_data_t	  * serial_ch;
 
-
 	serial_ch   = &brcv.ch[CH_USB];
 
-	if(msg_len < sizeof(serial_ch->RxBuffer))
+	if(msg_len + serial_ch->RxCnt < sizeof(serial_ch->RxBuffer))
 	{
-		serial_ch->RxCnt = msg_len;
-        serial_ch->RxMsgCounter++;
-        serial_ch->RxMsgOk = 1;
+		if(burst_rcv_add_msg(serial_ch,msg,msg_len)!= 0)
+		{
+			serial_ch->RxMsgCounter++;
+			serial_ch->RxMsgOk = 1;
+		}
 
         // TODO - check if really interrupt context
 		xSemaphoreGiveFromISR(brcv.sema_recv,NULL);
@@ -79,12 +112,13 @@ void burst_rcv_eth_rx(const char * msg,uint32_t msg_len)
 
 	if(msg_len < sizeof(serial_ch->RxBuffer))
 	{
-		memcpy(serial_ch->RxBuffer,msg,msg_len);
-		serial_ch->RxCnt = msg_len;
-        serial_ch->RxMsgCounter++;
-        serial_ch->RxMsgOk = 1;
+		if(burst_rcv_add_msg(serial_ch,msg,msg_len)!= 0)
+		{
+			serial_ch->RxMsgCounter++;
+			serial_ch->RxMsgOk = 1;
 
-		xSemaphoreGiveFromISR(brcv.sema_recv,NULL);
+			xSemaphoreGiveFromISR(brcv.sema_recv,NULL);
+		}
 	}
 
 	brcv.ch_active = CH_ETH;
@@ -107,7 +141,6 @@ void burst_rcv_once()
 	tcpconn_callback(burst_rcv_eth_rx);
 
 
-
 	xTaskCreate( burst_rcv_task, "Burst", 6 * configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY   + 1, NULL );
 }
 
@@ -116,7 +149,7 @@ void burst_rcv_once()
         \brief Function which calculates response frame crc and sends it out.
 
 */
-void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,char * response, int length)
+void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,const char * response, int length)
 {
 	if(length < 0)
 	{
@@ -186,9 +219,6 @@ static void burst_rcv_serial_rcv(void)
 		}
 
 
-
-
-
     }while (cnt != 0);
 
 }
@@ -204,6 +234,8 @@ static void burst_rcv_task(void * params)
     {
 
     	burst_rcv_serial_rcv();
+    	burst_rcv_usb_welcome();
+
 
         fw_stack_check();
     }

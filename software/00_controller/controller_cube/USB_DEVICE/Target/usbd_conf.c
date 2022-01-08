@@ -262,10 +262,7 @@ void HAL_PCD_ResumeCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
   /* USER CODE BEGIN 3 */
-#ifdef USE_MY_CODE
-  extern void burst_rcv_usb_open();
-  burst_rcv_usb_open();
-#endif
+
 
   /* USER CODE END 3 */
   USBD_LL_Resume((USBD_HandleTypeDef*)hpcd->pData);

@@ -401,7 +401,8 @@ int32_t   gcode_engine_motion_G0G1(const burst_rcv_ctx_t * rcv_ctx,const gcode_c
 		}
 
 
-		if(gcode_engine_motion(mj,axis,F,G,H,is_homing) != 0)
+		result = gcode_engine_motion(mj,axis,F,G,H,is_homing);
+		if( result != 0)
 		{
 			motion_engine_jobs_start();
 		}

@@ -29,9 +29,14 @@ typedef struct
 
 
 
-
 srv_serial_data_t  serial_pt;
 
+void serial_dummy_rec_char(uint32_t port_id,uint8_t cc,portBASE_TYPE * pb)
+{
+	UNUSED(port_id);
+	UNUSED(cc);
+	UNUSED(pb);
+}
 
 
 void    srv_serial_low_init(serial_usart_ctx_t * ctx,USART_TypeDef * usart)
@@ -40,6 +45,7 @@ void    srv_serial_low_init(serial_usart_ctx_t * ctx,USART_TypeDef * usart)
 
 
     ctx->usart = usart;
+    ctx->rec_char = serial_dummy_rec_char;
 
     vSemaphoreCreateBinary(ctx->sema);
 }
