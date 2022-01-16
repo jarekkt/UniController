@@ -130,6 +130,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/adc.h</locationURI>
 		</link>
 		<link>
+			<name>cube/Core/Inc/dma.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/dma.h</locationURI>
+		</link>
+		<link>
 			<name>cube/Core/Inc/fdcan.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/fdcan.h</locationURI>
@@ -148,11 +153,6 @@
 			<name>cube/Core/Inc/main.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/main.h</locationURI>
-		</link>
-		<link>
-			<name>cube/Core/Inc/spi.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/spi.h</locationURI>
 		</link>
 		<link>
 			<name>cube/Core/Inc/stm32h7xx_hal_conf.h</name>
@@ -178,11 +178,6 @@
 			<name>cube/Core/Src/adc.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/adc.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Core/Src/bdma.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/bdma.c</locationURI>
 		</link>
 		<link>
 			<name>cube/Core/Src/dma.c</name>

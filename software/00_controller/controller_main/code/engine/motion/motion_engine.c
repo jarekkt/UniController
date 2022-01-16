@@ -251,7 +251,8 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 	motion_buffer_t  *	mb_curr;
 	uint32_t       		org_mb_g_head;
 	int32_t 			result = 0;
-	float				step_freq;
+	uint32_t			step_freq;
+
 
 
 	// Calculate relative move
@@ -294,7 +295,7 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 			// Standard axis, software pulse generation
 			step_freq = mctx_nv.step_freq / 2;
 		}
-		mb_used = motion_engine_convert(axis_idx,curr_pos_mm,pos_mm,mctx_nv.step_freq,&calc,&ppctx_nv->axis[axis_idx],mb,DIM(mb));
+		mb_used = motion_engine_convert(axis_idx,curr_pos_mm,pos_mm,step_freq,&calc,&ppctx_nv->axis[axis_idx],mb,DIM(mb));
 
 
 		if(mb_used > 0)

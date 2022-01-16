@@ -112,17 +112,16 @@ uint32_t  srv_gpio_get_io(void)
 		io |= 0x80;
 	}
 
-#if 0
-	if(GPIO_Get(MID_IO1)!=0)
+	if(GPIO_Get(IN_CPU9)!=0)
 	{
 		io |= 0x100;
 	}
 
-	if(GPIO_Get(MID_IO2)!=0)
+	if(GPIO_Get(IN_CPU10)!=0)
 	{
 		io |= 0x200;
 	}
-#endif
+
 
 
 	return io;
@@ -205,31 +204,8 @@ void      srv_gpio_set_io(uint32_t mask,uint32_t value)
 		}
 	}
 
-#if 0
-	if(mask & 0x40)
-	{
-		if(value & 0x40)
-		{
-			GPIO_Set(MID_IO1);
-		}
-		else
-		{
-			GPIO_Clr(MID_IO1);
-		}
-	}
 
-	if(mask & 0x80)
-	{
-		if(value & 0x80)
-		{
-			GPIO_Set(MID_IO2);
-		}
-		else
-		{
-			GPIO_Clr(MID_IO2);
-		}
-	}
-#endif
+
 
 
 }
@@ -243,7 +219,7 @@ uint32_t srv_gpio_dump(char * buffer, uint32_t buffer_size)
 
   in = srv_gpio_get_io();
 
-  length = snprintf(buffer,buffer_size,"GPIO: IN1 %ld IN2 %ld IN3 %ld IN4 %ld IN5 %ld IN6 %ld IN7 %ld IN8 %ld MID1 %ld MID2 %ld \r\n",
+  length = snprintf(buffer,buffer_size,"GPIO: IN1 %ld IN2 %ld IN3 %ld IN4 %ld IN5 %ld IN6 %ld IN7 %ld IN8 %ld IN9 %ld IN10 %ld \r\n",
 		  in & 0x01,
 		  (in>>1) & 0x01,
 		  (in>>2) & 0x01,
