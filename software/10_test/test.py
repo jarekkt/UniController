@@ -217,12 +217,30 @@ class tick_calc:
         self.t_time   = arr.array('f')
 
     def calc_phase(self):
+        half_dist = self.m_dist / 2
+
+        if True:
+            # Calculate acceleration which would make ideal S curve
+            coeff = [1/(self.m_jerk), 0, 2*self.m_speed0, -half_dist * self.m_jerk]
             roots = np.roots(coeff)
+            a_scurve = roots[2].real
 
+            # If requested acceleration is bigger then ideal S curve
+            # then we have to limit it - it is too much for calculation distance
 
+            if self.log:
+                print('Acceleration our {} ideal S {} '.format(self.m_accel_s,a_scurve))
+
+            if a_scurve < self.m_accel_s:
+                old_acc = self.m_accel_s
+                self.m_accel_s = a_scurve
                 if self.log:
+                    print('Changing acceleration from {} to {} (ideal s curve distance limit)'.format(old_acc,self.m_accel_s))
 
+        # vs = v0 + a^2/j
+        top_speed = self.m_speed0 + self.m_accel_s * self.m_accel_s/self.m_jerk
 
+        if top_speed > self.m_speed:
             #Given acceleration makes too big speed - even for ideal S curve
             old_acc = self.m_accel_s
             old_speed = self.m_speed
@@ -248,9 +266,21 @@ class tick_calc:
 
         self.s_t123 = self.s_t1 + self.s_t2 + self.s_t3
 
+        if self.s_t123 > half_dist:
             # Reaching max speed gives too large distance
             # Cut linear acceleration period
+            lc = half_dist - self.s_t1
             if self.log:
+                print('Too long distance {} > {}'.format(self.s_t123,half_dist))
+
+            rr = self.v_t1*self.m_accel_s/self.m_jerk + (math.pow(self.m_accel_s,3) / (3* math.pow(self.m_jerk,2))) -lc
+            rr1 = (self.m_speed0 + (self.m_accel_s*self.m_accel_s)/(6*self.m_jerk) )*(self.m_accel_s/self.m_jerk)
+            rr1_2 = self.m_speed0 + (self.m_accel_s*self.m_accel_s)/(2*self.m_jerk)
+            rr2 = (self.v_t1 + (self.m_accel_s*self.m_accel_s)/(3*self.m_jerk) )*(self.m_accel_s/self.m_jerk)
+
+            coeff = [self.m_accel_s/2,
+                     self.v_t1 + self.m_accel_s*self.m_accel_s/self.m_jerk,
+                     rr]
             roots = np.roots(coeff)
             self.T12 = roots[1]
 
@@ -275,6 +305,7 @@ class tick_calc:
         self.T1 = self.T11 + self.T12 + self.T13
         self.S1 = self.s_t123
  
+        self.S2 = 2 * (half_dist - self.s_t123)
         self.T2 = self.S2 / self.m_speed
         self.T3 = self.T1
         self.S3 = self.S1
@@ -290,6 +321,7 @@ class tick_calc:
 
         self.T = self.T1 + self.T2 + self.T3
         if self.log:
+            print('T11={} T12={} T13={}  T1={} half_dist/s1 = {}/{}  T2={}'.format(self.T11,self.T12,self.T13,self.T1 ,half_dist,self.s_t123,self.T2))
 
     def calc_rev_time(self,zdist):
         org_dist = zdist
@@ -428,6 +460,7 @@ class tick_calc:
 
 
 
+"""
 mp_x = motion_profile(1000,1000,10000,50)
 mp_y = motion_profile(2000,2000,50000,50)
 
@@ -443,6 +476,12 @@ test.path_plot(p)
 p.show()
 """
 
+p = plt
+mp_x = motion_profile(100000, 1000, 1000, 1)
+#l1 = tick_calc(100000, mp_x, 0.001, 1)
+l1 = tick_calc(10, mp_x, 0.001, 1)
+l1.execute()
+l1.plot(p)
 p.show()
 
 
