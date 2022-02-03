@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import array as arr
 import math
 import numpy as np
@@ -218,16 +219,46 @@ class tick_calc:
     def calc_phase(self):
         hd = self.m_dist / 2
 
-        h_cc = (2*self.m_speed0 + self.m_accel_s * self.m_accel_s/self.m_jerk)*self.m_accel_s/self.m_jerk
+        if self.m_speed0 >= self.m_speed:
+            old_speed0 = self.m_speed0
+            self.m_speed0 = self.m_speed
+            print('Changing safe speed from {} to {} (lower speed requested)'.format(old_speed0, self.self.m_speed0))
 
-        if h_cc > hd:
+            self.T1 = self.T3 = 0
+            self.S1 = self.S3 = 0
+            self.S2 = 2 * hd
+            self.T2 = self.S2 / self.m_speed
+            return
+
+        t_vmax =  (self.m_speed - self.m_speed0) /self.m_accel_s
+        s_t_vmax = t_vmax * self.m_speed0 +  self.m_accel_s * t_vmax * t_vmax /2
+        if s_t_vmax > hd:
+            # We will not reach desired speed
+            coeff = [self.m_accel_s  /2,self.m_speed0 ,-hd]
+            roots = np.roots(coeff)
+            t_vmax = roots[1]
+            old_speed = self.m_speed
+            self.m_speed = self.m_speed0 + self.m_accel_s * t_vmax
+            if self.log:
+                print('Changing speed  from {} to {} (distance 1 limit)'.format(old_speed, self.m_speed))
+
+        # Check travel distance with ideal S curve
+        S = (self.m_speed * self.m_speed - self.m_speed0 * self.m_speed0)/ self.m_accel_s
+
+        if S > hd:
             #Acceleration needs to be lowered - even ideal S curve gives too big distance
             old_acc = self.m_accel_s
-            coeff = [1/(self.m_jerk*self.m_jerk),(2*self.m_speed0/self.m_jerk),0,-hd]
-            roots = np.roots(coeff)
-            self.m_accel_s = roots[2]
-            if self.log:
-                print('Changing acceleration from {} to {} (distance limit)'.format(old_acc,self.m_accel_s))
+            old_speed =  self.m_speed
+            new_acc = hd / (self.m_speed * self.m_speed - self.m_speed0 * self.m_speed0)
+            if new_acc > old_acc:
+                # The problem is not with accelleration, but with too high speed
+                new_speed = math.sqrt(S * self.m_accel_s +  self.m_speed0 * self.m_speed0)
+                self.m_speed = new_speed
+                if self.log:
+                    print('Changing speed  from {} to {} (distance/speed limit)'.format(old_speed, self.m_speed))
+            else:
+                if self.log:
+                    print('Changing acceleration from {} to {} (distance limit)'.format(old_acc,self.m_accel_s))
 
         h_v  = self.m_speed0 + self.m_accel_s * self.m_accel_s/self.m_jerk
 
@@ -442,7 +473,7 @@ class tick_calc:
 
 
 
-
+"""
 
 mp_x = motion_profile(1000,1000,10000,50)
 mp_y = motion_profile(2000,2000,50000,50)
@@ -456,6 +487,16 @@ test = motion_test()
 test.trajectory()
 test.path_plot(p)
 
+p.show()
+"""
+
+
+p    = plt
+
+mp_fault = motion_profile(1.0,10,0.1,0.1)
+l_test = tick_calc(0.012,mp_fault,0.001,1)
+l_test.execute()
+l_test.plot(p)
 p.show()
 
 #

@@ -124,33 +124,34 @@ double solve_qubic_positive(double a, double b, double c,double d)
 }
 
 
-void motion_scurve_calc(motion_calc_t * calc,
-						int32_t 		dist_001mm,
-						uint32_t 		speed_safe_001mm_s,
-						uint32_t 		speed_001mm_s,
-						uint32_t 		accel_001mm_s2,
-						uint32_t 		jerk_001mm_s3
+void motion_scurve_calc(
+		motion_calc_t * calc,
+		float 			dist_mm,
+		float 			speed_safe_mm_s,
+		float 			speed_mm_s,
+		float 			accel_mm_s2,
+		float 			jerk_mm_s3
 )
 {
 	 self_t self;
 
-	 if(dist_001mm > 0)
+	 if(dist_mm > 0)
 	 {
 		 calc->dir = 1;
 	 }
 	 else
 	 {
 		 calc->dir  = -1;
-		 dist_001mm = -dist_001mm;
+		 dist_mm = -dist_mm;
 	 }
 
 
 
-	 self.m_dist    = (double)dist_001mm / 1000.0;
-	 self.m_speed   = (double)speed_001mm_s / 1000.0;
-	 self.m_speed0  = (double)speed_safe_001mm_s / 1000.0;
-	 self.m_accel   = (double)accel_001mm_s2 / 1000.0;
-	 self.m_jerk    = (double)jerk_001mm_s3  / 1000.0;
+	 self.m_dist    = dist_mm;
+	 self.m_speed   = speed_mm_s;
+	 self.m_speed0  = speed_safe_mm_s;
+	 self.m_accel   = accel_mm_s2;
+	 self.m_jerk    = jerk_mm_s3;
 
 	 self.half_dist = self.m_dist / 2;
 	 self.calc 		= calc;

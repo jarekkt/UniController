@@ -45,10 +45,10 @@ gcode_parse_table_t  parse_table[] =
 				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
 				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
 				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
-				{ 'U' , GCODE_I_U, GCODE_V_FLOAT} ,
-				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
-				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
+				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
+				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
 				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
 				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
@@ -61,13 +61,13 @@ gcode_parse_table_t  parse_table[] =
 				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
 				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
 				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
-				{ 'U' , GCODE_I_U, GCODE_V_FLOAT} ,
-				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
-				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
+				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
+				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
 				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
+				{ 'G' , GCODE_I_G, GCODE_V_FLOAT} ,
+				{ 'H' , GCODE_I_H, GCODE_V_FLOAT} ,
 
 			}
 		},
@@ -90,13 +90,13 @@ gcode_parse_table_t  parse_table[] =
 				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
 				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
 				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
-				{ 'U' , GCODE_I_U, GCODE_V_FLOAT} ,
-				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
-				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
+				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
+				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
 				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
+				{ 'G' , GCODE_I_G, GCODE_V_FLOAT} ,
+				{ 'H' , GCODE_I_H, GCODE_V_FLOAT} ,
 			}
 		},
 		{
@@ -106,13 +106,13 @@ gcode_parse_table_t  parse_table[] =
 				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
 				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
 				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
-				{ 'U' , GCODE_I_U, GCODE_V_FLOAT} ,
-				{ 'V' , GCODE_I_V, GCODE_V_FLOAT} ,
-				{ 'W' , GCODE_I_W, GCODE_V_FLOAT} ,
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
+				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
+				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
 				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
+				{ 'G' , GCODE_I_G, GCODE_V_FLOAT} ,
+				{ 'H' , GCODE_I_H, GCODE_V_FLOAT} ,
 			}
 		},
 		{
@@ -142,7 +142,7 @@ gcode_parse_table_t  parse_table[] =
 		}
 		,
 		{
-			'M',204, 3,GCODE_F_M204_3,
+			'M',201, 3,GCODE_F_M201_3,
 		 	 {
 				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
 		 	 }
@@ -194,6 +194,8 @@ int32_t  gcode_parse_fn(gcode_command_t * cmd,const char * chunk)
 				if( (num == parse_table[ii].fn_number) && (subnum == parse_table[ii].fn_sub_number) )
 				{
 					cmd->fn = parse_table[ii].fn_id;
+					cmd->fn_letter = parse_table[ii].fn_letter;
+					cmd->fn_number = parse_table[ii].fn_number;
 					gctx.parse_fn_idx = ii;
 					return 0;
 				}
@@ -206,10 +208,9 @@ int32_t  gcode_parse_fn(gcode_command_t * cmd,const char * chunk)
 	return -1;
 }
 
-int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk,int token_idx)
+int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk)
 {
 	int 		ii;
-	uint32_t	mask = 0;
 	long   		num;
 	float       numf;
 	char * 		endptr;
@@ -218,24 +219,31 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk,int token_id
 
 	for(ii = 0;ii < GCODE_I_CNT;ii++)
 	{
-		if(chunk[0] == t->token_letter)
+		if(t[ii].token_letter==0)
 		{
-			if( (mask & (1<<ii) )!= 0)
+			// No more tokens in the table
+			break;
+		}
+
+
+		if(chunk[0] == t[ii].token_letter)
+		{
+			if( (cmd->tokens_present_mask  & (1 << t[ii].token_id) )!= 0)
 			{
 				sprintf(gctx.error_message,"Duplicate token %s",chunk);
 				// duplicate
 				return -1;
 			}
-			mask |=  (1<<ii);
 
-			cmd->tokens_present_mask |= (1<<ii);
-			cmd->tokens[token_idx].value_type = t->token_val_type;
+			cmd->tokens_present_mask |= (1<<t[ii].token_id);
+			cmd->tokens[t[ii].token_id].value_type = t[ii].token_val_type;
+			cmd->tokens[t[ii].token_id].letter = t[ii].token_letter;
 
-			switch(t->token_val_type)
+			switch(t[ii].token_val_type)
 			{
 				case GCODE_V_NONE:
 				{
-					cmd->tokens[token_idx].value.val_ui32 = 0;
+					cmd->tokens[t[ii].token_id].value.val_ui32 = 0;
 				}break;
 
 				case GCODE_V_UINT:
@@ -246,7 +254,7 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk,int token_id
 					  sprintf(gctx.error_message,"Wrong uint value %s",chunk);
 					  return -1;
 					}
-					cmd->tokens[token_idx].value.val_ui32 = (uint32_t)num;
+					cmd->tokens[t[ii].token_id].value.val_ui32 = (uint32_t)num;
 				}break;
 
 				case GCODE_V_INT:
@@ -257,7 +265,7 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk,int token_id
 					  sprintf(gctx.error_message,"Wrong int value %s",chunk);
 					  return -1;
 					}
-					cmd->tokens[token_idx].value.val_i32 = (int32_t)num;
+					cmd->tokens[ii].value.val_i32 = (int32_t)num;
 				}break;
 
 				case GCODE_V_FLOAT:
@@ -268,7 +276,7 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk,int token_id
 					  sprintf(gctx.error_message,"Wrong float value %s",chunk);
 					  return -1;
 					}
-					cmd->tokens[token_idx].value.val_float = numf;
+					cmd->tokens[t[ii].token_id].value.val_float = numf;
 				}break;
 
 				default:
@@ -297,17 +305,31 @@ int32_t gcode_parser_replacechar(char *str, char orig, char rep)
     return n;
 }
 
-int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line)
+int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line,uint32_t len)
 {
 	int32_t result = -1;
 	int32_t idx;
     char *string,*found;
 
 
-    // Initial settings
-    string = cmd_line;
-    idx    = 0;
-    memset(cmd,0,sizeof(*cmd));
+    printd(LVL_INFO,"GCODE parser - got this[%d]: \"%s\r\n",len,cmd_line);
+
+
+
+
+
+    // Trim possible telnet commands
+    // Look for G code commands ( which start - in our case - with 'G' or 'M' )
+    while(
+    	((*cmd_line) != 'G') &&
+		((*cmd_line) != 'M') &&
+		(len > 0)
+	)
+    {
+    	cmd_line++;
+    	len--;
+    }
+
 
     // Cut off comments
     found = strchr(cmd_line,';');
@@ -316,10 +338,16 @@ int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line)
     	*found = '\x0';
     }
 
+
     // Replace unwanted characters
     gcode_parser_replacechar(cmd_line,'\r',' ');
     gcode_parser_replacechar(cmd_line,'\n',' ');
 
+    printd(LVL_INFO,"GCODE parser - after pre-processing: \"%s\"\r\n",cmd_line);
+
+    // Initial settings
+    string = cmd_line;
+    idx    = 0;
     memset(cmd,0,sizeof(*cmd));
 
     while(1)
@@ -327,8 +355,15 @@ int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line)
     	found = strsep(&string," ");
     	if(found != NULL)
     	{
+    		if(*found =='\x00' )
+    		{
+    			// Multiple spaces
+    			continue;
+    		}
+
     		if(idx == 0)
     		{
+
 				if(gcode_parse_fn(cmd,found)!= 0)
 				{
 					break;
@@ -338,22 +373,47 @@ int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line)
     		}
     		else
     		{
-    			if(gcode_parse_token(cmd,found,idx-1)!= 0)
+    			if(gcode_parse_token(cmd,found)!= 0)
     			{
     				// Bad , wrong token
     				result = -1;
     				break;
     			}
     		}
+    		idx++;
     	}
 		else
 		{
 			break;
 		}
 
-    	idx++;
     }
 
+
+    printd(
+    	LVL_INFO,
+		"GCODE parser - result: %d\r\n %c%d.%d with tokens 0x%04x\r\n",
+    	result,
+		cmd->fn_letter,
+		cmd->fn_number,
+		cmd->sub_fn,
+		cmd->tokens_present_mask
+    );
+
+    for(idx = 0;idx < GCODE_I_CNT;idx++)
+    {
+    	if((cmd->tokens_present_mask & (1<<idx)) != 0)
+    	{
+    		switch(cmd->tokens[idx].value_type)
+    		{
+    			case GCODE_V_NONE: 	 printd(LVL_DEBUG,"  %c\r\n",   cmd->tokens[idx].letter);break;
+				case GCODE_V_UINT:	 printd(LVL_DEBUG,"  %c=%d\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_i32);break;
+    			case GCODE_V_INT:	 printd(LVL_DEBUG,"  %c=%u\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_ui32);break;
+    			case GCODE_V_FLOAT:  printd(LVL_DEBUG,"  %c=%f\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_float);break;
+    			default:			 printd(LVL_DEBUG,"  %c=??\r\n",cmd->tokens[idx].letter);break;
+    		}
+    	}
+    }
 
 	return result;
 }

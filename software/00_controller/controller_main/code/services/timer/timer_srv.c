@@ -162,7 +162,12 @@ void srv_timer_init(void)
 
 
 
-    /* Service callback timer - slow ( 1kHz) */
+    /*
+     * Service callback timer - slow ( 1kHz)
+     *
+     * FreeRtos calls supported in callbacks
+     *
+     * */
 
     __HAL_RCC_TIM5_CLK_ENABLE();
 
@@ -175,11 +180,15 @@ void srv_timer_init(void)
 
     HAL_TIM_Base_Start_IT(&tsrv.hTim5);
 
-    HAL_NVIC_SetPriority(TIM5_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM5_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(TIM5_IRQn);
 
 
-    /* Service callback timer - fast ( 10 kHz) */
+    /* Service callback timer - fast ( 10 kHz)
+     *
+     * FreeRtos calls supported in callbacks
+     *
+     */
 
     __HAL_RCC_TIM6_CLK_ENABLE();
 
@@ -192,7 +201,7 @@ void srv_timer_init(void)
 
     HAL_TIM_Base_Start_IT(&tsrv.hTim6);
 
-    HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM6_DAC_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY, 0);
     HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
 
 

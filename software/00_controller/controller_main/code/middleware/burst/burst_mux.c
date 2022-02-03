@@ -185,6 +185,10 @@ int32_t  burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len)
 
 	buffer[len] = 0;
 
+
+
+
+
 	while(curr < len)
 	{
 		while(next<len)
@@ -212,7 +216,7 @@ int32_t  burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len)
 		{
 			// Try for pure gcode - direct message
 			rcv_ctx.frame_format = RCV_FRAME_DIRECT;
-			gcode_engine_command(&buffer[curr],&rcv_ctx);
+			gcode_engine_command(&buffer[curr],len-curr,&rcv_ctx);
 		}
 
 		curr = next;

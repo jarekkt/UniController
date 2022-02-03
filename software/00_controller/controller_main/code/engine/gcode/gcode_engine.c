@@ -73,7 +73,7 @@ void gcode_engine_command_execute(jcmd_e cmd,const burst_rcv_ctx_t * rcv_ctx,uin
 
 
 
-void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
+void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * rcv_ctx)
 {
 	int32_t 			result = 0;
 	uint32_t 			args[2];
@@ -81,7 +81,7 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 
 	float				S;
 
-	result = gcode_parser_execute(&cmd,cmd_line);
+	result = gcode_parser_execute(&cmd,cmd_line,len);
 
 	if(result != 0)
 	{
@@ -197,7 +197,7 @@ void gcode_engine_command(char * cmd_line, const burst_rcv_ctx_t * rcv_ctx)
 
 			}break;
 
-			case GCODE_F_M204_3:
+			case GCODE_F_M201_3:
 			{
 				if(cmd.tokens_present_mask & (1<< GCODE_I_S))
 				{

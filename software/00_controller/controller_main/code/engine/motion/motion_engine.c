@@ -257,7 +257,7 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 
 	// Calculate relative move
 	curr_pos_mm = mctx.plan_pos_mm[axis_idx] ;
-	dist_mm	 	= curr_pos_mm - mctx.offset_pos_mm[axis_idx] - pos_mm;
+	dist_mm	 	= pos_mm - (curr_pos_mm - mctx.offset_pos_mm[axis_idx]);
 
 
 	// Update new target position
@@ -307,6 +307,7 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 				if(motion_engine_allocate(mj,axis_idx, &mb_curr)==0)
 				{
 					memcpy(mb_curr,&mb[ii],sizeof(*mb_curr));
+					mb_curr->next = NULL;
 				}
 				else
 				{
@@ -316,26 +317,7 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 			}
 		}
 	}
-	else
-	{
-		// Remote controller movement
 
-		if(motion_engine_allocate(mj,axis_idx, &mb_curr)==0)
-		{
-
-			dist_mm	 	= mctx.curr_pos[axis_idx] - mctx.offset_pos_mm[axis_idx] - pos_mm;
-
-			mb_curr->mfr.dist_mm 			= dist_mm;
-			mb_curr->mfr.safe_speed_mm_s    = ppctx_nv->axis[axis_idx].speed_safe_mm_s;
-			mb_curr->mfr.speed_mm_s			= speed_mm_s;
-			mb_curr->mfr.accel_mm_s2		= accel_mm_s2;
-			mb_curr->mfr.jerk_mm_s3			= jerk_mm_s3;
-		}
-		else
-		{
-			result = -1;
-		}
-	}
 
 	if(result != 0)
 	{
@@ -391,24 +373,24 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 {
 	uint32_t 	length = 0;
 	int32_t	 	idx;
-	const char  axes[]="XYZAUVWB";
+	const char  axes[]="XYZABCDE";
 
 	switch(mj->jcmd)
 	{
 		case JCMD_OK:
 		{
-			 length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok");
+			 length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok\r\n");
 		}break;
 
 		case JCMD_MOTION:
 		{
 			 if(result == 0)
 			 {
-				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok");
+				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok\r\n");
 			 }
 			 else
 			 {
-				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail");
+				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail\r\n");
 			 }
 		}break;
 
@@ -422,10 +404,12 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 			 {
 				 length += snprintf(&mctx.resp_buffer[length],
 						  	  	    sizeof(mctx.resp_buffer)-length,
-									"%c: %8.3f",
+									" %c:%08.3f",
 									axes[idx],
 									mctx.curr_pos[idx] - mctx.offset_pos_mm[idx]);
 			 }
+
+			 length += snprintf(&mctx.resp_buffer[length],sizeof(mctx.resp_buffer)-length,"\r\n");
 
 		}break;
 
@@ -433,7 +417,7 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 		{
 			length = snprintf(mctx.resp_buffer,
 						 sizeof(mctx.resp_buffer),
-						 "ok PROTOCOL_VERSION: 1.0 "
+						 "ok\r\n PROTOCOL_VERSION: 1.0 "
 						 "FIRMWARE_NAME: UniController %d.%d "
 						 "FIRMWARE_URL: https://github.com/jarekkt/UniController "
 						 "FIRMWARE_GITHASH: %s \r\n",
@@ -453,11 +437,11 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 			if(result == 0)
 			{
-				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok");
+				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok\r\n");
 			}
 			else
 			{
-				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail");
+				length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail\r\n");
 			}
 		}break;
 
@@ -465,7 +449,7 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 		default:
 		case JCMD_FAIL:
 		{
-			length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail");
+			length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"fail\r\n");
 		}break;
 
 	}
@@ -477,7 +461,10 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 static void  motion_task_abort_job(uint32_t idx)
 {
+	// Relese motion buffers
 	mctx.mb_g_head = mj_global[idx].mb_head;
+
+	// Report failure for remaining jobs
 	motion_engine_ack(&mj_global[idx],-1);
 }
 
@@ -514,11 +501,6 @@ static int32_t  motion_task_finish_job(uint32_t idx)
 			// This was stop/abort request
 			result = -1;
 		}
-		else if( mctx.remote_failure != 0)
-		{
-			// Remote command failure
-			result = -1;
-		}
 		else
 		{
 			//
@@ -531,6 +513,11 @@ static int32_t  motion_task_finish_job(uint32_t idx)
 			// Ordinary moves get ack immediately after entering the queue
 			motion_engine_ack(&mj_global[idx],result);
 		}
+
+		// Release motion buffers
+		mctx.mb_g_tail = mj_global[idx].mb_head;
+
+
 	}
 	else
 	{
@@ -579,7 +566,9 @@ static uint32_t motion_task_start_job(uint32_t idx)
 			}
 		}
 
-		mctx.job = &mj_global[idx];
+		mctx.job 		 = &mj_global[idx];
+		mctx.pulse_idle  = 0;
+		motion_engine_start_timer();
 
 	}
 	else
@@ -703,6 +692,13 @@ void motion_engine_tmr_step(void)
 		{
 			GPIO_STEP_SET_D();
 		}
+
+		if(active == 0)
+		{
+			 motion_engine_stop_timer();
+			 mctx.pulse_idle = 1;
+		}
+
 	}
 	else
 	{
@@ -710,14 +706,6 @@ void motion_engine_tmr_step(void)
 		GPIO_STEP_CLR_B();
 		GPIO_STEP_CLR_C();
 		GPIO_STEP_CLR_D();
-
-		if( (active == 0) || (mctx.hit_active != 0) || (mctx.stop_active != 0) )
-		{
-			 mctx.job->task_flags |= MF_FLAG_DONE;
-
-			 motion_engine_stop_timer();
-			 xSemaphoreGiveFromISR(mctx.motion_kick,NULL);
-		}
 	}
 }
 
@@ -737,8 +725,6 @@ void motion_engine_tmr_endpos(void)
 		return;
 	}
 
-
-	// TODO - check remote jobs
 
 
 	inputs = srv_gpio_get_io();
@@ -798,6 +784,18 @@ void motion_engine_tmr_endpos(void)
 	{
 		mctx.curr_pos[ii] = motion_engine_pulse_to_units(mctx.curr_pulse_pos[ii],ii);
 	}
+
+
+	if( (mctx.pulse_idle != 0)
+			)// || (mctx.hit_active != 0) || (mctx.stop_active != 0) )
+	{
+		 mctx.pulse_idle  = 0;
+		 mctx.job->task_flags |= MF_FLAG_DONE;
+
+		 xSemaphoreGiveFromISR(mctx.motion_kick,NULL);
+	}
+
+
 }
 
 

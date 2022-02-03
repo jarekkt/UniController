@@ -18,6 +18,7 @@ typedef enum
 	AXIS_B,
 	AXIS_C,
 	AXIS_D,
+	AXIS_E,
 	AXIS_GLOBAL_CNT
 }axis_idx_e;
 

@@ -9,7 +9,7 @@ typedef struct
 {   
     xSemaphoreHandle    sema;   
     
-    uint8_t               TxBuffer[256];
+    uint8_t               TxBuffer[1024];
     int                   TxHead;
     int                   TxTail;
 

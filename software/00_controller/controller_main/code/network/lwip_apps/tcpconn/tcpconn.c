@@ -80,7 +80,7 @@ void tcpconn_process_outgoing(struct netconn * nc)
 	err_t             err;
 	uint32_t 		  head_flash;
 
-	//todo - process or at least count error
+	//TODO - process or at least count error
 
 	head_flash = tctx.buf_head;
 	if(head_flash != tctx.buf_tail)

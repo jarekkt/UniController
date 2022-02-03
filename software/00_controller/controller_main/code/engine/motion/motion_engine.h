@@ -57,17 +57,6 @@ typedef struct
 }motion_phase_t;
 
 
-typedef struct _motion_remote_buffer_t
-{
-	float dist_mm;
-	float safe_speed_mm_s;
-	float speed_mm_s;
-	float accel_mm_s2;
-	float jerk_mm_s3;
-
-	struct _motion_remote_buffer_t  *  next;
-}motion_phase_remote_t;
-
 
 
 
@@ -84,11 +73,7 @@ typedef struct _motion_buffer_t
 {
 	int32_t				dir;
 
-	union
-	{
-		motion_phase_t  		mf;
-		motion_phase_remote_t  	mfr;
-	};
+	motion_phase_t  		mf;
 
 	struct _motion_buffer_t  *  next;
 }motion_buffer_t;
@@ -135,30 +120,37 @@ typedef struct
 	xSemaphoreHandle    motion_kick;
 
 	/* Request commands */
+
 	uint32_t 			req_stop;
 
 	/* Buffer management - motion profiles */
+
 	uint32_t			mb_g_tail;
 	uint32_t		    mb_g_head;
 
 	/* Buffer management - job management */
+
 	uint32_t 			mj_g_tail;
 	uint32_t 			mj_g_run_head;
 	uint32_t 			mj_g_head;
 
 	/* Pulse position (current) */
+
 	int32_t 			curr_pulse_pos[AXIS_GLOBAL_CNT];
 	int32_t				curr_dir[AXIS_GLOBAL_CNT];
 	int32_t				active_dir[AXIS_GLOBAL_CNT];
 
-	/* Position - future */
-	float	     		plan_pos_mm[AXIS_GLOBAL_CNT];
-
-
-	/* Common - global and remote */
+	/* Position (current) */
 
 	float	     		offset_pos_mm[AXIS_GLOBAL_CNT];
 	float				curr_pos[AXIS_GLOBAL_CNT];
+
+	/* Position (future) */
+
+	float	     		plan_pos_mm[AXIS_GLOBAL_CNT];
+
+
+
 
 
 
@@ -168,12 +160,13 @@ typedef struct
 	uint32_t			endpos_hit_cntr;
 	uint32_t 			stop_active;
 	uint32_t 			remote_failure;
+	uint32_t			pulse_idle;
 
 	/* Current job */
 	motion_job_t	 * job;
 
 	/* Command response buffer */
-	char			    resp_buffer[256];
+	char			    resp_buffer[384];
 
 }motion_ctx_t;
 

@@ -37,13 +37,12 @@ typedef struct
 
 
 
-void motion_scurve_calc(
-		motion_calc_t * calc,
-		float 			dist_mm,
-		float 			speed_safe_mm_s,
-		float 			speed_mm_s,
-		float 			accel_mm_s2,
-		float 			jerk_mm_s3
+void motion_scurve_calc(motion_calc_t * calc,
+						float 			dist_mm,
+						float 			speed_safe_mm_s,
+						float 			speed_mm_s,
+						float 			accel_mm_s2,
+						float 			jerk_mm_s3
 );
 
 int32_t motion_scurve_test(uint32_t test_nr);

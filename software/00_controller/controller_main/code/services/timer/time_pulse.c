@@ -96,25 +96,7 @@ void srv_timer_pulse_period(uint32_t period_01us)
 	   Error_Handler();
    }
 
-   htim16.Init.Prescaler = (tim_clock/TIMER_PWM_PRESCALER_10MHZ);
-   htim16.Init.Period    = period_01us;
 
-   if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
-   {
-	  Error_Handler();
-   }
-
-   sConfigOC.OCMode = TIM_OCMODE_TIMING;
-   sConfigOC.Pulse = 1;
-   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-   sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-   if (HAL_TIM_OC_ConfigChannel(&htim16, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-   {
-	   Error_Handler();
-   }
 }
 
 void srv_timer_pulse_once(void)

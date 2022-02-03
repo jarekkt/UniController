@@ -157,6 +157,9 @@ void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,const char * respon
 	}
 
 
+	printd(LVL_DEBUG,"Comm sent[%d]: %s",length,response);
+
+
     switch(rcv_ctx->channel)
     {
 
@@ -184,6 +187,11 @@ void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,const char * respon
 static void burst_rcv_serial_process(ch_idx_e idx)
 {
 	uint32_t execute_store;
+
+	brcv.ch[idx].RxBuffer[brcv.ch[idx].RxCnt] = 0;
+
+	printd(LVL_DEBUG,"Comm received[%d]: %s",brcv.ch[idx].RxCnt,brcv.ch[idx].RxBuffer);
+
 
     execute_store = burst_mux_serial_process(idx,brcv.ch[idx].RxBuffer,brcv.ch[idx].RxCnt);
 

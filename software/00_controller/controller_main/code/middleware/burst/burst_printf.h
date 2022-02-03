@@ -12,6 +12,21 @@
 #include "system.h"
 
 
+
+#define LVL_TRACE	0x01
+#define LVL_DEBUG	0x02
+#define LVL_INFO	0x04
+#define LVL_WARN	0x08
+#define LVL_ERROR	0x10
+
+#if 1
+#define printd(level_mask,format,...)  burst_log_printf(level_mask,format, __VA_ARGS__)
+#else
+#define printd(level_mask,format,...)
+#endif
+
+
+
 void burst_printf_init(void);
 void burst_printf_once(void);
 

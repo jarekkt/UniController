@@ -262,11 +262,16 @@ int32_t gcode_engine_motion(motion_job_t * mj,float * axis, float F,float G,floa
 
 	for( ii = GCODE_I_X; ii <= GCODE_I_LAST_AXIS;ii++)
 	{
-		if( isnan(axis[ii]) != 0)axis_mask |= ( 1<< ii);
+		if( isnan(axis[ii]) == 0)axis_mask |= ( 1<< ii);
+	}
+
+	if(axis_mask == 0)
+	{
+		return -1;
 	}
 
 
-	if(is_homing== 0)
+	if(is_homing != 0)
 	{
 		// Homing move required
 
@@ -309,6 +314,7 @@ int32_t gcode_engine_motion(motion_job_t * mj,float * axis, float F,float G,floa
 		// Acknowledge motion before even executing it
 		motion_engine_ack(mj,0);
 
+		result = 0;
 	}
 
 	return result;
@@ -402,7 +408,7 @@ int32_t   gcode_engine_motion_G0G1(const burst_rcv_ctx_t * rcv_ctx,const gcode_c
 
 
 		result = gcode_engine_motion(mj,axis,F,G,H,is_homing);
-		if( result != 0)
+		if( result == 0)
 		{
 			motion_engine_jobs_start();
 		}
