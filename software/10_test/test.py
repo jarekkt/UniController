@@ -217,52 +217,12 @@ class tick_calc:
         self.t_time   = arr.array('f')
 
     def calc_phase(self):
-        hd = self.m_dist / 2
-
-        if self.m_speed0 >= self.m_speed:
-            old_speed0 = self.m_speed0
-            self.m_speed0 = self.m_speed
-            print('Changing safe speed from {} to {} (lower speed requested)'.format(old_speed0, self.self.m_speed0))
-
-            self.T1 = self.T3 = 0
-            self.S1 = self.S3 = 0
-            self.S2 = 2 * hd
-            self.T2 = self.S2 / self.m_speed
-            return
-
-        t_vmax =  (self.m_speed - self.m_speed0) /self.m_accel_s
-        s_t_vmax = t_vmax * self.m_speed0 +  self.m_accel_s * t_vmax * t_vmax /2
-        if s_t_vmax > hd:
-            # We will not reach desired speed
-            coeff = [self.m_accel_s  /2,self.m_speed0 ,-hd]
             roots = np.roots(coeff)
-            t_vmax = roots[1]
-            old_speed = self.m_speed
-            self.m_speed = self.m_speed0 + self.m_accel_s * t_vmax
-            if self.log:
-                print('Changing speed  from {} to {} (distance 1 limit)'.format(old_speed, self.m_speed))
 
-        # Check travel distance with ideal S curve
-        S = (self.m_speed * self.m_speed - self.m_speed0 * self.m_speed0)/ self.m_accel_s
 
-        if S > hd:
-            #Acceleration needs to be lowered - even ideal S curve gives too big distance
-            old_acc = self.m_accel_s
-            old_speed =  self.m_speed
-            new_acc = hd / (self.m_speed * self.m_speed - self.m_speed0 * self.m_speed0)
-            if new_acc > old_acc:
-                # The problem is not with accelleration, but with too high speed
-                new_speed = math.sqrt(S * self.m_accel_s +  self.m_speed0 * self.m_speed0)
-                self.m_speed = new_speed
                 if self.log:
-                    print('Changing speed  from {} to {} (distance/speed limit)'.format(old_speed, self.m_speed))
-            else:
-                if self.log:
-                    print('Changing acceleration from {} to {} (distance limit)'.format(old_acc,self.m_accel_s))
 
-        h_v  = self.m_speed0 + self.m_accel_s * self.m_accel_s/self.m_jerk
 
-        if h_v > self.m_speed:
             #Given acceleration makes too big speed - even for ideal S curve
             old_acc = self.m_accel_s
             old_speed = self.m_speed
@@ -288,13 +248,9 @@ class tick_calc:
 
         self.s_t123 = self.s_t1 + self.s_t2 + self.s_t3
 
-        if self.s_t123 > hd:
             # Reaching max speed gives too large distance
             # Cut linear acceleration period
-            lc = hd - self.s_t1
             if self.log:
-                print('Too long distance {} > {}'.format(self.s_t123,hd))
-            coeff = [self.m_accel_s/2, self.v_t1 + self.m_accel_s*self.T11,self.T11* self.v_t1+self.m_accel_s*self.T11*self.T11/2-self.m_jerk*self.T11*self.T11*self.T11/6-lc]
             roots = np.roots(coeff)
             self.T12 = roots[1]
 
@@ -319,7 +275,6 @@ class tick_calc:
         self.T1 = self.T11 + self.T12 + self.T13
         self.S1 = self.s_t123
  
-        self.S2 = 2 * (hd - self.s_t123)
         self.T2 = self.S2 / self.m_speed
         self.T3 = self.T1
         self.S3 = self.S1
@@ -335,7 +290,6 @@ class tick_calc:
 
         self.T = self.T1 + self.T2 + self.T3
         if self.log:
-            print('T11={} T12={} T13={}  T1={} hd/s1 = {}/{}  T2={}'.format(self.T11,self.T12,self.T13,self.T1 ,hd,self.s_t123,self.T2))
 
     def calc_rev_time(self,zdist):
         org_dist = zdist
@@ -473,7 +427,6 @@ class tick_calc:
 
 
 
-"""
 
 mp_x = motion_profile(1000,1000,10000,50)
 mp_y = motion_profile(2000,2000,50000,50)
@@ -490,29 +443,8 @@ test.path_plot(p)
 p.show()
 """
 
-
-p    = plt
-
-mp_fault = motion_profile(1.0,10,0.1,0.1)
-l_test = tick_calc(0.012,mp_fault,0.001,1)
-l_test.execute()
-l_test.plot(p)
 p.show()
 
-#
-#plt.legend(loc='upper right')
-#
-#l1 = tick_calc(10000,mp_x,0.001,1)
-#
-#
-#l1.execute()
-#l1.plot(p)
-#
-#l2 = tick_calc(10000,mp_y,0.001,1)
-#l2.execute()
-#l2.plot(p)
-
-#
 
 print('Done')
 
