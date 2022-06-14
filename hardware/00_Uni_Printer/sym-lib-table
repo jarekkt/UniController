@@ -1,0 +1,12 @@
+(sym_lib_table
+  (lib (name "Uni_Printer-rescue")(type "Legacy")(uri "${KIPRJMOD}/Uni_Printer-rescue.lib")(options "")(descr ""))
+  (lib (name "mfc_base_lib")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/mfc_base_lib.lib")(options "")(descr ""))
+  (lib (name "step2cnc")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/step2cnc.lib")(options "")(descr ""))
+  (lib (name "components")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/kicad-libraries-master/components.lib")(options "")(descr ""))
+  (lib (name "NUF2042XV6T1G")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/NUF2042XV6T1G.lib")(options "")(descr ""))
+  (lib (name "MCU_ST_STM32H7")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/MCU_ST_STM32H7.lib")(options "")(descr ""))
+  (lib (name "GD25Q32CSIG")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/GD25Q32CSIG.lib")(options "")(descr ""))
+  (lib (name "L7986A")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/moje.pretty/L7986A.lib")(options "")(descr ""))
+  (lib (name "ITS4141NHUMA1")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/ITS4141NHUMA1.lib")(options "")(descr ""))
+  (lib (name "MT25QL256ABA1EW7-0SIT_TR")(type "Legacy")(uri "${KIPRJMOD}/Biblioteki/MT25QL256ABA1EW7-0SIT_TR.lib")(options "")(descr ""))
+)

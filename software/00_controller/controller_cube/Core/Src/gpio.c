@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -37,8 +37,6 @@
      PH1-OSC_OUT (PH1)   ------> RCC_OSC_OUT
      PA13 (JTMS/SWDIO)   ------> DEBUG_JTMS-SWDIO
      PA14 (JTCK/SWCLK)   ------> DEBUG_JTCK-SWCLK
-     PD0   ------> FDCAN1_RX
-     PD1   ------> FDCAN1_TX
 */
 void MX_GPIO_Init(void)
 {
@@ -47,73 +45,89 @@ void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, SCK4_OUT_STEP5_Pin|NSS4_OUT_DIR5_Pin|MISO4_OUT_STEP6_Pin|MOSI_OUT_DIR6_Pin
-                          |IO_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, IN_CPU2_Pin|IN_CPU1_Pin|IN_CPU6_Pin|OUT_CPU9_Pin
+                          |OUT_CPU10_Pin|OUT_DIR5_Pin|OUT_STEP6_Pin|OUT_STEP4_Pin
+                          |OUT_DIR6_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, OUT_DIR3_Pin|OUT_CPU4_Pin|OUT_CPU3_Pin|OUT_CPU2_Pin
-                          |OUT_STEP4_Pin|OUT_CPU1_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, ENET_RST_Pin|OUT_CPU8_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, OUT_STEP7_Pin|OUT_DIR7_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, OUT_DIR3_Pin|OUT_CPU6_Pin|OUT_CPU5_Pin|OUT_DIR4_Pin
+                          |OUT_STEP5_Pin|OUT_STEP7_Pin|OUT_CPU7_Pin|OUT_CPU8D4_Pin
+                          |OUT_DIR7_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(OUT_DIR4_GPIO_Port, OUT_DIR4_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, LED_Pin|OUT_RS485_RE_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PEPin PEPin PEPin PEPin
-                           PEPin */
-  GPIO_InitStruct.Pin = SCK4_OUT_STEP5_Pin|NSS4_OUT_DIR5_Pin|MISO4_OUT_STEP6_Pin|MOSI_OUT_DIR6_Pin
-                          |IO_LED_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PEPin PEPin PEPin PEPin
-                           PEPin PEPin */
-  GPIO_InitStruct.Pin = IN_CPU1_Pin|IN_CPU2_Pin|IN_CPU3_Pin|IN_CPU4_Pin
-                          |IN_CPU10_Pin|IN_CPU9_Pin;
+  /*Configure GPIO pins : PEPin PEPin PEPin */
+  GPIO_InitStruct.Pin = IO_CPU1_Pin|IO_CPU2_Pin|IN_CPU10_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PDPin PDPin PDPin PDPin
-                           PDPin PDPin PDPin PDPin */
-  GPIO_InitStruct.Pin = OUT_DIR3_Pin|OUT_CPU4_Pin|OUT_CPU3_Pin|OUT_CPU2_Pin
-                          |OUT_STEP4_Pin|OUT_CPU1_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin;
+  /*Configure GPIO pins : PEPin PEPin PEPin PEPin
+                           PEPin PEPin PEPin PEPin
+                           PEPin */
+  GPIO_InitStruct.Pin = IN_CPU2_Pin|IN_CPU1_Pin|IN_CPU6_Pin|OUT_CPU9_Pin
+                          |OUT_CPU10_Pin|OUT_DIR5_Pin|OUT_STEP6_Pin|OUT_STEP4_Pin
+                          |OUT_DIR6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PCPin PCPin PCPin PCPin
+                           PCPin */
+  GPIO_InitStruct.Pin = IN_CPU6C13_Pin|IN_CPU5_Pin|IN_CPU4_Pin|IO_CPU3_Pin
+                          |IO_CPU4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PAPin PAPin */
-  GPIO_InitStruct.Pin = OUT_STEP7_Pin|OUT_DIR7_Pin;
+  GPIO_InitStruct.Pin = ENET_RST_Pin|OUT_CPU8_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PD0 PD1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  /*Configure GPIO pins : PAPin PAPin */
+  GPIO_InitStruct.Pin = IN_CPU7_Pin|IO_CPU7_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF9_FDCAN1;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PtPin */
-  GPIO_InitStruct.Pin = OUT_DIR4_Pin;
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin */
+  GPIO_InitStruct.Pin = IN_CPU8_Pin|IN_CPU9_Pin|IO_CPU9_Pin|IO_CPU6_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PDPin PDPin PDPin PDPin
+                           PDPin PDPin PDPin PDPin
+                           PDPin PDPin PDPin */
+  GPIO_InitStruct.Pin = OUT_DIR3_Pin|OUT_CPU6_Pin|OUT_CPU5_Pin|OUT_DIR4_Pin
+                          |OUT_STEP5_Pin|OUT_STEP7_Pin|OUT_CPU7_Pin|OUT_CPU8D4_Pin
+                          |OUT_DIR7_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(OUT_DIR4_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PCPin PCPin */
+  GPIO_InitStruct.Pin = LED_Pin|OUT_RS485_RE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 }
 

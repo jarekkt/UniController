@@ -55,11 +55,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>cube/USB_DEVICE</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>cube/Core/Inc</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -100,22 +95,7 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>cube/Middlewares/Third_Party</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/App</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/Target</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -300,16 +280,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/LWIP/Target/lwipopts.h</locationURI>
 		</link>
 		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Class</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>cube/Middlewares/Third_Party/FreeRTOS</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -318,46 +288,6 @@
 			<name>cube/Middlewares/Third_Party/LwIP</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/App/usb_device.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/USB_DEVICE/App/usb_device.c</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/App/usb_device.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/USB_DEVICE/App/usb_device.h</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/App/usbd_cdc_if.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/USB_DEVICE/App/usbd_cdc_if.c</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/App/usbd_cdc_if.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/USB_DEVICE/App/usbd_cdc_if.h</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/App/usbd_desc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/USB_DEVICE/App/usbd_desc.c</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/App/usbd_desc.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/USB_DEVICE/App/usbd_desc.h</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/Target/usbd_conf.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/USB_DEVICE/Target/usbd_conf.c</locationURI>
-		</link>
-		<link>
-			<name>cube/USB_DEVICE/Target/usbd_conf.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/USB_DEVICE/Target/usbd_conf.h</locationURI>
 		</link>
 		<link>
 			<name>cube/Drivers/BSP/Components/lan8742</name>
@@ -725,16 +655,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c</locationURI>
 		</link>
 		<link>
-			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd_ex.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pcd_ex.c</locationURI>
-		</link>
-		<link>
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c</locationURI>
@@ -790,29 +710,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c</locationURI>
 		</link>
 		<link>
-			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c</locationURI>
-		</link>
-		<link>
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Class/CDC</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Inc</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Src</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>cube/Middlewares/Third_Party/FreeRTOS/Source</name>
@@ -848,51 +748,6 @@
 			<name>cube/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Class/CDC/Inc</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Class/CDC/Src</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Inc/usbd_core.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Inc/usbd_def.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Src/usbd_core.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</locationURI>
 		</link>
 		<link>
 			<name>cube/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2</name>
@@ -983,16 +838,6 @@
 			<name>cube/Drivers/CMSIS/Device/ST/STM32H7xx/Include</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h</locationURI>
-		</link>
-		<link>
-			<name>cube/Middlewares/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</locationURI>
 		</link>
 		<link>
 			<name>cube/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h</name>

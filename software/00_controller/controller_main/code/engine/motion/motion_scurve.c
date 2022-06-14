@@ -133,7 +133,10 @@ void motion_scurve_calc(
 		float 			jerk_mm_s3
 )
 {
-	 self_t self;
+	 self_t		 self;
+
+	 double		 a_scurve;
+	 double		 top_speed;
 
 	 if(dist_mm > 0)
 	 {
@@ -157,23 +160,22 @@ void motion_scurve_calc(
 	 self.calc 		= calc;
 
 
+	 // Calculate ideal S-curve acceleration
+	 a_scurve = solve_qubic_positive( 1/self.m_jerk,0,2*self.m_speed0,-self.half_dist*self.m_jerk);
 
-	 // Calculate distance with ideal curve for given acceleration and jerk
-	 self.calc_dist = (2*self.m_speed0 + self.m_accel * self.m_accel / self.m_jerk) * self.m_accel/self.m_jerk;
-
-	 if(self.calc_dist > self.half_dist)
+	 if(a_scurve < self.m_accel)
 	 {
-		 // Too much - we are not destined to reach full acceleration, so tune it down
-		 self.m_accel = solve_qubic_positive(1/(self.m_jerk*self.m_jerk), (2*self.m_speed0/self.m_jerk), 0, -self.half_dist);
+		 //Changing acceleration (ideal s curve distance limit)
+		 self.m_accel = a_scurve;
 	 }
 
-	 self.calc_speed = self.m_speed0 + self.m_accel * self.m_accel/self.m_jerk;
+	 top_speed = self.m_speed0 + self.m_accel * self.m_accel/self.m_jerk;
 
-	 if(self.calc_speed > self.m_speed)
+	 if (top_speed > self.m_speed)
 	 {
-		 // Too much - we are not destined to reach full speed so tune both acceleration and speed
-	     self.m_accel  = sqrt((self.m_speed - self.m_speed0)*self.m_jerk);
-		 self.m_speed  = self.m_speed0 + self.m_accel * self.m_accel/self.m_jerk;
+		 // Given acceleration makes too big speed - even for ideal S curve
+		 self.m_accel = sqrt((self.m_speed - self.m_speed0)*self.m_jerk);
+		 self.m_speed = self.m_speed0 + self.m_accel * self.m_accel/self.m_jerk;
 	 }
 
 	 self.calc->T11 = self.m_accel / self.m_jerk;
