@@ -452,7 +452,7 @@
       "idf": "",
       "netlist": "Main_tank_v2.net",
       "specctra_dsn": "",
-      "step": "Uni_Printer.step",
+      "step": "../10_shield_chm36VA/model3D/Uni_Printer.step",
       "vmrl": "",
       "vrml": "Uni_Printer.wrl"
     },
