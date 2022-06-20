@@ -1887,9 +1887,9 @@
   (no_connect (at 373.38 218.44) (uuid 79a3aadc-3ee0-4a29-962e-bc5cb5c68f76))
   (no_connect (at 245.745 237.49) (uuid 85a491e6-d180-4f1f-b6f6-3a0b56aa35c6))
   (no_connect (at 285.115 139.7) (uuid cca94dd0-2f3f-4e36-a211-20653152b4d7))
-  (no_connect (at 285.115 142.24) (uuid cca94dd0-2f3f-4e36-a211-20653152b4d7))
-  (no_connect (at 295.275 139.7) (uuid cca94dd0-2f3f-4e36-a211-20653152b4d7))
-  (no_connect (at 295.275 142.24) (uuid cca94dd0-2f3f-4e36-a211-20653152b4d7))
+  (no_connect (at 285.115 142.24) (uuid cca94dd0-2f3f-4e36-a211-20653152b4d8))
+  (no_connect (at 295.275 139.7) (uuid cca94dd0-2f3f-4e36-a211-20653152b4d9))
+  (no_connect (at 295.275 142.24) (uuid cca94dd0-2f3f-4e36-a211-20653152b4da))
   (no_connect (at 240.665 273.685) (uuid d1cc6daf-d55e-4f32-9714-35241fd2949f))
   (no_connect (at 307.975 59.055) (uuid ed8477ac-1cc4-4910-a6b6-b113aef36300))
 
@@ -3559,7 +3559,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 00589b4a-a5af-4aba-a628-9849a95898f1)
   )
-  (label "RS485_DE" (at 303.53 124.46 180)
+  (label "RS485_RE" (at 303.53 124.46 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid 0117461e-dcff-400d-9a11-6c7315334ca8)
   )
@@ -8762,20 +8762,11 @@
     (path "/65700f12-eb56-4b13-86e1-0fcfad370e8f"
       (reference "#PWR0101") (unit 1) (value "GND-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue") (footprint "")
     )
-    (path "/00000000-0000-0000-0000-00005c984242/e9aaa5ad-afec-4745-8ff5-83406401d3a1"
-      (reference "#PWR0102") (unit 1) (value "GND") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-00005c984242/cbc659df-d4a7-4995-afd7-19644ec0137f"
-      (reference "#PWR0103") (unit 1) (value "+3V3") (footprint "")
-    )
     (path "/4be14d84-8cd4-4ecd-812a-0214e5e58c67"
       (reference "#PWR0104") (unit 1) (value "+3V3") (footprint "")
     )
     (path "/e258f13b-fe4a-4b5e-8b38-9d4fea40bff1"
       (reference "#PWR0105") (unit 1) (value "GND-Sensor_tank_v1-rescue-Uni_General_v1-rescue-Uni_Printer_v1-rescue") (footprint "")
-    )
-    (path "/00000000-0000-0000-0000-00005c984242/257c531d-611b-427c-ae52-5178706d70ab"
-      (reference "#PWR0106") (unit 1) (value "+3V3") (footprint "")
     )
     (path "/e91f46bd-d7d5-4b14-8252-46dcba475b09"
       (reference "#PWR0108") (unit 1) (value "+3V3") (footprint "")
@@ -9043,9 +9034,6 @@
     )
     (path "/00000000-0000-0000-0000-00005fc2896f/ce7488ad-b8d3-467a-94f6-d9dc874b5e66"
       (reference "C31") (unit 1) (value "100n") (footprint "Capacitor_SMD:C_0603_1608Metric")
-    )
-    (path "/00000000-0000-0000-0000-00005c984242/450ce09e-f005-4b3c-bec6-61e07a176932"
-      (reference "C32") (unit 1) (value "100n / 25V") (footprint "Capacitor_SMD:C_0603_1608Metric")
     )
     (path "/19e3c943-ba04-4ec6-bbe1-e9e8a6d18ef5"
       (reference "C33") (unit 1) (value "100n / 25V") (footprint "Capacitor_SMD:C_0603_1608Metric")
