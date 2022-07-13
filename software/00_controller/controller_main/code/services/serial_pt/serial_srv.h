@@ -11,7 +11,7 @@
 #include "system.h"
 
 #define SRV_SERIAL_UxART1_ID       0
-#define SRV_SERIAL_UxART6_ID       1
+
 
 
 #define SRV_SERIAL_DEBUG		   SRV_SERIAL_UxART6_ID

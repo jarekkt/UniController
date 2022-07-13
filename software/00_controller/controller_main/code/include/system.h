@@ -21,8 +21,13 @@
 
 
 #ifndef DIM
-#define DIM(x_)                         (sizeof(x_)/sizeof(x_[0]))
+#define DIM(x_)                       (sizeof(x_)/sizeof(x_[0]))
 #endif
+
+#ifndef BV
+#define BV(x)                         (1<<(x))
+#endif
+
 
 #define SYS_VAR_NAME_LENGTH   32
 

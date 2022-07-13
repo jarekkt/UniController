@@ -186,9 +186,6 @@ int32_t  burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len)
 	buffer[len] = 0;
 
 
-
-
-
 	while(curr < len)
 	{
 		while(next<len)

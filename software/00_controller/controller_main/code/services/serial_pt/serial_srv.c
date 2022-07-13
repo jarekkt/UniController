@@ -22,8 +22,6 @@ typedef struct
 typedef struct
 {   
     serial_usart_ctx_t u1;
-    serial_usart_ctx_t u6;
-
 }srv_serial_data_t;
 
 
@@ -31,7 +29,7 @@ typedef struct
 
 srv_serial_data_t  serial_pt;
 
-void serial_dummy_rec_char(uint32_t port_id,uint8_t cc,portBASE_TYPE * pb)
+static void serial_dummy_rec_char(uint32_t port_id,uint8_t cc,portBASE_TYPE * pb)
 {
 	UNUSED(port_id);
 	UNUSED(cc);
@@ -55,7 +53,6 @@ serial_usart_ctx_t   * srv_serial_id2ctx(uint32_t id)
     switch(id)
     {
         case SRV_SERIAL_UxART1_ID: return &serial_pt.u1;
-        case SRV_SERIAL_UxART6_ID: return &serial_pt.u6;
     }
 
     return NULL;
@@ -105,7 +102,7 @@ void    srv_serial_init(void)
 void    srv_serial_once(void)
 {
     srv_serial_low_init(&serial_pt.u1,USART1);
-    srv_serial_low_init(&serial_pt.u6,USART6);
+
 
 
    /* 
@@ -120,10 +117,6 @@ void    srv_serial_once(void)
     LL_USART_EnableIT_RXNE_RXFNE(serial_pt.u1.usart);
 
 
-    HAL_NVIC_SetPriority(USART6_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY, 0);
-    HAL_NVIC_EnableIRQ(USART6_IRQn);
-
-    LL_USART_EnableIT_RXNE_RXFNE(serial_pt.u6.usart);
 }
 
 
@@ -203,11 +196,6 @@ void ATTRIBUTE_IN_RAM USART1_IRQHandler(void)
     UARTx_IRQHandler(SRV_SERIAL_UxART1_ID,&serial_pt.u1);
 }
 
-
-void ATTRIBUTE_IN_RAM USART6_IRQHandler(void)
-{
-    UARTx_IRQHandler(SRV_SERIAL_UxART6_ID,&serial_pt.u6);
-}
 
 
 

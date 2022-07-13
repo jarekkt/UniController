@@ -29,7 +29,6 @@ typedef struct
 	burst_serial_data_t  ch[CH_CNT];
 	int32_t			 	 ch_active;
 	xSemaphoreHandle     sema_recv;
-	uint32_t			 usb_open_activated;
 }burst_rcv_t;
 
 
@@ -37,7 +36,6 @@ static void burst_rcv_task(void * params);
 
 burst_rcv_t  brcv;
 
-extern void burst_rcv_usb_tx(const char * msg,uint32_t msg_len);
 
 void burst_rcv_init()
 {
@@ -45,22 +43,6 @@ void burst_rcv_init()
 	brcv.ch_active = -1;
 }
 
-void burst_rcv_usb_open()
-{
-	brcv.usb_open_activated = 1000 / BURST_MUX_TIMEOUT;
-}
-
-void burst_rcv_usb_welcome()
-{
-	if(brcv.usb_open_activated > 0)
-	{
-		brcv.usb_open_activated--;
-		if(brcv.usb_open_activated == 0)
-		{
-			burst_rcv_usb_tx("Welcome to Unicontroller\r\n",26);
-		}
-	}
-}
 
 
 uint32_t	burst_rcv_add_msg(burst_serial_data_t * ch,const char * msg,uint32_t msg_len)
@@ -83,26 +65,6 @@ uint32_t	burst_rcv_add_msg(burst_serial_data_t * ch,const char * msg,uint32_t ms
 }
 
 
-void burst_rcv_usb_rx(const char * msg,uint32_t msg_len)
-{
-	burst_serial_data_t	  * serial_ch;
-
-	serial_ch   = &brcv.ch[CH_USB];
-
-	if(msg_len + serial_ch->RxCnt < sizeof(serial_ch->RxBuffer))
-	{
-		if(burst_rcv_add_msg(serial_ch,msg,msg_len)!= 0)
-		{
-			serial_ch->RxMsgCounter++;
-			serial_ch->RxMsgOk = 1;
-		}
-
-        // TODO - check if really interrupt context
-		xSemaphoreGiveFromISR(brcv.sema_recv,NULL);
-	}
-
-	brcv.ch_active = CH_USB;
-}
 
 void burst_rcv_eth_rx(const char * msg,uint32_t msg_len)
 {
@@ -125,6 +87,32 @@ void burst_rcv_eth_rx(const char * msg,uint32_t msg_len)
 }
 
 
+static void burst_rcv_cc_debug(uint32_t port_id,uint8_t cc,portBASE_TYPE * pb)
+{
+   burst_serial_data_t	  * serial_ch;
+
+   serial_ch   = &brcv.ch[CH_FTDI];
+
+   if(serial_ch->RxMsgOk == 0)
+   {
+      if(serial_ch->RxCnt < sizeof(serial_ch->RxBuffer))
+      {
+          serial_ch->RxBuffer[serial_ch->RxCnt++] = cc;
+
+          if( (cc == '>') || (cc == '\n') || (cc == '\r'))
+          {
+                  serial_ch->RxMsgCounter++;
+                  serial_ch->RxMsgOk = 1;
+
+                  xSemaphoreGiveFromISR(brcv.sema_recv,NULL);
+          }
+      }
+      else
+      {
+          serial_ch->RxCnt = 0;
+      }
+   }
+}
 
 
 
@@ -134,8 +122,8 @@ void burst_rcv_once()
 	vSemaphoreCreateBinary(brcv.sema_recv);
 
 
-	// CH_USB
-	// No configuration needed
+	// CH_FTDI
+	srv_serial_rcv_callback(SRV_SERIAL_DEBUG,burst_rcv_cc_debug);
 
 	// CH_ETH
 	tcpconn_callback(burst_rcv_eth_rx);
@@ -163,12 +151,10 @@ void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,const char * respon
     switch(rcv_ctx->channel)
     {
 
-			case CH_USB:
+			case CH_FTDI:
 			{
-				burst_rcv_usb_tx(response,length);
+				srv_serial_send(SRV_SERIAL_DEBUG,response,length);
 			}break;
-
-
 
 			case CH_ETH:
 			{
@@ -197,7 +183,11 @@ static void burst_rcv_serial_process(ch_idx_e idx)
 
     if( execute_store!=0)
 	{
+    	// Store data to flash
 		tsk_storage_activate();
+
+		// Reinitialize blocks with possible dependencies
+		srv_gpio_refresh();
 	}
 }
 
@@ -242,9 +232,6 @@ static void burst_rcv_task(void * params)
     {
 
     	burst_rcv_serial_rcv();
-    	burst_rcv_usb_welcome();
-
-
         fw_stack_check();
     }
 }

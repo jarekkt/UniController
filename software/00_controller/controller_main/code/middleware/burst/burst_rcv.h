@@ -13,7 +13,7 @@
 
 typedef enum
 {
-	CH_USB,
+	CH_FTDI,
 	CH_ETH,
 	CH_CNT
 }ch_idx_e;

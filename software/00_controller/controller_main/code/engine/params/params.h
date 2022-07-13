@@ -2,25 +2,17 @@
 #define PARAMS_H
  
 #include "system.h"
+#include "common.h"
+
 
 void params_init(void);
 void params_once(void);
 
 #define MM_TO_001(x_)   ((uint32_t)((x_)*1000))
 
-typedef enum
-{
-	AXIS_X,
-	AXIS_Y,
-	AXIS_Z,
-	AXIS_FAST_CNT,
-	AXIS_A = AXIS_FAST_CNT,
-	AXIS_B,
-	AXIS_C,
-	AXIS_D,
-	AXIS_E,
-	AXIS_GLOBAL_CNT
-}axis_idx_e;
+
+
+
 
 typedef struct
 {
@@ -50,6 +42,12 @@ typedef struct
 
 }axis_params_t;
 
+typedef struct
+{
+	uint32_t min;
+	uint32_t max;
+	uint32_t delay_ms;
+}pwm_range_t;
 
 
 typedef struct
@@ -58,6 +56,8 @@ typedef struct
 	path_params_t		path_initial_m;
 	uint32_t			estop_mask;
 	uint32_t			axis_used_mask;
+	uint32_t			io_cpu_dir;
+	pwm_range_t			pwm_range[PWM_GLOBAL_CNT];
 }params_nv_ctx_t;
 
 

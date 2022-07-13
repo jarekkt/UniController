@@ -111,11 +111,11 @@ void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(NSS4_OUT_DIR5);
+					GPIO_Set(OUT_DIR5);
 				}
 				else
 				{
-					GPIO_Clr(NSS4_OUT_DIR5);
+					GPIO_Clr(OUT_DIR5);
 				}
 			}break;
 
@@ -123,11 +123,11 @@ void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(MOSI_OUT_DIR6);
+					GPIO_Set(OUT_DIR6);
 				}
 				else
 				{
-					GPIO_Clr(MOSI_OUT_DIR6);
+					GPIO_Clr(OUT_DIR6);
 				}
 			}break;
 

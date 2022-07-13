@@ -115,10 +115,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     PC0     ------> ADC3_INP10
     PC3_C     ------> ADC3_INP1
     */
-    GPIO_InitStruct.Pin = ADC_CH1_Pin;
+    GPIO_InitStruct.Pin = GPIO_PIN_0;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(ADC_CH1_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
     HAL_SYSCFG_AnalogSwitchConfig(SYSCFG_SWITCH_PC3, SYSCFG_SWITCH_PC3_OPEN);
 
@@ -162,7 +162,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
     PC0     ------> ADC3_INP10
     PC3_C     ------> ADC3_INP1
     */
-    HAL_GPIO_DeInit(ADC_CH1_GPIO_Port, ADC_CH1_Pin);
+    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_0);
 
     /* ADC3 DMA DeInit */
     HAL_DMA_DeInit(adcHandle->DMA_Handle);

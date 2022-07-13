@@ -10,6 +10,7 @@ void srv_init(void)
   srv_timer_init();
   srv_sermon_init();
   srv_serial_init();
+  srv_serial_485_init();
   srv_i2c_init();
   srv_adc_init();
 }
@@ -33,6 +34,7 @@ void srv_once(void)
   srv_timer_once();
   srv_sermon_once();
   srv_serial_once();
+  srv_serial_485_once();
   srv_i2c_once();
   srv_adc_once();
 

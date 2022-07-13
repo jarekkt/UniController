@@ -52,7 +52,7 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, IN_CPU2_Pin|IN_CPU1_Pin|IN_CPU6_Pin|OUT_CPU9_Pin
+  HAL_GPIO_WritePin(GPIOE, IN_CPU2_Pin|IN_CPU1_Pin|IN_CPU3_Pin|OUT_CPU9_Pin
                           |OUT_CPU10_Pin|OUT_DIR5_Pin|OUT_STEP6_Pin|OUT_STEP4_Pin
                           |OUT_DIR6_Pin, GPIO_PIN_RESET);
 
@@ -61,7 +61,7 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, OUT_DIR3_Pin|OUT_CPU6_Pin|OUT_CPU5_Pin|OUT_DIR4_Pin
-                          |OUT_STEP5_Pin|OUT_STEP7_Pin|OUT_CPU7_Pin|OUT_CPU8D4_Pin
+                          |OUT_STEP5_Pin|OUT_STEP7_Pin|OUT_CPU7_Pin|IO_CPU8_Pin
                           |OUT_DIR7_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -76,7 +76,7 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pins : PEPin PEPin PEPin PEPin
                            PEPin PEPin PEPin PEPin
                            PEPin */
-  GPIO_InitStruct.Pin = IN_CPU2_Pin|IN_CPU1_Pin|IN_CPU6_Pin|OUT_CPU9_Pin
+  GPIO_InitStruct.Pin = IN_CPU2_Pin|IN_CPU1_Pin|IN_CPU3_Pin|OUT_CPU9_Pin
                           |OUT_CPU10_Pin|OUT_DIR5_Pin|OUT_STEP6_Pin|OUT_STEP4_Pin
                           |OUT_DIR6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -86,7 +86,7 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PCPin PCPin PCPin PCPin
                            PCPin */
-  GPIO_InitStruct.Pin = IN_CPU6C13_Pin|IN_CPU5_Pin|IN_CPU4_Pin|IO_CPU3_Pin
+  GPIO_InitStruct.Pin = IN_CPU6_Pin|IN_CPU5_Pin|IN_CPU4_Pin|IO_CPU3_Pin
                           |IO_CPU4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -105,8 +105,10 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PBPin PBPin PBPin PBPin */
-  GPIO_InitStruct.Pin = IN_CPU8_Pin|IN_CPU9_Pin|IO_CPU9_Pin|IO_CPU6_Pin;
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin
+                           PBPin */
+  GPIO_InitStruct.Pin = IN_CPU8_Pin|IN_CPU9_Pin|IO_CPU9_Pin|IO_CPU6_Pin
+                          |IO_CPU5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -115,7 +117,7 @@ void MX_GPIO_Init(void)
                            PDPin PDPin PDPin PDPin
                            PDPin PDPin PDPin */
   GPIO_InitStruct.Pin = OUT_DIR3_Pin|OUT_CPU6_Pin|OUT_CPU5_Pin|OUT_DIR4_Pin
-                          |OUT_STEP5_Pin|OUT_STEP7_Pin|OUT_CPU7_Pin|OUT_CPU8D4_Pin
+                          |OUT_STEP5_Pin|OUT_STEP7_Pin|OUT_CPU7_Pin|IO_CPU8_Pin
                           |OUT_DIR7_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;

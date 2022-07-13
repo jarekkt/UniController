@@ -2532,6 +2532,10 @@
     (uuid fb8f6a72-4af8-4563-afa0-1ef8a4deddcd)
   )
 
+  (label "VSUP" (at 71.12 133.35 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 32973d37-785c-41dc-8fed-64808a82409d)
+  )
   (label "VSUP" (at 226.695 239.395 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid a230e9ee-994f-4320-bca8-ade810c0d20d)

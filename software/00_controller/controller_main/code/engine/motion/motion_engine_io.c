@@ -18,7 +18,7 @@ int32_t  motion_engine_io(uint32_t pin,uint32_t value)
 
 int32_t  motion_engine_io_analog(char * buffer,uint32_t length)
 {
-	length = snprintf(buffer,length,"ok V0:%u V1:%u\r\n",(unsigned int)srv_adc_get(ADC_S1),(unsigned int)srv_adc_get(ADC_S2) );
+	length = snprintf(buffer,length,"ok V0:%u V1:%u\r\n",(unsigned int)srv_adc_get(ADC_IN1),(unsigned int)srv_adc_get(ADC_IN2) );
 
 	return length;
 }

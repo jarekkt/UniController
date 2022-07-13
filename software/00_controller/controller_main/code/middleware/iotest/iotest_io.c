@@ -42,14 +42,6 @@ static void iotest_io_special(uint32_t io_special)
 
 void iotest_io_control(uint32_t io_request)
 {
-	static int div = 0;
-
-
-	if( ( div ++ % 100) !=0)
-	{
-		return;
-	}
-
 
     if( (io_request & 0x01) != 0)
     {
@@ -59,8 +51,8 @@ void iotest_io_control(uint32_t io_request)
 
     if( (io_request & 0x01) != 0)
     {
-    	 srv_adc_dump(iot_io.buffer, sizeof(iot_io.buffer));
-    	 burst_log_printf(1,iot_io.buffer);
+    	srv_adc_dump(iot_io.buffer, sizeof(iot_io.buffer));
+    	burst_log_printf(1,iot_io.buffer);
     }
 }
 

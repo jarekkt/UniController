@@ -5,6 +5,7 @@
 
 #include "services.h"
 #include "middleware.h"
+#include "main.h"
 
 #define MWR_IOTEST_THREAD_PERIOD 50
 
@@ -35,14 +36,39 @@ typedef struct
 const mwr_gpio_sequence_t mwr_test_pins[] = 
 {
 
-  /* 00 */ { GPIO_SEQ_PIN(OUT_CPU1)},
-  /* 01 */ { GPIO_SEQ_PIN(OUT_CPU2)},
-  /* 02 */ { GPIO_SEQ_PIN(OUT_CPU3)},
-  /* 03 */ { GPIO_SEQ_PIN(OUT_CPU4)},
+  /* 00 */ { GPIO_SEQ_PIN(OUT_CPU5)},
+  /* 01 */ { GPIO_SEQ_PIN(OUT_CPU6)},
+  /* 02 */ { GPIO_SEQ_PIN(OUT_CPU7)},
+  /* 03 */ { GPIO_SEQ_PIN(OUT_CPU8)},
 
-  /* 04 */ { GPIO_SEQ_PIN(OUT_DIR1)},
-  /* 05 */ { GPIO_SEQ_PIN(OUT_DIR2)},
-  /* 06 */ { GPIO_SEQ_PIN(OUT_DIR3)},
+  /* 04 */ { GPIO_SEQ_PIN(OUT_CPU9)},
+  /* 05 */ { GPIO_SEQ_PIN(OUT_DIR1)},
+  /* 06 */ { GPIO_SEQ_PIN(OUT_DIR2)},
+  /* 07 */ { GPIO_SEQ_PIN(OUT_DIR3)},
+
+  /* 08 */ { GPIO_SEQ_PIN(OUT_STEP4)},
+  /* 09 */ { GPIO_SEQ_PIN(OUT_DIR4)},
+  /* 10 */ { GPIO_SEQ_PIN(OUT_STEP5)},
+  /* 11 */ { GPIO_SEQ_PIN(OUT_DIR5)},
+
+  /* 12 */ { GPIO_SEQ_PIN(OUT_STEP6)},
+  /* 13 */ { GPIO_SEQ_PIN(OUT_DIR6)},
+  /* 14 */ { GPIO_SEQ_PIN(OUT_STEP7)},
+  /* 15 */ { GPIO_SEQ_PIN(OUT_DIR7)},
+
+  /* 16 */ { GPIO_SEQ_PIN(OUT_RS485_RE)},
+  /* 17 */ { GPIO_SEQ_PIN(LED) },
+  /* 18 */ { GPIO_SEQ_PIN(IO_CPU1)},
+  /* 19 */ { GPIO_SEQ_PIN(IO_CPU2)},
+
+  /* 20 */ { GPIO_SEQ_PIN(IO_CPU3)},
+  /* 21 */ { GPIO_SEQ_PIN(IO_CPU4)},
+  /* 22 */ { GPIO_SEQ_PIN(IO_CPU5)},
+  /* 23 */ { GPIO_SEQ_PIN(IO_CPU6)},
+
+  /* 24 */ { GPIO_SEQ_PIN(IO_CPU7)},
+  /* 25 */ { GPIO_SEQ_PIN(IO_CPU8)},
+  /* 26 */ { GPIO_SEQ_PIN(IO_CPU9)},
 
 
 };

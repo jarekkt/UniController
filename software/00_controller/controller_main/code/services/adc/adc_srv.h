@@ -14,11 +14,6 @@ typedef enum
 {
   ADC_IN1 = 0,
   ADC_IN2,
-  ADC_IN3,
-  ADC_IN4,
-  ADC_S1,
-  ADC_S2,
-
   ADC_CH_CNT
 }adc_ch_e;
 

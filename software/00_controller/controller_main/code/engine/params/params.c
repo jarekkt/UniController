@@ -118,7 +118,33 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "p_accel_mm_s2",   			&pctx_nv.path_initial_m.accel_mm_s2     	,E_VA_FLT_FREE   },
   { "p_jerk_mm_s3",   			&pctx_nv.path_initial_m.jerk_mm_s3      	,E_VA_FLT_FREE   },
 
-  { "motion_axis_mask", 		&pctx_nv.axis_used_mask						,E_VA_UINT_FREE  },
+
+  { "pwm_out1_min",		 	  	&pctx_nv.pwm_range[PWM_OUT1].min    	,E_VA_UINT_FREE  },
+  { "pwm_out1_max", 	  		&pctx_nv.pwm_range[PWM_OUT1].max  		,E_VA_UINT_FREE  },
+  { "pwm_out1_delay", 	  		&pctx_nv.pwm_range[PWM_OUT1].delay_ms 	,E_VA_UINT_FREE  },
+
+  { "pwm_out2_min",		 	  	&pctx_nv.pwm_range[PWM_OUT2].min    	,E_VA_UINT_FREE  },
+  { "pwm_out2_max", 	  		&pctx_nv.pwm_range[PWM_OUT2].max  		,E_VA_UINT_FREE  },
+  { "pwm_out2_delay", 	  		&pctx_nv.pwm_range[PWM_OUT2].delay_ms 	,E_VA_UINT_FREE  },
+
+  { "pwm_out3_min",		 	  	&pctx_nv.pwm_range[PWM_OUT3].min    	,E_VA_UINT_FREE  },
+  { "pwm_out3_max", 	  		&pctx_nv.pwm_range[PWM_OUT3].max  		,E_VA_UINT_FREE  },
+  { "pwm_out3_delay", 	  		&pctx_nv.pwm_range[PWM_OUT3].delay_ms 	,E_VA_UINT_FREE  },
+
+  { "pwm_out4_min",		 	  	&pctx_nv.pwm_range[PWM_OUT4].min    	,E_VA_UINT_FREE  },
+  { "pwm_out4_max", 	  		&pctx_nv.pwm_range[PWM_OUT4].max  		,E_VA_UINT_FREE  },
+  { "pwm_out4_delay", 	  		&pctx_nv.pwm_range[PWM_OUT4].delay_ms 	,E_VA_UINT_FREE  },
+
+  { "pwm_out11_min",		 	&pctx_nv.pwm_range[PWM_OUT11].min   	,E_VA_UINT_FREE  },
+  { "pwm_out11_max", 	  		&pctx_nv.pwm_range[PWM_OUT11].max  		,E_VA_UINT_FREE  },
+  { "pwm_out11_delay", 	  		&pctx_nv.pwm_range[PWM_OUT11].delay_ms  ,E_VA_UINT_FREE  },
+
+  { "pwm_out12_min",		 	&pctx_nv.pwm_range[PWM_OUT12].min   	,E_VA_UINT_FREE  },
+  { "pwm_out12_max", 	  		&pctx_nv.pwm_range[PWM_OUT12].max  		,E_VA_UINT_FREE  },
+  { "pwm_out12_delay", 	  		&pctx_nv.pwm_range[PWM_OUT12].delay_ms  ,E_VA_UINT_FREE  },
+
+  { "motion_axis_mask", 		&pctx_nv.axis_used_mask					,E_VA_UINT_FREE  },
+  { "io_cpu_dir", 				&pctx_nv.io_cpu_dir 					,E_VA_UINT_FREE  }
 };
 
 
@@ -150,6 +176,14 @@ void params_init_default(void)
 	}
 
 
+	for(ii = 0; ii < PWM_GLOBAL_CNT;ii++)
+	{
+		pctx_nv.pwm_range[ii].min   	= 0;
+		pctx_nv.pwm_range[ii].max   	= 100;
+		pctx_nv.pwm_range[ii].delay_ms  = 100;
+	}
+
+
 	/* Initial path settings */
 	pctx_nv.path_initial_m.speed_mm_s    	= 1000;
 	pctx_nv.path_initial_m.accel_mm_s2   	= 1000;
@@ -157,6 +191,11 @@ void params_init_default(void)
 
 	/* Axis enabled */
 	pctx_nv.axis_used_mask					= (1<< AXIS_X) | (1<<AXIS_Y) | (1<< AXIS_Z);
+
+	/* IO_CPUxx direction */
+
+	pctx_nv.io_cpu_dir						= 0;
+
 
 }
 
