@@ -1,1 +1,3 @@
 - add buzzer
+- U2 AM26LV -> LS, different footprint
+- D1 SMCJ26CA different footprint ( smaller D->C )

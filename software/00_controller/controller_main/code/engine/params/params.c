@@ -206,8 +206,15 @@ void params_init(void)
 }
 
 
-void params_once(void)
+void params_thread(void)
 {
 
+}
+
+
+
+void params_once(void)
+{
+    mwr_periodic_low_register(params_thread,1000);
 }
 

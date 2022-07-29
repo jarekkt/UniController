@@ -205,16 +205,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/stm32h7xx_it.c</locationURI>
 		</link>
 		<link>
-			<name>cube/Core/Src/syscalls.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/syscalls.c</locationURI>
-		</link>
-		<link>
-			<name>cube/Core/Src/sysmem.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/sysmem.c</locationURI>
-		</link>
-		<link>
 			<name>cube/Core/Src/system_stm32h7xx.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/system_stm32h7xx.c</locationURI>

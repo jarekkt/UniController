@@ -57,15 +57,12 @@ void MX_GPIO_Init(void)
                           |OUT_DIR6_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(ENET_RST_GPIO_Port, ENET_RST_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, ENET_RST_Pin|OUT_CPU8_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, OUT_DIR3_Pin|OUT_CPU6_Pin|OUT_CPU5_Pin|OUT_DIR4_Pin
                           |OUT_STEP5_Pin|OUT_STEP7_Pin|OUT_CPU7_Pin|IO_CPU8_Pin
                           |OUT_DIR7_Pin|OUT_DIR1_Pin|OUT_DIR2_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(OUT_CPU8_GPIO_Port, OUT_CPU8_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, LED_Pin|OUT_RS485_RE_Pin, GPIO_PIN_RESET);
