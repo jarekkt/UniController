@@ -50,7 +50,7 @@ gcode_parse_table_t  parse_table[] =
 				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
 				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
 				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'G' , GCODE_I_F, GCODE_V_FLOAT} ,
+				{ 'G' , GCODE_I_G, GCODE_V_FLOAT} ,
 				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
 			}
 		},

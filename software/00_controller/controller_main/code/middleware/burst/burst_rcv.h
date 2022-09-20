@@ -21,7 +21,8 @@ typedef enum
 typedef enum
 {
 	RCV_FRAME_DIRECT = 0,
-	RCV_FRAME_ENCAPSULATED
+	RCV_FRAME_ENCAPSULATED,
+	RCV_FRAME_GCODE_ENCAPSULATED
 }rcv_frame_e;
 
 

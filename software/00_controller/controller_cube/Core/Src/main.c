@@ -124,6 +124,14 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+#ifdef USE_MY_CODE
+  {
+	  extern void system_main_init();
+
+	  system_main_init();
+  }
+#endif
+
   /* USER CODE END 2 */
 
   /* Init scheduler */

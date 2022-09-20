@@ -398,7 +398,7 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 		{
 			 length = 0;
 
-			 length += snprintf(&mctx.resp_buffer[length],sizeof(mctx.resp_buffer)-length,"C: ");
+			 length += snprintf(&mctx.resp_buffer[length],sizeof(mctx.resp_buffer)-length,"ok C: ");
 
 			 for(idx = 0; idx < AXIS_GLOBAL_CNT;idx++)
 			 {
@@ -418,11 +418,13 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 			length = snprintf(mctx.resp_buffer,
 						 sizeof(mctx.resp_buffer),
 						 "ok\r\n PROTOCOL_VERSION: 1.0 "
-						 "FIRMWARE_NAME: UniController %d.%d "
+						 "FIRMWARE_NAME: UniController "
+						 "FIRMWARE_VERSION: %s "
 						 "FIRMWARE_URL: https://github.com/jarekkt/UniController "
-						 "FIRMWARE_GITHASH: %s \r\n",
-						 0,1,
-						 git_hash_short
+						 "FIRMWARE_BUILD: %s "
+						 "\r\n",
+						 git_hash_short,
+						 __DATE__
 			);
 		}break;
 

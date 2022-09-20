@@ -139,6 +139,11 @@ void burst_rcv_once()
 */
 void burst_rcv_send_response(const burst_rcv_ctx_t * rcv_ctx,const char * response, int length)
 {
+	if(length == 0)
+	{
+		return;
+	}
+
 	if(length < 0)
 	{
 		length = strlen(response);

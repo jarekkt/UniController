@@ -197,7 +197,7 @@ void gcode_engine_euclidean_geometry(
 	{
 		if( ( (*axis_mask) & ( 1<<ii))!= 0)
 		{
-			delta = axis[ii] - mj->pos_end_mm[GCODE_I_X];
+			delta = axis[ii] - mj->pos_end_mm[ii];
 			if( delta != 0)
 			{
 				vector_len += pow(delta,2);

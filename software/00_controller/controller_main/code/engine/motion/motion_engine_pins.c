@@ -35,14 +35,20 @@ uint32_t motion_engine_step_axis(int32_t axis_idx,motion_buffer_t ** p_mbfr,int3
 			{
 				*active = 1;
 			}
+			else
+			{
+				goto next;
+			}
 		}
 		else
 		{
+next:
 			*p_mbfr = mbfr->next;
 			if(*p_mbfr!= NULL)
 			{
-				*dir = (*p_mbfr)->dir;
+				*dir    = (*p_mbfr)->dir;
 				motion_engine_dir(axis_idx,*dir,active_dir);
+				*active = 1;
 			}
 		}
 	}

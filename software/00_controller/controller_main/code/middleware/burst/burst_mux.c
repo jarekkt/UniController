@@ -40,50 +40,6 @@ void burst_mux_once()
 }
 
 
-int32_t burst_mux_process_enc_crc(char * fstart,char ** fend)
-{
-
-	char            * var_crc;
-    uint8_t           crc;
-    uint8_t           crc_calc;
-	char            * pBreake = 0;
-	int				  ii;
-
-
-	pBreake = strchr(fstart, ':');
-	if(pBreake == NULL)
-	{
-	   // Wrong frame without crc
-	   return -1;
-	}
-	else
-	{
-		*fend = pBreake;
-
-	    *pBreake     = '\0';
-	     var_crc      = pBreake + 1;
-
-	    if(strcmp(var_crc,"$") != 0)
-	    {
-	       // No magic crc bypass
-	       crc = (char)strtol(var_crc,NULL,16);
-	       ii = 0;
-	       crc_calc = 0;
-	       while(fstart[ii] != 0)
-	       {
-	          crc_calc = crc_calc ^ fstart[ii++];
-	       }
-
-	       if(crc != crc_calc)
-	       {
-	          // Ignore frames with wrong CRC
-	          return -1;
-	       }
-	    }
-	}
-
-	return 0;
-}
 
 
 
@@ -95,11 +51,7 @@ int32_t burst_mux_process_enc_req(char * fstart,char * fend,burst_rcv_ctx_t *rcv
     char              resp_value[128];
     char              resp_enc_value[128+32];
     int32_t		      resp_len;
-    uint8_t           crc = 0;
-
 	int32_t			  execute_store = -1;
-
-	int				  ii;
 
 
 	//  Check against	R/W request
@@ -135,23 +87,28 @@ int32_t burst_mux_process_enc_req(char * fstart,char * fend,burst_rcv_ctx_t *rcv
 		}
 		else
 		{
-			resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"<%s=%s:$$>\r\n",var_name,resp_value);
+			if(rcv_ctx->frame_format == RCV_FRAME_GCODE_ENCAPSULATED)
+			{
+				resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"OK <%s=%s>\r\n",var_name,resp_value);
+			}
+			else
+			{
+				resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"<%s=%s>\r\n",var_name,resp_value);
+			}
 
-		    if(resp_len >=6 )
-		    {
-		       // Prepare message with CRC
-		       for(ii = 1;ii < resp_len-6;ii++)
-		       {
-		           crc ^= resp_enc_value[ii];
-		       }
 
-		       resp_enc_value[resp_len-5] = hexd[crc>>4];
-		       resp_enc_value[resp_len-4] = hexd[crc&0x0F];
-		    }
-
-			burst_rcv_send_response(rcv_ctx,resp_enc_value,resp_len);
 		}
 	}
+	else
+	{
+		if(rcv_ctx->frame_format == RCV_FRAME_GCODE_ENCAPSULATED)
+		{
+			resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"FAIL <?>\r\n",var_name,resp_value);
+		}
+
+	}
+
+	burst_rcv_send_response(rcv_ctx,resp_enc_value,resp_len);
 
 	return execute_store;
 
@@ -163,10 +120,8 @@ int32_t burst_mux_process_enc(char * fstart,char * fend,burst_rcv_ctx_t *rcv_ctx
 {
 	int32_t execute_store = -1;
 
-	if(burst_mux_process_enc_crc(fstart,&fend)== 0)
-	{
-		execute_store = burst_mux_process_enc_req(fstart,fend,rcv_ctx);
-	}
+
+	execute_store = burst_mux_process_enc_req(fstart,fend,rcv_ctx);
 
 	return execute_store;
 
@@ -182,6 +137,7 @@ int32_t  burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len)
 	int32_t				next = 0;
 	char 			  * fstart;
 	char 		      * fend;
+	char 		      * xstart;
 
 	buffer[len] = 0;
 
@@ -200,13 +156,25 @@ int32_t  burst_mux_serial_process(uint32_t idx,char * buffer,uint32_t len)
 
 		rcv_ctx.channel	= idx;
 
+
+		xstart = strstr(&buffer[curr],"GX");
+
+
+
 		fstart = strchr(&buffer[curr],'<');
 		fend  = strchr(&buffer[curr],'>');
 
 		if( (fstart != NULL) && (fend != NULL))
 		{
 			// Got standard encapsulated frame
-			rcv_ctx.frame_format = RCV_FRAME_ENCAPSULATED;
+			if(xstart == NULL)
+			{
+				rcv_ctx.frame_format = RCV_FRAME_ENCAPSULATED;
+			}
+			else
+			{
+				rcv_ctx.frame_format = RCV_FRAME_GCODE_ENCAPSULATED;
+			}
 			execute_store = burst_mux_process_enc(fstart+1,fend,&rcv_ctx);
 		}
 		else

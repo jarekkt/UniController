@@ -11,6 +11,7 @@
 
 #include "version.h"
 #include "burst_printf.h"
+#include "tcpconn/tcpconn.h"
 
 
 
@@ -113,9 +114,9 @@ void burst_log_printf(uint32_t level_mask,const char  * format, ...)
  
         // In production mode we disable all debug messages
         if( (bpctx_nv.printf_mask & level_mask) != 0 )
-        {                     
+        {
           length = vsnprintf(bpctx.print_buffer,sizeof(bpctx.print_buffer)-3,format, msg);
-          srv_serial_send(SRV_SERIAL_DEBUG,bpctx.print_buffer,length);
+          tcpconn_send_debug(bpctx.print_buffer,length);
         }
 
         va_end(msg);
