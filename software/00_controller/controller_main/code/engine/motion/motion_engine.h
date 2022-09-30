@@ -168,6 +168,10 @@ typedef struct
 	/* Command response buffer */
 	char			    resp_buffer[384];
 
+	/* Misc */
+
+	uint32_t inputs;
+
 }motion_ctx_t;
 
 

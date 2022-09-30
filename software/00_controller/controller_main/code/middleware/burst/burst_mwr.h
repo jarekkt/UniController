@@ -18,6 +18,8 @@ void mwr_burst_init(void);
 void mwr_burst_once(void);
 
 int  burst_process_variable(const char * var_name,const char * var_value,char * resp_buffer,uint32_t resp_buffer_len,int32_t * execute_store);
+int  burst_process_command(const char * var_value,char * resp_buffer,uint32_t resp_buffer_len,int32_t * execute_store);
+
 int  burst_execute_var(char* command, int length);
 
 

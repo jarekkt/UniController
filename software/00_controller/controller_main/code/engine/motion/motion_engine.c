@@ -714,10 +714,13 @@ void motion_engine_tmr_step(void)
 
 void motion_engine_tmr_endpos(void)
 {
-	uint32_t inputs;
+
 	uint32_t is_hit   = 0;
 	uint32_t hit_mask = 0;
 	uint32_t ii;
+
+
+	mctx.inputs = srv_gpio_get_io() ^ ppctx_nv->io_rev_mask;
 
 
 	// Check if motion engine active at all
@@ -728,17 +731,13 @@ void motion_engine_tmr_endpos(void)
 	}
 
 
-
-	inputs = srv_gpio_get_io();
-
-
 	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
 	{
 		if(mctx.active_dir[ii] != 0)
 		{
 			if(mctx.active_dir[ii] > 0)
 			{
-				if( (inputs & ppctx_nv->axis[ii].endpos_max_mask) != 0)
+				if( (mctx.inputs & ppctx_nv->axis[ii].endpos_max_mask) != 0)
 				{
 					is_hit = 1;
 					hit_mask |= ppctx_nv->axis[ii].endpos_max_mask;
@@ -746,7 +745,7 @@ void motion_engine_tmr_endpos(void)
 			}
 			else
 			{
-				if( (inputs & ppctx_nv->axis[ii].endpos_min_mask) != 0)
+				if( (mctx.inputs & ppctx_nv->axis[ii].endpos_min_mask) != 0)
 				{
 					is_hit = 1;
 					hit_mask |= ppctx_nv->axis[ii].endpos_min_mask;
@@ -756,7 +755,7 @@ void motion_engine_tmr_endpos(void)
 	}
 
 
-	if( (inputs & ppctx_nv->estop_mask )!= 0)
+	if( (mctx.inputs & ppctx_nv->estop_mask )!= 0)
 	{
 		is_hit = 1;
 		hit_mask |= ppctx_nv->estop_mask;

@@ -6,6 +6,7 @@
 typedef struct
 {
 	int32_t		  			is_inch;
+	int32_t		  			is_absolute; //TODO
 	path_params_t		 	path_param;
 }gcode_ctx_t;
 

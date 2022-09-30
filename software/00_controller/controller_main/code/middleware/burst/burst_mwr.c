@@ -45,6 +45,21 @@ void mwr_burst_once(void)
 }
 
 
+int  burst_process_command(const char * var_value,char * resp_buffer,uint32_t resp_buffer_len,int32_t * execute_store)
+{
+	  int               resp_len = -1;
+
+	  if(strstr(var_value,"chm63va")!= NULL)
+	  {
+
+	  }
+
+	  return 			resp_len;
+}
+
+
+
+
 int burst_process_variable(const char * var_name, const char * var_value,char * resp_buffer,uint32_t resp_buffer_len,int32_t * execute_store)
 {
   int               ii;

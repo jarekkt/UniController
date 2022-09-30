@@ -135,6 +135,20 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 				gcode_engine_command_execute(JCMD_OK,rcv_ctx,0,0);
 			}break;
 
+			case GCODE_F_G90:
+			{
+				//TODO
+
+			}break;
+
+			case GCODE_F_G91:
+			{
+				//TODO
+
+			}break;
+
+
+
 			case GCODE_F_G92:
 			{
 				result = gcode_engine_motion_G92(rcv_ctx,&cmd);

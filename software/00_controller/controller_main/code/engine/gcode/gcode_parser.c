@@ -47,11 +47,7 @@ gcode_parse_table_t  parse_table[] =
 				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
 				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
-				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
-				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
-				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'G' , GCODE_I_G, GCODE_V_FLOAT} ,
-				{ 'H' , GCODE_I_F, GCODE_V_FLOAT} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT}
 			}
 		},
 		{
@@ -63,11 +59,7 @@ gcode_parse_table_t  parse_table[] =
 				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
 				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
-				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
-				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
-				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'G' , GCODE_I_G, GCODE_V_FLOAT} ,
-				{ 'H' , GCODE_I_H, GCODE_V_FLOAT} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT}
 
 			}
 		},
@@ -93,10 +85,30 @@ gcode_parse_table_t  parse_table[] =
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
 				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
 				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
-				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
-				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'G' , GCODE_I_G, GCODE_V_FLOAT} ,
-				{ 'H' , GCODE_I_H, GCODE_V_FLOAT} ,
+			}
+		},
+		{
+			'G',90, 0,GCODE_F_G90,
+			{
+				{ 'X' , GCODE_I_X, GCODE_V_NONE} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_NONE} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_NONE} ,
+				{ 'A' , GCODE_I_A, GCODE_V_NONE} ,
+				{ 'B' , GCODE_I_B, GCODE_V_NONE} ,
+				{ 'C' , GCODE_I_C, GCODE_V_NONE} ,
+				{ 'D' , GCODE_I_D, GCODE_V_NONE} ,
+			}
+		},
+		{
+			'G',91, 0,GCODE_F_G91,
+			{
+				{ 'X' , GCODE_I_X, GCODE_V_NONE} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_NONE} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_NONE} ,
+				{ 'A' , GCODE_I_A, GCODE_V_NONE} ,
+				{ 'B' , GCODE_I_B, GCODE_V_NONE} ,
+				{ 'C' , GCODE_I_C, GCODE_V_NONE} ,
+				{ 'D' , GCODE_I_D, GCODE_V_NONE} ,
 			}
 		},
 		{
@@ -109,10 +121,6 @@ gcode_parse_table_t  parse_table[] =
 				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
 				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
 				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
-				{ 'E' , GCODE_I_E, GCODE_V_FLOAT} ,
-				{ 'F' , GCODE_I_F, GCODE_V_FLOAT} ,
-				{ 'G' , GCODE_I_G, GCODE_V_FLOAT} ,
-				{ 'H' , GCODE_I_H, GCODE_V_FLOAT} ,
 			}
 		},
 		{
@@ -313,9 +321,6 @@ int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line,uint32_t len
 
 
     printd(LVL_INFO,"GCODE parser - got this[%d]: \"%s\r\n",len,cmd_line);
-
-
-
 
 
     // Trim possible telnet commands

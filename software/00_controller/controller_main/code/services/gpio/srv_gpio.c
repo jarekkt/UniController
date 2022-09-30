@@ -13,14 +13,14 @@ uint32_t		gpio_pwm_value 			= 0;
 uint32_t		gpio_pwm_value_prev 	= 0;
 
 
-void  srv_gpio_pinmode(uint32_t mask)
+void  srv_gpio_pinmode(uint32_t out_mask)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     GPIO_InitStruct.Pull = GPIO_NOPULL;
 
     GPIO_InitStruct.Pin = IO_CPU1_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(0))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -31,7 +31,7 @@ void  srv_gpio_pinmode(uint32_t mask)
     HAL_GPIO_Init(IO_CPU1_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU2_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(1))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -42,7 +42,7 @@ void  srv_gpio_pinmode(uint32_t mask)
     HAL_GPIO_Init(IO_CPU2_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU3_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(2))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -53,7 +53,7 @@ void  srv_gpio_pinmode(uint32_t mask)
     HAL_GPIO_Init(IO_CPU3_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU4_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(3))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -65,7 +65,7 @@ void  srv_gpio_pinmode(uint32_t mask)
 
 
     GPIO_InitStruct.Pin = IO_CPU5_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(4))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -76,7 +76,7 @@ void  srv_gpio_pinmode(uint32_t mask)
     HAL_GPIO_Init(IO_CPU5_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU6_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(5))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -87,7 +87,7 @@ void  srv_gpio_pinmode(uint32_t mask)
     HAL_GPIO_Init(IO_CPU6_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU7_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(6))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -98,7 +98,7 @@ void  srv_gpio_pinmode(uint32_t mask)
     HAL_GPIO_Init(IO_CPU7_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU8_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(7))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -110,7 +110,7 @@ void  srv_gpio_pinmode(uint32_t mask)
 
 
     GPIO_InitStruct.Pin = IO_CPU9_Pin;
-	if(mask & BV(0))
+	if(out_mask & BV(8))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -119,14 +119,155 @@ void  srv_gpio_pinmode(uint32_t mask)
 		 GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 	}
     HAL_GPIO_Init(IO_CPU9_GPIO_Port, &GPIO_InitStruct);
-
-
 }
+
+
+void  srv_gpio_pullupmode(uint32_t pullup_mask)
+{
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pin = IN_CPU1_Pin;
+	if(pullup_mask & BV(0))
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+	}
+	else
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	}
+    HAL_GPIO_Init(IN_CPU1_GPIO_Port, &GPIO_InitStruct);
+
+
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pin = IN_CPU2_Pin;
+	if(pullup_mask & BV(1))
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+	}
+	else
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	}
+    HAL_GPIO_Init(IN_CPU2_GPIO_Port, &GPIO_InitStruct);
+
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pin = IN_CPU3_Pin;
+	if(pullup_mask & BV(3))
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+	}
+	else
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	}
+    HAL_GPIO_Init(IN_CPU3_GPIO_Port, &GPIO_InitStruct);
+
+
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pin = IN_CPU4_Pin;
+	if(pullup_mask & BV(3))
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+	}
+	else
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	}
+    HAL_GPIO_Init(IN_CPU4_GPIO_Port, &GPIO_InitStruct);
+
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+     GPIO_InitStruct.Pin = IN_CPU5_Pin;
+ 	if(pullup_mask & BV(4))
+ 	{
+ 		GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 	}
+ 	else
+ 	{
+ 		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+ 	}
+     HAL_GPIO_Init(IN_CPU5_GPIO_Port, &GPIO_InitStruct);
+
+
+
+     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+     GPIO_InitStruct.Pin = IN_CPU6_Pin;
+ 	if(pullup_mask & BV(5))
+ 	{
+ 		GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 	}
+ 	else
+ 	{
+ 		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+ 	}
+     HAL_GPIO_Init(IN_CPU6_GPIO_Port, &GPIO_InitStruct);
+
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pin = IN_CPU7_Pin;
+ 	if(pullup_mask & BV(6))
+ 	{
+ 		GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 	}
+ 	else
+ 	{
+ 		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+ 	}
+    HAL_GPIO_Init(IN_CPU7_GPIO_Port, &GPIO_InitStruct);
+
+
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pin = IN_CPU8_Pin;
+ 	if(pullup_mask & BV(7))
+ 	{
+ 		GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 	}
+ 	else
+ 	{
+ 		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+ 	}
+    HAL_GPIO_Init(IN_CPU8_GPIO_Port, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pin = IN_CPU9_Pin;
+	if(pullup_mask & BV(8))
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+	}
+	else
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	}
+    HAL_GPIO_Init(IN_CPU9_GPIO_Port, &GPIO_InitStruct);
+
+
+
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pin = IN_CPU10_Pin;
+	if(pullup_mask & BV(9))
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+	}
+	else
+	{
+		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+	}
+    HAL_GPIO_Init(IN_CPU10_GPIO_Port, &GPIO_InitStruct);
+}
+
 
 void      srv_gpio_init(void)
 {
 
 }
+
+
 
 uint32_t  srv_gpio_get_io(void)
 {
@@ -226,6 +367,7 @@ uint32_t  srv_gpio_get_io(void)
 	{
 		io |= BV(8+16);
 	}
+
 
 	return io;
 }
@@ -661,6 +803,7 @@ uint32_t srv_gpio_dump(char * buffer, uint32_t buffer_size)
 void  srv_gpio_refresh(void)
 {
 	srv_gpio_pinmode(ppctx_nv->io_cpu_dir);
+	srv_gpio_pullupmode(ppctx_nv->in_cpu_pullup);
 }
 
 

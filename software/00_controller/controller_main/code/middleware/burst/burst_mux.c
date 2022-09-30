@@ -78,7 +78,14 @@ int32_t burst_mux_process_enc_req(char * fstart,char * fend,burst_rcv_ctx_t *rcv
 			var_value       = pBreake + 1;
 	}
 
-	resp_len = 	burst_process_variable(var_name,var_value,resp_value,sizeof(resp_value),&execute_store);
+	if(strcmp(var_name,"cmd")==0)
+	{
+		resp_len = 	burst_process_variable(var_name,var_value,resp_value,sizeof(resp_value),&execute_store);
+	}
+	else
+	{
+		resp_len = 	burst_process_command(var_value,resp_value,sizeof(resp_value),&execute_store);
+	}
 	if( resp_len> 0)
 	{
 		if(rcv_ctx->frame_format == RCV_FRAME_DIRECT)
@@ -103,7 +110,7 @@ int32_t burst_mux_process_enc_req(char * fstart,char * fend,burst_rcv_ctx_t *rcv
 	{
 		if(rcv_ctx->frame_format == RCV_FRAME_GCODE_ENCAPSULATED)
 		{
-			resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"FAIL <?>\r\n",var_name,resp_value);
+			resp_len = snprintf(resp_enc_value,sizeof(resp_enc_value),"FAIL <?>\r\n");
 		}
 
 	}

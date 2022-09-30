@@ -60,6 +60,7 @@ next:
 
 void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 {
+	dir = dir ^ ppctx_nv->dir_rev_mask;
 	active_dir[idx] = dir;
 
 	switch(idx)
