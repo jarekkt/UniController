@@ -64,9 +64,9 @@ void gcode_engine_command_execute(jcmd_e cmd,const burst_rcv_ctx_t * rcv_ctx,uin
 
 	if(motion_engine_job_init(&mj,rcv_ctx) == 0)
 	{
-		mj->jcmd 		 	 = cmd;
-		mj->args.cmd_args[0] = cmd_arg1;
-		mj->args.cmd_args[1] = cmd_arg2;
+		mj->jcmd 		 = cmd;
+		mj->jcmd_args[0] = cmd_arg1;
+		mj->jcmd_args[1] = cmd_arg2;
 		motion_engine_jobs_start();
 	}
 }
@@ -78,6 +78,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 	int32_t 			result = 0;
 	uint32_t 			args[2];
 	gcode_command_t 	cmd;
+	uint32_t			cnt;
+	int					ii;
 
 	float				S;
 
@@ -92,11 +94,20 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 		switch(cmd.fn)
 		{
 			case GCODE_F_G28:
+			{
+				// homing motion
+				result = gcode_engine_motion_G28(rcv_ctx,&cmd);
+				if(result != 0)
+				{
+					gcode_engine_command_execute(JCMD_FAIL,rcv_ctx,0,0);
+				}
+			}break;
+
 			case GCODE_F_G0:
 			case GCODE_F_G1:
 			{
 				// linear move/ homing shared code
-				result = gcode_engine_motion_G0G1(rcv_ctx,&cmd);
+				result = gcode_engine_motion_G0G1(rcv_ctx,&cmd,gcd.gcx.is_incremental);
 				if(result != 0)
 				{
 					gcode_engine_command_execute(JCMD_FAIL,rcv_ctx,0,0);
@@ -135,19 +146,39 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 				gcode_engine_command_execute(JCMD_OK,rcv_ctx,0,0);
 			}break;
 
+
+
 			case GCODE_F_G90:
-			{
-				//TODO
-
-			}break;
-
 			case GCODE_F_G91:
 			{
-				//TODO
 
+				// G90 absolute coordinates
+				// G91 incremental coordinates
+				cnt = 0;
+				for(ii=0;ii<=GCODE_I_LAST_AXIS;ii++)
+				{
+					if(cmd.tokens_present_mask & (1<< ii))
+					{
+						cnt++;
+						if(cmd.fn == GCODE_F_G90)
+						{
+							gcd.gcx.is_incremental &= ~(1<<ii);
+						}
+						else
+						{
+							gcd.gcx.is_incremental |= (1<<ii);
+						}
+					}
+				}
+				if(cnt > 0)
+				{
+					gcode_engine_command_execute(JCMD_OK,rcv_ctx,0,0);
+				}
+				else
+				{
+					gcode_engine_command_execute(JCMD_FAIL,rcv_ctx,0,0);
+				}
 			}break;
-
-
 
 			case GCODE_F_G92:
 			{

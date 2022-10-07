@@ -17,6 +17,11 @@
 #define  MF_FLAG_RUNNING 0x0001
 #define  MF_FLAG_DONE	 0x0002
 
+#define  MF_HOME_RUN	 0x0001
+#define  MF_HOME_LAST	 0x0002
+
+
+
 #define  HIT_LIMIT		5
 
 typedef enum
@@ -36,6 +41,7 @@ typedef enum
 	JCMD_OK,
 	JCMD_FAIL,
 	JCMD_MOTION,
+	JCMD_MOTION_WAIT,
 	JCMD_COORDS,
 	JCMD_FWINFO,
 	JCMD_SENSORS,
@@ -88,16 +94,31 @@ typedef struct
 
 }motion_remote_status_t;
 
+
+typedef struct
+{
+	uint32_t			home_phase;
+	uint32_t			home_axis;
+	float				home_value;
+}motion_home_args_t;
+
+typedef struct
+{
+	uint32_t			io_mask_endstop;
+	uint32_t			io_mask_run_stop;
+	uint32_t			io_mask_run_keep;
+}motion_io_args_t;
+
 typedef struct
 {
 	jcmd_e					jcmd;
+	uint32_t				jcmd_args[2];
 
-	struct
-	{
-		uint32_t			home_axis;
-		uint32_t			home_axis_mask;
-		uint32_t			cmd_args[2];
-	}args;
+
+
+	motion_home_args_t		homing;
+	motion_io_args_t		io;
+
 
 	uint32_t				task_flags;
 
@@ -149,17 +170,12 @@ typedef struct
 
 	float	     		plan_pos_mm[AXIS_GLOBAL_CNT];
 
-
-
-
-
-
 	/* Flow control */
+
 	uint32_t		    hit_active;
-	uint32_t		    hit_mask;
-	uint32_t			endpos_hit_cntr;
-	uint32_t 			stop_active;
-	uint32_t 			remote_failure;
+	uint32_t		    hit_io;
+
+	uint32_t		    stop_active;
 	uint32_t			pulse_idle;
 
 	/* Current job */
@@ -171,6 +187,9 @@ typedef struct
 	/* Misc */
 
 	uint32_t inputs;
+	uint32_t inputs_filters[32];
+	uint32_t inputs_filtered;
+
 
 }motion_ctx_t;
 
@@ -183,23 +202,25 @@ int32_t motion_engine_job_init(motion_job_t ** mj,const burst_rcv_ctx_t * comm_c
 void    motion_engine_ack(motion_job_t * mj,int32_t result);
 void	motion_engine_jobs_start();
 void	motion_engine_jobs_abort();
+void 	motion_engine_set_pos(
+			int32_t	 axis_idx,
+			float pos_mm
+);
 
 
 int32_t motion_engine_run
 (			motion_job_t * mj,
 			uint32_t axis_idx,
 			float pos_mm,
+			uint32_t is_incremental,
 			float speed_mm_s,
 			float accel_mm_s2,
 			float jerk_mm_s3
 );
 
 int32_t  motion_engine_run_home
-(			motion_job_t * mj,
-			uint32_t axis_idx,
-			float speed_mm_s,
-			float accel_mm_s2,
-			float jerk_mm_s3
+(			uint32_t 					axis_idx,
+			const burst_rcv_ctx_t     * rcv_ctx
 );
 
 int32_t motion_engine_delay

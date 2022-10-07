@@ -1,12 +1,12 @@
 #ifndef GCODE_ENGINE_MOTION_PRV_H
 #define GCODE_ENGINE_MOTION_PRV_H
  
-
+#include "gcode_parser.h"
 
 typedef struct
 {
 	int32_t		  			is_inch;
-	int32_t		  			is_absolute; //TODO
+	uint32_t		  		is_incremental;
 	path_params_t		 	path_param;
 }gcode_ctx_t;
 

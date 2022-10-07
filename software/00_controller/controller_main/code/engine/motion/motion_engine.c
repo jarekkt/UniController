@@ -14,6 +14,19 @@
 #include "motion_engine.h"
 #include "motion_scurve.h"
 
+#define  HIT_ESTOP			0x01
+#define  HIT_REQSTOP		0x02
+
+#define  HIT_ENDPOS			0x04
+#define  HIT_SOFTPOS		0x08
+#define  HIT_STOP			0x10
+#define  HIT_RUN			0x20
+
+#define  HOME_RUNTO_FAST	1
+#define  HOME_RETRACT		2
+#define  HOME_RUNFROM		3
+#define  HOME_RUNTO_SLOW   10
+
 
 typedef struct
 {
@@ -145,16 +158,64 @@ void motion_engine_jobs_abort()
 	mctx.mj_g_head = mctx.mj_g_run_head;
 }
 
-
-int32_t motion_engine_run_home
-(	motion_job_t * 	mj,
-	uint32_t 		axis_idx,
-	float 			speed_mm_s,
-	float 			accel_mm_s2,
-	float	 		jerk_mm_s3
+void 	motion_engine_set_pos(
+			int32_t	 axis_idx,
+			float pos_mm
 )
 {
-	float dist;
+	mctx.plan_pos_mm[axis_idx] 	  = pos_mm;
+	mctx.curr_pos[axis_idx]    	  = pos_mm;
+	mctx.curr_pulse_pos[axis_idx] = motion_engine_units_to_pulse(pos_mm,axis_idx);
+
+
+}
+
+
+
+
+int32_t motion_engine_run_home_schedule(
+		float						dist,
+		const path_params_t 	*  	path,
+		motion_home_args_t		*	home_args,
+		motion_io_args_t		*	io_args,
+		const burst_rcv_ctx_t   *   rcv_ctx
+)
+{
+	motion_job_t * 	mj;
+	int32_t			result;
+
+
+	if(motion_engine_job_init(&mj,rcv_ctx) == 0)
+	{
+		result = motion_engine_run(mj,home_args->home_axis,dist,1,path->speed_mm_s,path->accel_mm_s2,path->jerk_mm_s3);
+
+		mj->homing = *home_args;
+		mj->io     = *io_args;
+
+	}
+
+
+	return result;
+}
+
+
+int32_t motion_engine_run_home
+(
+	uint32_t 				 axis_idx,
+	const burst_rcv_ctx_t  * rcv_ctx
+)
+{
+
+	path_params_t			path_home;
+	path_params_t			path_retract;
+	float					dist_home;
+	float					dist_retract;
+	int32_t					result = 0;
+
+	motion_home_args_t		home_args;
+	motion_io_args_t		io_args;
+
+
 
 	if(axis_idx >AXIS_GLOBAL_CNT)
 	{
@@ -162,23 +223,152 @@ int32_t motion_engine_run_home
 		return -1;
 	}
 
-	mj->args.home_axis	|= (1<<axis_idx);
-
-	// Calculate max possible distance, add 20% to travel range
-	dist = 1.2 *(ppctx_nv->axis[axis_idx].endpos_max_value - ppctx_nv->axis[axis_idx].endpos_min_value);
-
-	if(speed_mm_s < 0)
+	if(ppctx_nv->axis[axis_idx].homing_type == P_HOMING_NONE)
 	{
-		dist 					= -dist;
-		speed_mm_s				= -speed_mm_s;
-		mj->args.home_axis_mask |= ppctx_nv->axis[axis_idx].endpos_min_mask;
+		motion_job_t * 	mj;
+
+		// Dummy homing
+		motion_engine_set_pos(axis_idx,ppctx_nv->axis[axis_idx].homing_value);
+		// Just send acknowledge
+		if(motion_engine_job_init(&mj,rcv_ctx) == 0)
+		{
+			mj->jcmd 		 = JCMD_OK;
+		}
+		else
+		{
+			result = -1;
+		}
 	}
 	else
 	{
-		mj->args.home_axis_mask |= ppctx_nv->axis[axis_idx].endpos_max_mask;
+		// Real motion needed
+		path_retract.speed_mm_s      = ppctx_nv->axis[axis_idx].speed_home_retract_mm_s;
+		path_retract.accel_mm_s2 	 = ppctx_nv->axis[axis_idx].accel_mm_s2;
+		path_retract.jerk_mm_s3      = ppctx_nv->axis[axis_idx].jerk_mm_s3;
+
+		path_home.speed_mm_s	     = ppctx_nv->axis[axis_idx].speed_home_mm_s;
+		path_home.accel_mm_s2 	     = ppctx_nv->axis[axis_idx].accel_mm_s2;
+		path_home.jerk_mm_s3         = ppctx_nv->axis[axis_idx].jerk_mm_s3;
+
+
+		dist_home = 1.2 *(ppctx_nv->axis[axis_idx].endpos_max_value - ppctx_nv->axis[axis_idx].endpos_min_value);
+		if(dist_home == 0)
+		{
+			// In case soft limits not set use large unreasonable value
+			dist_home = 10000;
+		}
+
+		dist_retract = ppctx_nv->axis[axis_idx].homing_retract_mm;
+
+
+
+
+		home_args.home_axis			= axis_idx;
+		home_args.home_value		= ppctx_nv->axis[axis_idx].homing_value;
+
+		io_args.io_mask_run_keep	= 0;
+
+		switch(ppctx_nv->axis[axis_idx].homing_type)
+		{
+			default:
+			{
+				assert(0);
+				result = -1;
+			}break;
+
+			case P_HOMING_TO_MIN:
+			{
+				io_args.io_mask_endstop	 =  ppctx_nv->axis[axis_idx].endpos_min_mask;
+				io_args.io_mask_run_stop = ppctx_nv->axis[axis_idx].homing_mask;
+
+				if( (mctx.inputs_filtered & ppctx_nv->axis[axis_idx].homing_mask ) == 0)
+				{
+					// Not in end position - go there
+					home_args.home_phase 	 = HOME_RUNTO_FAST;
+					result 					|= motion_engine_run_home_schedule(-dist_home,&path_home,&home_args,&io_args,rcv_ctx);
+				}
+				// Retract
+				home_args.home_phase 		= HOME_RETRACT;
+				io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_max_mask;
+				result 				   	   |= motion_engine_run_home_schedule(dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
+
+				// Home again - slowly
+				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
+				result 					   |= motion_engine_run_home_schedule(-2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
+			}break;
+
+
+			case P_HOMING_TO_MAX:
+			{
+				io_args.io_mask_endstop	 =  ppctx_nv->axis[axis_idx].endpos_max_mask;
+				io_args.io_mask_run_stop =  ppctx_nv->axis[axis_idx].homing_mask;
+
+				if( (mctx.inputs_filtered & ppctx_nv->axis[axis_idx].homing_mask ) == 0)
+				{
+					// Not in end position - go there
+					home_args.home_phase 	 = HOME_RUNTO_FAST;
+					result 					|= motion_engine_run_home_schedule(dist_home,&path_home,&home_args,&io_args,rcv_ctx);
+				}
+				// Retract
+				home_args.home_phase 		= HOME_RETRACT;
+				io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_min_mask;
+
+				result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
+
+				// Home again - slowly
+				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_max_mask;
+
+				result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
+			}break;
+
+			case P_HOMING_TO_MID:
+			{
+
+				if( (mctx.inputs_filtered & ppctx_nv->axis[axis_idx].homing_mask ) != 0)
+				{
+					// MMID switch activated - run until inactive
+					io_args.io_mask_endstop	 = ppctx_nv->axis[axis_idx].endpos_min_mask;
+					home_args.home_phase 	 = HOME_RUNFROM;
+					io_args.io_mask_run_stop = 0;
+					io_args.io_mask_run_keep = ppctx_nv->axis[axis_idx].homing_mask;
+
+					result 					|= motion_engine_run_home_schedule(-dist_home,&path_home,&home_args,&io_args,rcv_ctx);
+				}
+				else
+				{
+					// MMID switch not activated - run until inactive
+					io_args.io_mask_endstop	 =  ppctx_nv->axis[axis_idx].endpos_max_mask;
+					home_args.home_phase 	 = HOME_RUNTO_FAST;
+					io_args.io_mask_run_stop = ppctx_nv->axis[axis_idx].homing_mask;
+					io_args.io_mask_run_keep = 0;
+
+					result 					|= motion_engine_run_home_schedule(-dist_home,&path_home,&home_args,&io_args,rcv_ctx);
+				}
+
+				// Retract
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
+				home_args.home_phase 		= HOME_RETRACT;
+				io_args.io_mask_run_keep	= 0;
+				io_args.io_mask_run_keep 	= 0;
+
+				result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
+
+				// Home again - slowly
+				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
+				io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_max_mask;
+				io_args.io_mask_run_stop 	= ppctx_nv->axis[axis_idx].homing_mask;
+
+				result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
+			}break;
+
+		}
 	}
 
-	return motion_engine_run(mj,axis_idx,dist,speed_mm_s,accel_mm_s2,jerk_mm_s3);
+
+
+	return result;
 }
 
 
@@ -240,7 +430,7 @@ int32_t motion_engine_allocate(motion_job_t * mj,uint32_t axis_idx, motion_buffe
 
 
 
-int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,float speed_mm_s,float accel_mm_s2,float jerk_mm_s3)
+int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,uint32_t is_incremental,float speed_mm_s,float accel_mm_s2,float jerk_mm_s3)
 {
 	motion_calc_t  		calc;
 	float		   		dist_mm;
@@ -257,7 +447,15 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,floa
 
 	// Calculate relative move
 	curr_pos_mm = mctx.plan_pos_mm[axis_idx] ;
-	dist_mm	 	= pos_mm - (curr_pos_mm - mctx.offset_pos_mm[axis_idx]);
+
+	if( ( is_incremental &( 1<<axis_idx)) == 0)
+	{
+		dist_mm	 	= pos_mm - (curr_pos_mm - mctx.offset_pos_mm[axis_idx]);
+	}
+	else
+	{
+		dist_mm	 	= pos_mm;
+	}
 
 
 	// Update new target position
@@ -382,6 +580,7 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 			 length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok\r\n");
 		}break;
 
+		case JCMD_MOTION_WAIT:
 		case JCMD_MOTION:
 		{
 			 if(result == 0)
@@ -402,11 +601,15 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 			 for(idx = 0; idx < AXIS_GLOBAL_CNT;idx++)
 			 {
-				 length += snprintf(&mctx.resp_buffer[length],
+
+				 if( (ppctx_nv->axis_used_mask &  ( 1<<idx)) != 0)
+				 {
+					 length += snprintf(&mctx.resp_buffer[length],
 						  	  	    sizeof(mctx.resp_buffer)-length,
 									" %c:%08.3f",
 									axes[idx],
 									mctx.curr_pos[idx] - mctx.offset_pos_mm[idx]);
+				 }
 			 }
 
 			 length += snprintf(&mctx.resp_buffer[length],sizeof(mctx.resp_buffer)-length,"\r\n");
@@ -435,7 +638,7 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 		case JCMD_OUTPUTS:
 		{
-			result = motion_engine_io(mj->args.cmd_args[0],mj->args.cmd_args[1]);
+			result = motion_engine_io(mj->jcmd_args[0],mj->jcmd_args[1]);
 
 			if(result == 0)
 			{
@@ -466,8 +669,61 @@ static void  motion_task_abort_job(uint32_t idx)
 	// Relese motion buffers
 	mctx.mb_g_head = mj_global[idx].mb_head;
 
-	// Report failure for remaining jobs
+	// Report failure
 	motion_engine_ack(&mj_global[idx],-1);
+}
+
+
+static int32_t  motion_task_finish_homing_job(uint32_t idx)
+{
+	int32_t result = -1;
+
+	switch(mj_global[idx].homing.home_phase)
+	{
+		case HOME_RUNTO_FAST:
+		{
+			if( (mctx.hit_io & mj_global[idx].io.io_mask_run_stop) != 0)
+			{
+				result = 0;
+			}
+		}break;
+
+		case HOME_RETRACT:
+		{
+			if( (mctx.hit_io & mj_global[idx].io.io_mask_run_stop) != 0)
+			{
+				result = 0;
+			}
+		}break;
+
+		case HOME_RUNFROM:
+		{
+			if( (mctx.hit_io & mj_global[idx].io.io_mask_run_keep) == 0)
+			{
+				result = 0;
+			}
+		}break;
+
+		case HOME_RUNTO_SLOW:
+		{
+
+			if( (mctx.hit_io & mj_global[idx].io.io_mask_run_stop) != 0)
+			{
+				result = 0;
+			}
+
+			// Only homing moves are acknowledged (last successful phase)
+			motion_engine_ack(&mj_global[idx],result);
+		}break;
+
+
+		default:
+		{
+
+		}break;
+	}
+
+	return result;
 }
 
 static int32_t  motion_task_finish_job(uint32_t idx)
@@ -476,50 +732,33 @@ static int32_t  motion_task_finish_job(uint32_t idx)
 
 	if(mj_global[idx].jcmd == JCMD_MOTION)
 	{
-		if(mctx.hit_active != 0)
-		{
-		   // End position sensor hit
-		   if(mj_global[idx].args.home_axis != 0)
-		   {
-			  // It was homing move, make sure we hit proper sensor
-			  // TODO
-			  if( (mj_global[idx].args.home_axis_mask & mctx.hit_mask ) == mj_global[idx].args.home_axis_mask)
-			  {
-				  // OK, we got what we wanted
-				  result = 0;
-			  }
-		   }
-		   else
-		   {
-			   // Unexpected end position sensor hit
-			   result = -1;
-		   }
-
-		   mctx.hit_active = 0;
-		   mctx.hit_mask   = 0;
-		}
-		else if(mctx.stop_active != 0)
+		if( (mctx.hit_active == HIT_ESTOP) || (mctx.hit_active == HIT_REQSTOP) )
 		{
 			// This was stop/abort request
+			// Fails all remaining jobs in chain
 			result = -1;
+		}
+		else if(mctx.hit_active != 0)
+		{
+			// We are executing homing - special care needed
+			if(mj_global[idx].homing.home_phase != 0)
+			{
+				result = motion_task_finish_homing_job(idx);
+			}
+			else
+			{
+				// Ordinary failure - we hit something
+				result = -1;
+			}
 		}
 		else
 		{
-			//
+			// Ordinary job finish, no errors
 			result = 0;
-		}
-
-		if(mj_global[idx].args.home_axis != 0)
-		{
-			// Only homing moves are acknowledged
-			// Ordinary moves get ack immediately after entering the queue
-			motion_engine_ack(&mj_global[idx],result);
 		}
 
 		// Release motion buffers
 		mctx.mb_g_tail = mj_global[idx].mb_head;
-
-
 	}
 	else
 	{
@@ -557,7 +796,7 @@ static uint32_t motion_task_start_job(uint32_t idx)
 	int32_t 	ii;
 	uint32_t	again = 0;
 
-	if(mj_global[idx].jcmd == JCMD_MOTION)
+	if( (mj_global[idx].jcmd == JCMD_MOTION) || (mj_global[idx].jcmd == JCMD_MOTION_WAIT))
 	{
 		for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
 		{
@@ -568,8 +807,12 @@ static uint32_t motion_task_start_job(uint32_t idx)
 			}
 		}
 
-		mctx.job 		 = &mj_global[idx];
+		mctx.stop_active = 0;
+		mctx.hit_active  = 0;
 		mctx.pulse_idle  = 0;
+
+		mctx.job 		 = &mj_global[idx];
+
 		motion_engine_start_timer();
 
 	}
@@ -712,74 +955,24 @@ void motion_engine_tmr_step(void)
 }
 
 
+void motion_engine_io_filter(void)
+{
+	mctx.inputs = srv_gpio_get_io() ^ ppctx_nv->io_rev_mask;
+
+
+
+
+}
+
+
+
+
 void motion_engine_tmr_endpos(void)
 {
-
-	uint32_t is_hit   = 0;
 	uint32_t hit_mask = 0;
 	uint32_t ii;
 
 
-	mctx.inputs = srv_gpio_get_io() ^ ppctx_nv->io_rev_mask;
-
-
-	// Check if motion engine active at all
-	if(mctx.job == NULL)
-	{
-		mctx.endpos_hit_cntr = 0;
-		return;
-	}
-
-
-	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
-	{
-		if(mctx.active_dir[ii] != 0)
-		{
-			if(mctx.active_dir[ii] > 0)
-			{
-				if( (mctx.inputs & ppctx_nv->axis[ii].endpos_max_mask) != 0)
-				{
-					is_hit = 1;
-					hit_mask |= ppctx_nv->axis[ii].endpos_max_mask;
-				}
-			}
-			else
-			{
-				if( (mctx.inputs & ppctx_nv->axis[ii].endpos_min_mask) != 0)
-				{
-					is_hit = 1;
-					hit_mask |= ppctx_nv->axis[ii].endpos_min_mask;
-				}
-			}
-		}
-	}
-
-
-	if( (mctx.inputs & ppctx_nv->estop_mask )!= 0)
-	{
-		is_hit = 1;
-		hit_mask |= ppctx_nv->estop_mask;
-	}
-
-	if(is_hit != 0)
-	{
-		if(mctx.endpos_hit_cntr < HIT_LIMIT)
-		{
-			mctx.endpos_hit_cntr++;
-		}
-		else
-		{
-			mctx.hit_active = 1;
-			mctx.hit_mask   = hit_mask;
-		}
-	}
-	else
-	{
-		if(mctx.endpos_hit_cntr > 0)
-		{
-			mctx.endpos_hit_cntr--;
-		}
-	}
 
 	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
 	{
@@ -787,13 +980,49 @@ void motion_engine_tmr_endpos(void)
 	}
 
 
-	if( (mctx.pulse_idle != 0)
-			)// || (mctx.hit_active != 0) || (mctx.stop_active != 0) )
+	if(mctx.job == NULL)
 	{
-		 mctx.pulse_idle  = 0;
-		 mctx.job->task_flags |= MF_FLAG_DONE;
+		return;
+	}
 
-		 xSemaphoreGiveFromISR(mctx.motion_kick,NULL);
+	if( (mctx.inputs_filtered & ppctx_nv->estop_mask) != 0)
+	{
+		hit_mask |= HIT_ESTOP;
+	}
+
+	if( mctx.stop_active !=0 )
+	{
+		hit_mask |= HIT_REQSTOP;
+	}
+
+	if( (mctx.inputs_filtered & mctx.job->io.io_mask_endstop) != 0)
+	{
+		hit_mask |= HIT_ENDPOS;
+	}
+
+	if( (mctx.inputs_filtered & mctx.job->io.io_mask_run_stop) != 0)
+	{
+		hit_mask |= HIT_STOP;
+	}
+
+	if( (mctx.inputs_filtered & mctx.job->io.io_mask_run_keep) == 0)
+	{
+		hit_mask |= HIT_RUN;
+	}
+
+
+
+	mctx.hit_active = hit_mask;
+	mctx.hit_io     = mctx.inputs_filtered;
+
+	if( (mctx.pulse_idle != 0) || (mctx.hit_active  != 0))
+	{
+		motion_engine_stop_timer();
+
+		mctx.pulse_idle  	  = 0;
+		mctx.job->task_flags |= MF_FLAG_DONE;
+
+		xSemaphoreGiveFromISR(mctx.motion_kick,NULL);
 	}
 
 
