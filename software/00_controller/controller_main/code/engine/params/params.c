@@ -177,7 +177,7 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "motion_axis_mask", 		&pctx_nv.axis_used_mask						,E_VA_UINT_FREE  },
   { "io_cpu_dir", 				&pctx_nv.io_cpu_dir 						,E_VA_UINT_FREE  },
   { "in_cpu_pullup",			&pctx_nv.in_cpu_pullup						,E_VA_UINT_FREE  },
-  { "in_cpu_filter",			&pctx_nv.in_cpu_filter						,E_VA_UINT_FREE  },
+  { "in_cpu_filter_ms",			&pctx_nv.in_cpu_filter_ms					,E_VA_UINT_FREE  },
   { "io_rev_mask", 				&pctx_nv.io_rev_mask 						,E_VA_UINT_FREE  },
   { "dir_rev_mask",				&pctx_nv.dir_rev_mask						,E_VA_UINT_FREE  }
 

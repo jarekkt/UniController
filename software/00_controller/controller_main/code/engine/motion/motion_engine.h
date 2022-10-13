@@ -107,6 +107,8 @@ typedef struct
 	uint32_t			io_mask_endstop;
 	uint32_t			io_mask_run_stop;
 	uint32_t			io_mask_run_keep;
+	uint32_t			io_mask_soft_max_stop;
+	uint32_t			io_mask_soft_min_stop;
 }motion_io_args_t;
 
 typedef struct

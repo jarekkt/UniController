@@ -240,14 +240,28 @@ int32_t gcode_engine_motion(motion_job_t * mj,float * axis, uint32_t is_incremen
 		{
 			motion_engine_run(mj,ii,axis[ii],is_incremental,pP[ii].speed_mm_s,pP[ii].accel_mm_s2,pP[ii].jerk_mm_s3);
 
+			// Setup active soft limits
+
+			if( ppctx_nv->axis[ii].endpos_min_value != ppctx_nv->axis[ii].endpos_max_value)
+			{
+				if(axis[ii] > 0)
+				{
+					mj->io.io_mask_soft_max_stop	|= (1<<ii);
+				}
+				else
+				{
+					mj->io.io_mask_endstop 			|= ppctx_nv->axis[ii].endpos_min_mask;
+				}
+			}
+
 			// Setup active end position switches
 			if(axis[ii] > 0)
 			{
-				mj->io.io_mask_endstop = ppctx_nv->axis[ii].endpos_max_mask;
+				mj->io.io_mask_endstop 			|= ppctx_nv->axis[ii].endpos_max_mask;
 			}
 			else
 			{
-				mj->io.io_mask_endstop = ppctx_nv->axis[ii].endpos_min_mask;
+				mj->io.io_mask_endstop 			|= ppctx_nv->axis[ii].endpos_min_mask;
 			}
 		}
 	}

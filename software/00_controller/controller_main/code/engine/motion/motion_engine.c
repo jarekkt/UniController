@@ -263,10 +263,11 @@ int32_t motion_engine_run_home
 
 
 
-		home_args.home_axis			= axis_idx;
-		home_args.home_value		= ppctx_nv->axis[axis_idx].homing_value;
+		home_args.home_axis				= axis_idx;
+		home_args.home_value			= ppctx_nv->axis[axis_idx].homing_value;
 
-		io_args.io_mask_run_keep	= 0;
+
+		memset(&io_args,0,sizeof(io_args));
 
 		switch(ppctx_nv->axis[axis_idx].homing_type)
 		{
@@ -957,21 +958,93 @@ void motion_engine_tmr_step(void)
 
 void motion_engine_io_filter(void)
 {
+	int 		ii;
+	uint32_t 	mask;
+	uint32_t 	new_io = 0;
+
+
 	mctx.inputs = srv_gpio_get_io() ^ ppctx_nv->io_rev_mask;
 
 
+	// Note that ppctx_nv->in_cpu_filter_ms is in ms, that is why there is 10x conversion
+
+	for(ii = 0; ii < 32; ii++)
+	{
+		mask = (1 << ii);
+
+		if( (mctx.inputs & mask) != 0)
+		{
+			if(mctx.inputs_filters[ii] < 20 * ppctx_nv->in_cpu_filter_ms)
+			{
+				mctx.inputs_filters[ii]++;
+			}
+		}
+		else
+		{
+			if(mctx.inputs_filters[ii] > 0)
+			{
+				mctx.inputs_filters[ii]--;
+			}
+		}
 
 
+		// Set the result - use hysteresis
+		if( (mctx.inputs_filtered & mask) != 0)
+		{
+			// Previously "high"
+			if( mctx.inputs_filters[ii] >  20 * ppctx_nv->in_cpu_filter_ms / 3   )
+			{
+				new_io |= 	mask;
+			}
+		}
+		else
+		{
+			// Previously "low"
+			if( mctx.inputs_filters[ii] >  40 * ppctx_nv->in_cpu_filter_ms / 3   )
+			{
+				new_io |= 	mask;
+			}
+		}
+	}
+
+	mctx.inputs_filtered = new_io;
 }
 
+int32_t motion_engine_soft_limits_active(void)
+{
+	int result = -1;
+	int ii;
 
+
+	for(ii = 0; ii < AXIS_GLOBAL_CNT;ii++)
+	{
+		if(mctx.job->io.io_mask_soft_max_stop & ( 1<ii))
+		{
+			if(mctx.curr_pos[ii] >= ppctx_nv->axis[ii].endpos_max_value)
+			{
+				result = 0;
+				break;
+			}
+		}
+
+		if(mctx.job->io.io_mask_soft_min_stop & ( 1<ii))
+		{
+			if(mctx.curr_pos[ii] <= ppctx_nv->axis[ii].endpos_max_value)
+			{
+				result = 0;
+				break;
+			}
+		}
+	}
+
+	return result;
+}
 
 
 void motion_engine_tmr_endpos(void)
 {
 	uint32_t hit_mask = 0;
 	uint32_t ii;
-
 
 
 	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
@@ -984,6 +1057,12 @@ void motion_engine_tmr_endpos(void)
 	{
 		return;
 	}
+
+	if( (mctx.job->task_flags & MF_FLAG_DONE) != 0)
+	{
+		return;
+	}
+
 
 	if( (mctx.inputs_filtered & ppctx_nv->estop_mask) != 0)
 	{
@@ -1011,6 +1090,10 @@ void motion_engine_tmr_endpos(void)
 	}
 
 
+	if(motion_engine_soft_limits_active() == 0)
+	{
+		hit_mask |= HIT_SOFTPOS;
+	}
 
 	mctx.hit_active = hit_mask;
 	mctx.hit_io     = mctx.inputs_filtered;
