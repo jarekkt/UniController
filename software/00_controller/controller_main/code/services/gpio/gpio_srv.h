@@ -19,15 +19,17 @@
 #define GPIO_Get(name_)        HAL_GPIO_ReadPin(GPIO_PORT(name_),GPIO_PIN(name_))
 #define GPIO_TestMode(val_)    gpio_test_mode = val_;
 
-#define GPIO_STEP_SET_A()	   GPIO_Set_Unc(OUT_STEP4)
-#define GPIO_STEP_SET_B()	   GPIO_Set_Unc(OUT_STEP5)
-#define GPIO_STEP_SET_C()	   GPIO_Set_Unc(OUT_STEP6)
-#define GPIO_STEP_SET_D()	   GPIO_Set_Unc(OUT_STEP7)
 
-#define GPIO_STEP_CLR_A()	   GPIO_Clr_Unc(OUT_STEP4)
-#define GPIO_STEP_CLR_B()	   GPIO_Clr_Unc(OUT_STEP5)
-#define GPIO_STEP_CLR_C()      GPIO_Clr_Unc(OUT_STEP6)
-#define GPIO_STEP_CLR_D()      GPIO_Clr_Unc(OUT_STEP7)
+// Step pin pulses - not these are negated in hardware
+#define GPIO_STEP_SET_A()	   GPIO_Clr_Unc(OUT_STEP4)
+#define GPIO_STEP_SET_B()	   GPIO_Clr_Unc(OUT_STEP5)
+#define GPIO_STEP_SET_C()	   GPIO_Clr_Unc(OUT_STEP6)
+#define GPIO_STEP_SET_D()	   GPIO_Clr_Unc(OUT_STEP7)
+
+#define GPIO_STEP_CLR_A()	   GPIO_Set_Unc(OUT_STEP4)
+#define GPIO_STEP_CLR_B()	   GPIO_Set_Unc(OUT_STEP5)
+#define GPIO_STEP_CLR_C()      GPIO_Set_Unc(OUT_STEP6)
+#define GPIO_STEP_CLR_D()      GPIO_Set_Unc(OUT_STEP7)
 
 
 

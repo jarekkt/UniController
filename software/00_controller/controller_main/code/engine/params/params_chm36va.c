@@ -27,6 +27,7 @@
 	- OUT_N2_VALVE				CPU_OUT5
 	- OUT_LZ 					CPU_OUT12_PWM
 	- CAM_SWITCH				CPU_OUT7
+	- OUT_BUZZ					CPU_OUT8
 	- ENA_XYZ					IO_CPU1
 	- ENA_BCD					IO_CPU2
 
@@ -49,20 +50,20 @@ void	params_chm36va(void)
 
    // Machine X axis
 
-   pctx_nv.axis[AXIS_Z].pulses_step_m     = 			31940;
-   pctx_nv.axis[AXIS_Z].pulses_enc_m 	  = 				0; //TODO
-   pctx_nv.axis[AXIS_Z].endpos_min_mask   = 				0;
-   pctx_nv.axis[AXIS_Z].endpos_max_mask   = 		P_IN_CPU1;
-   pctx_nv.axis[AXIS_Z].endpos_min_value  =   	  		  0.0;
-   pctx_nv.axis[AXIS_Z].endpos_max_value  = 			525.0;
-   pctx_nv.axis[AXIS_Z].homing_type 	  =   P_HOMING_TO_MIN;
-   pctx_nv.axis[AXIS_Z].homing_mask    	  = 		P_IN_CPU1;
-   pctx_nv.axis[AXIS_Z].homing_value   	  =	    		  0.0;
-   pctx_nv.axis[AXIS_Z].speed_mm_s        =    		   1000.0;
-   pctx_nv.axis[AXIS_Z].speed_home_mm_s   = 			 80.0;
-   pctx_nv.axis[AXIS_Z].speed_safe_mm_s   = 	 		 10.0;
-   pctx_nv.axis[AXIS_Z].accel_mm_s2       =   		   4000.0;
-   pctx_nv.axis[AXIS_Z].jerk_mm_s3        = 		1000000.0;
+   pctx_nv.axis[AXIS_X].pulses_step_m     = 			31940;
+   pctx_nv.axis[AXIS_X].pulses_enc_m 	  = 				0; //TODO
+   pctx_nv.axis[AXIS_X].endpos_min_mask   = 				0;
+   pctx_nv.axis[AXIS_X].endpos_max_mask   = 		P_IN_CPU1;
+   pctx_nv.axis[AXIS_X].endpos_min_value  =   	  		  0.0;
+   pctx_nv.axis[AXIS_X].endpos_max_value  = 			525.0;
+   pctx_nv.axis[AXIS_X].homing_type 	  =   P_HOMING_TO_MIN;
+   pctx_nv.axis[AXIS_X].homing_mask    	  = 		P_IN_CPU1;
+   pctx_nv.axis[AXIS_X].homing_value   	  =	    		  0.0;
+   pctx_nv.axis[AXIS_X].speed_mm_s        =    		   1000.0;
+   pctx_nv.axis[AXIS_X].speed_home_mm_s   = 			 80.0;
+   pctx_nv.axis[AXIS_X].speed_safe_mm_s   = 	 		 10.0;
+   pctx_nv.axis[AXIS_X].accel_mm_s2       =   		   4000.0;
+   pctx_nv.axis[AXIS_X].jerk_mm_s3        = 		1000000.0;
 
    // Machine Y axis
 
@@ -100,7 +101,7 @@ void	params_chm36va(void)
 
    // Machine N1 axis
 
-   pctx_nv.axis[AXIS_A].pulses_step_m     = 				0;
+   pctx_nv.axis[AXIS_A].pulses_step_m     = 		 	 4444;
    pctx_nv.axis[AXIS_A].endpos_min_mask   = 				0;
    pctx_nv.axis[AXIS_A].endpos_max_mask   = 				0;
    pctx_nv.axis[AXIS_A].endpos_min_value  = 		   -120.0;
@@ -116,7 +117,7 @@ void	params_chm36va(void)
 
    // Machine N2 axis
 
-   pctx_nv.axis[AXIS_B].pulses_step_m     = 				0;
+   pctx_nv.axis[AXIS_B].pulses_step_m     = 			 4444;
    pctx_nv.axis[AXIS_B].endpos_min_mask   = 				0;
    pctx_nv.axis[AXIS_B].endpos_max_mask   = 				0;
    pctx_nv.axis[AXIS_B].endpos_min_value  = 		   -120.0;
@@ -132,7 +133,7 @@ void	params_chm36va(void)
 
    // Machine peeler axis
 
-   pctx_nv.axis[AXIS_C].pulses_step_m     = 		  69264.2;
+   pctx_nv.axis[AXIS_C].pulses_step_m     = 		    69264;
    pctx_nv.axis[AXIS_C].endpos_min_mask   = 				0;
    pctx_nv.axis[AXIS_C].endpos_max_mask   = 				0;
    pctx_nv.axis[AXIS_C].endpos_min_value  = 				0;
@@ -180,7 +181,7 @@ void	params_chm36va(void)
 
    // PRESURE PUMP - operates at 2% like in original firmware
    pctx_nv.pwm_range[PWM_OUT3].min    	  = 				0;
-   pctx_nv.pwm_range[PWM_OUT3].max  	  = 			   50;
+   pctx_nv.pwm_range[PWM_OUT3].max  	  = 			    2;
    pctx_nv.pwm_range[PWM_OUT3].delay_ms   = 				0;
 
    // VAACUM PUMP - needs 50% for stable long term operation
@@ -222,6 +223,12 @@ void	params_chm36va(void)
 
    // Reverse dir pins
    pctx_nv.dir_rev_mask					  = 				0;
+
+
+   // IO filter - 5 ms
+   pctx_nv.in_cpu_filter_ms				 = 5;
+
+
 
 };
 

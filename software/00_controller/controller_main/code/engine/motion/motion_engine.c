@@ -963,6 +963,7 @@ void motion_engine_io_filter(void)
 	uint32_t 	new_io = 0;
 
 
+
 	mctx.inputs = srv_gpio_get_io() ^ ppctx_nv->io_rev_mask;
 
 
@@ -1018,7 +1019,7 @@ int32_t motion_engine_soft_limits_active(void)
 
 	for(ii = 0; ii < AXIS_GLOBAL_CNT;ii++)
 	{
-		if(mctx.job->io.io_mask_soft_max_stop & ( 1<ii))
+		if(mctx.job->io.io_mask_soft_max_stop & ( 1<<ii))
 		{
 			if(mctx.curr_pos[ii] >= ppctx_nv->axis[ii].endpos_max_value)
 			{
@@ -1027,9 +1028,9 @@ int32_t motion_engine_soft_limits_active(void)
 			}
 		}
 
-		if(mctx.job->io.io_mask_soft_min_stop & ( 1<ii))
+		if(mctx.job->io.io_mask_soft_min_stop & ( 1<<ii))
 		{
-			if(mctx.curr_pos[ii] <= ppctx_nv->axis[ii].endpos_max_value)
+			if(mctx.curr_pos[ii] <= ppctx_nv->axis[ii].endpos_min_value)
 			{
 				result = 0;
 				break;
@@ -1047,10 +1048,16 @@ void motion_engine_tmr_endpos(void)
 	uint32_t ii;
 
 
+
+
+	motion_engine_io_filter();
+
+
 	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
 	{
 		mctx.curr_pos[ii] = motion_engine_pulse_to_units(mctx.curr_pulse_pos[ii],ii);
 	}
+
 
 
 	if(mctx.job == NULL)
@@ -1084,7 +1091,7 @@ void motion_engine_tmr_endpos(void)
 		hit_mask |= HIT_STOP;
 	}
 
-	if( (mctx.inputs_filtered & mctx.job->io.io_mask_run_keep) == 0)
+	if( (mctx.inputs_filtered & ~mctx.job->io.io_mask_run_keep) == 0)
 	{
 		hit_mask |= HIT_RUN;
 	}

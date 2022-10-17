@@ -478,7 +478,6 @@ p.show()
 
 p = plt
 mp_x = motion_profile(100000, 1000, 1000, 1)
-#l1 = tick_calc(100000, mp_x, 0.001, 1)
 l1 = tick_calc(10, mp_x, 0.001, 1)
 l1.execute()
 l1.plot(p)

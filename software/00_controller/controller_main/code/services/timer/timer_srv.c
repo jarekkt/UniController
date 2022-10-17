@@ -46,7 +46,8 @@ void TIM5_IRQHandler()
   }
 
   __HAL_TIM_CLEAR_IT(&tsrv.hTim5, TIM_IT_UPDATE);
-  
+  __DSB();
+  GPIO_Set_Unc(OUT_CPU9);
 
 }
 
@@ -54,23 +55,39 @@ void  TIM6_DAC_IRQHandler()
 {
   int ii;
 
+
+  GPIO_Set_Unc(OUT_CPU10);
+
   for(ii = 0; ii < tsrv.time_fast_cnt;ii++)
   {
     tsrv.time_fast_cb[ii]();
   }
 
+
+  GPIO_Clr_Unc(OUT_CPU10);
+
   __HAL_TIM_CLEAR_IT(&tsrv.hTim6, TIM_IT_UPDATE);
+  __DSB();
+
+
 }
 
 
 
 void TIM16_IRQHandler()
 {
+   GPIO_Set_Unc(OUT_CPU9);
+
    if(tsrv.step_fn != NULL) // TODO - make it better
    {
 	   tsrv.step_fn();
    }
+
+   GPIO_Clr_Unc(OUT_CPU9);
+
+
   __HAL_TIM_CLEAR_IT(&tsrv.hTim16, TIM_IT_UPDATE);
+  __DSB();
 
 }
 
@@ -130,7 +147,7 @@ void srv_timer_init(void)
 
     memset(&tsrv,0,sizeof(tsrv));
 
-    tsrv.tim_clock = SystemCoreClock / 4;
+    tsrv.tim_clock = SystemCoreClock / 2;
 
     /* Free running hardware tick counter  - 1ms */
 
@@ -140,7 +157,7 @@ void srv_timer_init(void)
     tsrv.hTim7.Init.Prescaler     = (tsrv.tim_clock/ 1000) - 1;
     tsrv.hTim7.Init.CounterMode   = TIM_COUNTERMODE_UP;
     tsrv.hTim7.Init.Period        = -1;
-    tsrv.hTim7.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+    tsrv.hTim7.Init.ClockDivision = 0;
     HAL_TIM_Base_Init(&tsrv.hTim7);
 
     HAL_TIM_Base_Start(&tsrv.hTim7); // Trying to start the base counter
@@ -155,7 +172,7 @@ void srv_timer_init(void)
     tsrv.hTim13.Init.Prescaler     = (tsrv.tim_clock/ TIMER_SRV_1MHZ) - 1;
     tsrv.hTim13.Init.CounterMode   = TIM_COUNTERMODE_UP;
     tsrv.hTim13.Init.Period        = -1;
-    tsrv.hTim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+    tsrv.hTim13.Init.ClockDivision = 0;
     HAL_TIM_Base_Init(&tsrv.hTim13);
 
     HAL_TIM_Base_Start(&tsrv.hTim13); // Trying to start the fast base counter
@@ -175,7 +192,7 @@ void srv_timer_init(void)
     tsrv.hTim5.Init.Prescaler     = (tsrv.tim_clock/ TIMER_SRV_1MHZ) - 1;
     tsrv.hTim5.Init.CounterMode   = TIM_COUNTERMODE_UP;
     tsrv.hTim5.Init.Period        = TIMER_SRV_1MHZ / TIMER_SRV_SLOW_HZ;
-    tsrv.hTim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+    tsrv.hTim5.Init.ClockDivision = 0;
     HAL_TIM_Base_Init(&tsrv.hTim5);
 
     HAL_TIM_Base_Start_IT(&tsrv.hTim5);
@@ -195,8 +212,8 @@ void srv_timer_init(void)
     tsrv.hTim6.Instance           = TIM6;
     tsrv.hTim6.Init.Prescaler     = (tsrv.tim_clock/ TIMER_SRV_1MHZ) - 1;
     tsrv.hTim6.Init.CounterMode   = TIM_COUNTERMODE_UP;
-    tsrv.hTim6.Init.Period        = 65535;
-    tsrv.hTim6.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+    tsrv.hTim6.Init.Period        = TIMER_SRV_1MHZ / TIMER_SRV_FAST_HZ;
+    tsrv.hTim6.Init.ClockDivision = 0;
     HAL_TIM_Base_Init(&tsrv.hTim6);
 
     HAL_TIM_Base_Start_IT(&tsrv.hTim6);
@@ -214,7 +231,7 @@ void srv_timer_init(void)
     tsrv.hTim16.Init.Prescaler     = (tsrv.tim_clock/ TIMER_SRV_10MHZ) - 1;
     tsrv.hTim16.Init.CounterMode   = TIM_COUNTERMODE_UP;
     tsrv.hTim16.Init.Period        = 65535;
-    tsrv.hTim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+    tsrv.hTim16.Init.ClockDivision = 0;
     HAL_TIM_Base_Init(&tsrv.hTim16);
 
     HAL_TIM_Base_Start_IT(&tsrv.hTim16);

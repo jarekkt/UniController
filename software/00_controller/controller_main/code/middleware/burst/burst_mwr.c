@@ -49,9 +49,10 @@ int  burst_process_command(const char * var_value,char * resp_buffer,uint32_t re
 {
 	  int               resp_len = -1;
 
-	  if(strstr(var_value,"chm63va")!= NULL)
+	  if(strstr(var_value,"chm36va")!= NULL)
 	  {
-
+		  params_chm36va();
+		  resp_len = snprintf(resp_buffer,resp_buffer_len,"chm36va");
 	  }
 
 	  return 			resp_len;

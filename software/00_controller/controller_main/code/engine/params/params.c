@@ -264,6 +264,12 @@ void params_thread(void)
 
 void params_once(void)
 {
+	// TODO - remove after power on
+	params_chm36va();
+
+	pctx_nv.estop_mask = 0;
+
+
     mwr_periodic_low_register(params_thread,1000);
 }
 
