@@ -12,11 +12,18 @@
 
 
 
+
+#define   OBL_OPTIONAL  0
+#define   OBL_ONEMORE   1
+#define   OBL_ALWAYS    2
+#define   OBL_ONLYONE   3
+
 typedef struct
 {
 	char 				token_letter;
 	gcode_item_e		token_id;
 	gcode_value_type_e	token_val_type;
+	int					obligatory;
 }gcode_table_token_t;
 
 typedef struct
@@ -41,32 +48,32 @@ gcode_parse_table_t  parse_table[] =
 		{
 			'G',0,0, GCODE_F_G0,
 			{
-				{ 'X' , GCODE_I_X, GCODE_V_FLOAT} ,
-				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
-				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
-				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
-				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
-				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
-				{ 'D' , GCODE_I_D, GCODE_V_FLOAT}
+				{ 'X' , GCODE_I_X, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'A' , GCODE_I_A, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'B' , GCODE_I_B, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'C' , GCODE_I_C, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT, OBL_ONEMORE}
 			}
 		},
 		{
 			'G',1,0, GCODE_F_G1,
 			{
-				{ 'X' , GCODE_I_X, GCODE_V_FLOAT} ,
-				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
-				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
-				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
-				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
-				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
-				{ 'D' , GCODE_I_D, GCODE_V_FLOAT}
+				{ 'X' , GCODE_I_X, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'A' , GCODE_I_A, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'B' , GCODE_I_B, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'C' , GCODE_I_C, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT, OBL_ONEMORE}
 
 			}
 		},
 		{
 			'G',4, 0,GCODE_F_G4,
 		 	 {
-				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
+				{ 'S' , GCODE_I_S, GCODE_V_FLOAT,OBL_ALWAYS} ,
 		 	 }
 		},
 		{
@@ -78,62 +85,62 @@ gcode_parse_table_t  parse_table[] =
 		{
 			'G',28, 0,GCODE_F_G28,
 			{
-				{ 'X' , GCODE_I_X, GCODE_V_FLOAT} ,
-				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
-				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
-				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
-				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
-				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
-				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
+				{ 'X' , GCODE_I_X, GCODE_V_FLOAT, OBL_ONLYONE} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT, OBL_ONLYONE} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT, OBL_ONLYONE} ,
+				{ 'A' , GCODE_I_A, GCODE_V_FLOAT, OBL_ONLYONE} ,
+				{ 'B' , GCODE_I_B, GCODE_V_FLOAT, OBL_ONLYONE} ,
+				{ 'C' , GCODE_I_C, GCODE_V_FLOAT, OBL_ONLYONE} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT, OBL_ONLYONE} ,
 			}
 		},
 		{
 			'G',90, 0,GCODE_F_G90,
 			{
-				{ 'X' , GCODE_I_X, GCODE_V_NONE} ,
-				{ 'Y' , GCODE_I_Y, GCODE_V_NONE} ,
-				{ 'Z' , GCODE_I_Z, GCODE_V_NONE} ,
-				{ 'A' , GCODE_I_A, GCODE_V_NONE} ,
-				{ 'B' , GCODE_I_B, GCODE_V_NONE} ,
-				{ 'C' , GCODE_I_C, GCODE_V_NONE} ,
-				{ 'D' , GCODE_I_D, GCODE_V_NONE} ,
+				{ 'X' , GCODE_I_X, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'A' , GCODE_I_A, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'B' , GCODE_I_B, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'C' , GCODE_I_C, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'D' , GCODE_I_D, GCODE_V_NONE, OBL_ONEMORE} ,
 			}
 		},
 		{
 			'G',91, 0,GCODE_F_G91,
 			{
-				{ 'X' , GCODE_I_X, GCODE_V_NONE} ,
-				{ 'Y' , GCODE_I_Y, GCODE_V_NONE} ,
-				{ 'Z' , GCODE_I_Z, GCODE_V_NONE} ,
-				{ 'A' , GCODE_I_A, GCODE_V_NONE} ,
-				{ 'B' , GCODE_I_B, GCODE_V_NONE} ,
-				{ 'C' , GCODE_I_C, GCODE_V_NONE} ,
-				{ 'D' , GCODE_I_D, GCODE_V_NONE} ,
+				{ 'X' , GCODE_I_X, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'A' , GCODE_I_A, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'B' , GCODE_I_B, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'C' , GCODE_I_C, GCODE_V_NONE, OBL_ONEMORE} ,
+				{ 'D' , GCODE_I_D, GCODE_V_NONE, OBL_ONEMORE} ,
 			}
 		},
 		{
 			'G',92, 0,GCODE_F_G92,
 			{
-				{ 'X' , GCODE_I_X, GCODE_V_FLOAT} ,
-				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT} ,
-				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT} ,
-				{ 'A' , GCODE_I_A, GCODE_V_FLOAT} ,
-				{ 'B' , GCODE_I_B, GCODE_V_FLOAT} ,
-				{ 'C' , GCODE_I_C, GCODE_V_FLOAT} ,
-				{ 'D' , GCODE_I_D, GCODE_V_FLOAT} ,
+				{ 'X' , GCODE_I_X, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'Y' , GCODE_I_Y, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'Z' , GCODE_I_Z, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'A' , GCODE_I_A, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'B' , GCODE_I_B, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'C' , GCODE_I_C, GCODE_V_FLOAT, OBL_ONEMORE} ,
+				{ 'D' , GCODE_I_D, GCODE_V_FLOAT, OBL_ONEMORE} ,
 			}
 		},
 		{
 			'M',42, 0,GCODE_F_M42,
 			 {
-				{ 'S' , GCODE_I_S, GCODE_V_UINT} ,
-				{ 'P' , GCODE_I_P, GCODE_V_UINT} ,
+				{ 'S' , GCODE_I_S, GCODE_V_UINT, OBL_ALWAYS} ,
+				{ 'P' , GCODE_I_P, GCODE_V_UINT, OBL_ALWAYS} ,
 			 }
 		},
 		{
 			'M',105, 0,GCODE_F_M105,
 			 {
-				{ 'T' , GCODE_I_T, GCODE_V_UINT} ,
+				{ 'T' , GCODE_I_T, GCODE_V_UINT, OBL_OPTIONAL} ,
 			 }
 		},
 		{
@@ -145,14 +152,14 @@ gcode_parse_table_t  parse_table[] =
 		{
 			'M',204, 0,GCODE_F_M204,
 		 	 {
-				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
+				{ 'S' , GCODE_I_S, GCODE_V_FLOAT, OBL_ALWAYS} ,
 		 	 }
 		}
 		,
 		{
 			'M',201, 3,GCODE_F_M201_3,
 		 	 {
-				{ 'S' , GCODE_I_S, GCODE_V_FLOAT} ,
+				{ 'S' , GCODE_I_S, GCODE_V_FLOAT, OBL_ALWAYS} ,
 		 	 }
 		},
 		{

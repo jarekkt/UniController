@@ -8,6 +8,7 @@
 #include "system.h"
 #include "services.h"
 #include "middleware.h"
+#include "engine.h"
 
 #include "version.h"
 #include "burst_mux.h"
