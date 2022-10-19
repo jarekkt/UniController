@@ -20,11 +20,11 @@ extern TIM_HandleTypeDef htim16;
 
 void srv_timer_pulse_init(void);
 void srv_timer_pulse_once(void);
-void srv_timer_pulse_period(uint32_t period_01us);
+void srv_timer_pulse_period_for_hz(uint32_t step_freq);
 
-#define TMR_TIRGGER_X()	HAL_TIM_OnePulse_Start(&htim12,0)   //htim12.Instance->EGR = TIM_EGR_UG
-#define TMR_TIRGGER_Y()	htim8.Instance->EGR = TIM_EGR_UG
-#define TMR_TIRGGER_Z()	htim17.Instance->EGR = TIM_EGR_UG
+#define TMR_TIRGGER_X()	__HAL_TIM_ENABLE(&htim8);
+#define TMR_TIRGGER_Y()	__HAL_TIM_ENABLE(&htim12);
+#define TMR_TIRGGER_Z()	__HAL_TIM_ENABLE(&htim17);
 
 
 

@@ -62,7 +62,7 @@ void motion_engine_init(void)
 void motion_engine_start_timer(void)
 {
 	// Pulse length calculation - step frequency to 0.1us step pulse units
-	srv_timer_pulse_period( (10*1000000 / mctx_nv.step_freq)/2);
+	srv_timer_pulse_period_for_hz(mctx_nv.step_freq);
 
 	// Step calculations generation
 	srv_timer_callback_step(mctx_nv.step_freq,motion_engine_tmr_step);
@@ -75,6 +75,9 @@ void motion_engine_stop_timer(void)
 
 void motion_engine_once(void)
 {
+	volatile uint32_t  uu = 0;
+	volatile uint32_t  uuu = 0;
+
 	srv_timer_callback_fast_add(motion_engine_tmr_endpos);
 
 	motion_scurve_test_all();
