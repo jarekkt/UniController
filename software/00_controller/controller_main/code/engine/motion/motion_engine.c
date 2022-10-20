@@ -75,9 +75,6 @@ void motion_engine_stop_timer(void)
 
 void motion_engine_once(void)
 {
-	volatile uint32_t  uu = 0;
-	volatile uint32_t  uuu = 0;
-
 	srv_timer_callback_fast_add(motion_engine_tmr_endpos);
 
 	motion_scurve_test_all();

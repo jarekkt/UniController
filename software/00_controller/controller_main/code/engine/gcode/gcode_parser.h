@@ -72,6 +72,7 @@ typedef struct
 		uint8_t				letter;
 		gcode_value_u		value;
 		gcode_value_type_e  value_type;
+		uint32_t			obligatory;
 	}tokens[GCODE_I_CNT];
 
 	uint32_t tokens_present_mask;

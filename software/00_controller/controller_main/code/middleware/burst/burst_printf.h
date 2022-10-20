@@ -19,11 +19,9 @@
 #define LVL_WARN	0x08
 #define LVL_ERROR	0x10
 
-#if 1
 #define printd(level_mask,format,...)  burst_log_printf(level_mask,format, __VA_ARGS__)
-#else
-#define printd(level_mask,format,...)
-#endif
+#define printds(level_mask,string)     burst_log_printf(level_mask,string)
+
 
 
 

@@ -33,7 +33,7 @@ typedef struct
 	uint32_t 	fn_sub_number;
 	gcode_fn_e  fn_id;
 
-	gcode_table_token_t tokens[GCODE_I_CNT];
+	gcode_table_token_t tokens[GCODE_I_CNT+1];
 
 }gcode_parse_table_t;
 
@@ -43,7 +43,7 @@ typedef struct
 	int	 parse_fn_idx;
 }gcode_pasres_ctx_t;
 
-gcode_parse_table_t  parse_table[] =
+const gcode_parse_table_t  parse_table[] =
 {
 		{
 			'G',0,0, GCODE_F_G0,
@@ -229,6 +229,7 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk)
 	long   		num;
 	float       numf;
 	char * 		endptr;
+	int32_t		result = -1;
 	const gcode_table_token_t * t = parse_table[gctx.parse_fn_idx].tokens;
 
 
@@ -247,18 +248,27 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk)
 			{
 				sprintf(gctx.error_message,"Duplicate token %s",chunk);
 				// duplicate
-				return -1;
+				break;
 			}
 
 			cmd->tokens_present_mask |= (1<<t[ii].token_id);
 			cmd->tokens[t[ii].token_id].value_type = t[ii].token_val_type;
 			cmd->tokens[t[ii].token_id].letter = t[ii].token_letter;
+			cmd->tokens[t[ii].token_id].obligatory  = t[ii].obligatory;
 
 			switch(t[ii].token_val_type)
 			{
 				case GCODE_V_NONE:
 				{
-					cmd->tokens[t[ii].token_id].value.val_ui32 = 0;
+					if( chunk[1] != '\0')
+					{
+						sprintf(gctx.error_message,"Unexpected value %s",chunk);
+					}
+					else
+					{
+						cmd->tokens[t[ii].token_id].value.val_ui32 = 0;
+						result = 0;
+					}
 				}break;
 
 				case GCODE_V_UINT:
@@ -266,10 +276,13 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk)
 					num  = strtol(&chunk[1], &endptr, 10);
 					if ( (*endptr != '\0') || (num < 0) )
 					{
-					  sprintf(gctx.error_message,"Wrong uint value %s",chunk);
-					  return -1;
+					    sprintf(gctx.error_message,"Wrong uint value %s",chunk);
 					}
-					cmd->tokens[t[ii].token_id].value.val_ui32 = (uint32_t)num;
+					else
+					{
+						cmd->tokens[t[ii].token_id].value.val_ui32 = (uint32_t)num;
+						result = 0;
+					}
 				}break;
 
 				case GCODE_V_INT:
@@ -278,9 +291,11 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk)
 					if (*endptr != '\0')
 					{
 					  sprintf(gctx.error_message,"Wrong int value %s",chunk);
-					  return -1;
 					}
-					cmd->tokens[ii].value.val_i32 = (int32_t)num;
+					else
+					{
+						cmd->tokens[ii].value.val_i32 = (int32_t)num;
+					}
 				}break;
 
 				case GCODE_V_FLOAT:
@@ -289,15 +304,18 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk)
 					if (*endptr != '\0')
 					{
 					  sprintf(gctx.error_message,"Wrong float value %s",chunk);
-					  return -1;
+
 					}
-					cmd->tokens[t[ii].token_id].value.val_float = numf;
+					else
+					{
+						cmd->tokens[t[ii].token_id].value.val_float = numf;
+						result = 0;
+					}
 				}break;
 
 				default:
 				{
 					sprintf(gctx.error_message,"Internal error %s",chunk) ;
-					return -1;
 				}break;
 			}
 
@@ -305,7 +323,12 @@ int32_t  gcode_parse_token(gcode_command_t * cmd,const char * chunk)
 		}
 	}
 
-	return 0;
+	if(ii == GCODE_I_CNT)
+	{
+		sprintf(gctx.error_message,"Unrecognized token %s",chunk) ;
+	}
+
+	return result;
 }
 
 int32_t gcode_parser_replacechar(char *str, char orig, char rep)
@@ -325,6 +348,11 @@ int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line,uint32_t len
 	int32_t result = -1;
 	int32_t idx;
     char *string,*found;
+
+    int32_t  t_one_more  = 0, c_one_more = 0;
+    int32_t  t_only_one  = 0, c_only_one = 0;
+    int32_t  t_always    = 0, c_always   = 0;
+
 
 
     printd(LVL_INFO,"GCODE parser - got this[%d]: \"%s\r\n",len,cmd_line);
@@ -378,6 +406,7 @@ int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line,uint32_t len
 
 				if(gcode_parse_fn(cmd,found)!= 0)
 				{
+					// Error, wrong header
 					break;
 				}
 				// Good ,we have header parsed
@@ -402,30 +431,122 @@ int32_t  gcode_parser_execute(gcode_command_t * cmd,char * cmd_line,uint32_t len
     }
 
 
-    printd(
-    	LVL_INFO,
-		"GCODE parser - result: %d\r\n %c%d.%d with tokens 0x%04x\r\n",
-    	result,
-		cmd->fn_letter,
-		cmd->fn_number,
-		cmd->sub_fn,
-		cmd->tokens_present_mask
-    );
-
-    for(idx = 0;idx < GCODE_I_CNT;idx++)
+    if(result == 0)
     {
-    	if((cmd->tokens_present_mask & (1<<idx)) != 0)
-    	{
-    		switch(cmd->tokens[idx].value_type)
-    		{
-    			case GCODE_V_NONE: 	 printd(LVL_DEBUG,"  %c\r\n",   cmd->tokens[idx].letter);break;
-				case GCODE_V_UINT:	 printd(LVL_DEBUG,"  %c=%d\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_i32);break;
-    			case GCODE_V_INT:	 printd(LVL_DEBUG,"  %c=%u\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_ui32);break;
-    			case GCODE_V_FLOAT:  printd(LVL_DEBUG,"  %c=%f\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_float);break;
-    			default:			 printd(LVL_DEBUG,"  %c=??\r\n",cmd->tokens[idx].letter);break;
-    		}
-    	}
+		printd(
+			LVL_INFO,
+			"GCODE parser - result: %d\r\n %c%d.%d with tokens 0x%04x\r\n",
+			result,
+			cmd->fn_letter,
+			cmd->fn_number,
+			cmd->sub_fn,
+			cmd->tokens_present_mask
+		);
+
+		for(idx = 0;idx < GCODE_I_CNT;idx++)
+		{
+
+			switch(cmd->tokens[idx].obligatory)
+			{
+				case OBL_ONEMORE:
+				{
+					t_one_more++;
+				}break;
+
+				case OBL_ALWAYS:
+				{
+					t_always++;
+				}break;
+
+				case OBL_ONLYONE:
+				{
+					t_only_one++;
+				}break;
+
+				case OBL_OPTIONAL:
+				default:
+				{
+					// ignore these
+				}break;
+			}
+
+			if((cmd->tokens_present_mask & (1<<idx)) != 0)
+			{
+				switch(cmd->tokens[idx].value_type)
+				{
+					case GCODE_V_NONE: 	 printd(LVL_DEBUG,"  %c\r\n",   cmd->tokens[idx].letter);break;
+					case GCODE_V_UINT:	 printd(LVL_DEBUG,"  %c=%d\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_i32);break;
+					case GCODE_V_INT:	 printd(LVL_DEBUG,"  %c=%u\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_ui32);break;
+					case GCODE_V_FLOAT:  printd(LVL_DEBUG,"  %c=%f\r\n",cmd->tokens[idx].letter,cmd->tokens[idx].value.val_float);break;
+					default:			 printd(LVL_DEBUG,"  %c=??\r\n",cmd->tokens[idx].letter);break;
+				}
+
+				switch(cmd->tokens[idx].obligatory)
+				{
+					case OBL_ONEMORE:
+					{
+						c_one_more++;
+					}break;
+
+					case OBL_ALWAYS:
+					{
+						c_always++;
+					}break;
+
+					case OBL_ONLYONE:
+					{
+						c_only_one++;
+					}break;
+
+					case OBL_OPTIONAL:
+					default:
+					{
+						// ignore these
+					}break;
+				}
+			}
+		}
+
+		// Check syntax
+
+		if(t_one_more>0)
+		{
+			if(c_one_more <1)
+			{
+				printds(LVL_INFO,"Syntax error - Token(OneOrMore)\r\n");
+				result = -1;
+			}
+		}
+
+		if(t_always!= c_always)
+		{
+			printds(LVL_INFO,"Syntax error - Token(Always)\r\n");
+		}
+
+		if(c_only_one>0)
+		{
+			if(c_only_one !=1)
+			{
+				printds(LVL_INFO,"Syntax error - Token(OnlyOne)\r\n");
+				result = -1;
+			}
+		}
     }
+    else
+    {
+		printd(
+			LVL_INFO,
+			"GCODE parser failure: %s\r\n",
+			gctx.error_message
+		);
+
+    }
+
+
+
+
+
+
 
 	return result;
 }
