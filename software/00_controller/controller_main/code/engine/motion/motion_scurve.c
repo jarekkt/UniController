@@ -138,6 +138,13 @@ void motion_scurve_calc(
 	 double		 a_scurve;
 	 double		 top_speed;
 
+
+	 if(dist_mm == 0)
+	 {
+		 memset(calc,0,sizeof(*calc));
+	 }
+
+
 	 if(dist_mm > 0)
 	 {
 		 calc->dir = 1;
@@ -147,7 +154,6 @@ void motion_scurve_calc(
 		 calc->dir  = -1;
 		 dist_mm = -dist_mm;
 	 }
-
 
 
 	 self.m_dist    = dist_mm;

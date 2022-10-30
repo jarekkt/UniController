@@ -25,6 +25,16 @@ int32_t  motion_engine_units_to_pulse(float units_mm,int32_t axis)
 }
 
 
+double  motion_engine_units_to_pulse_d(float units_mm,int32_t axis)
+{
+	double  result;
+
+	result =  (units_mm * ((double)ppctx_nv->axis[axis].pulses_step_m)) / 1000;
+
+	return result;
+}
+
+
 float  motion_engine_pulse_to_units(int32_t pulses,int32_t axis)
 {
 	float  result;
@@ -47,45 +57,55 @@ int32_t  motion_engine_units_to_enc(float units_mm,int32_t axis)
 }
 
 
-static int64_t  motion_engine_speed_to_fract(float speed_mm_s,int32_t axis,uint32_t step_freq)
+static engval_t  motion_engine_speed_to_fract(float speed_mm_s,int32_t axis,uint32_t step_freq)
 {
+#if 0
 	int64_t	    result;
 
 	result 			= ((int64_t)motion_engine_units_to_pulse(speed_mm_s,axis)) << 32;
 	result 			= result / ((int64_t)step_freq);
 
 	return result << 32;
+#else
+	return (engval_t)(motion_engine_units_to_pulse_d(speed_mm_s,axis))/((engval_t)step_freq);
+#endif
 
 }
 
 
-static int64_t  motion_engine_accel_to_fract(float accel_mm_s2,int32_t axis,uint32_t step_freq)
+static engval_t  motion_engine_accel_to_fract(float accel_mm_s2,int32_t axis,uint32_t step_freq)
 {
-
+#if 0
 	int64_t	    result;
 
 	result 			= ((int64_t)motion_engine_units_to_pulse(accel_mm_s2,axis)) << 32;
 	result 			= result / ((int64_t)step_freq);
-	result 			= result << 32;
+	//result 			= result << 32;
 	result 			= result / ((int64_t)step_freq);
 
 
 	return result;
-
+#else
+	return (engval_t)(motion_engine_units_to_pulse_d(accel_mm_s2,axis))/ ( ((engval_t)step_freq) * ((engval_t)step_freq));
+#endif
 }
 
-static int64_t  motion_engine_jerk_to_fract(float jerk_mm_s3,int32_t axis,uint32_t step_freq)
+static engval_t  motion_engine_jerk_to_fract(float jerk_mm_s3,int32_t axis,uint32_t step_freq)
 {
+#if 0
 	int64_t	    result;
 
 	result 			= ((int64_t)motion_engine_units_to_pulse(jerk_mm_s3,axis)) << 32;
 	result 			= result / ((int64_t)step_freq);
-	result 			= result << 32;
+//	result 			= result << 32;
 	result 			= result / ((int64_t)step_freq);
 	result 			= result / ((int64_t)step_freq);
 
 
 	return result;
+#else
+	return (engval_t)(motion_engine_units_to_pulse_d(jerk_mm_s3,axis))/ ( ((engval_t)step_freq) * ((engval_t)step_freq) * ((engval_t)step_freq));
+#endif
 
 }
 
@@ -108,12 +128,13 @@ int32_t motion_engine_convert(
 	int32_t pulse_convex[2];
 	int32_t pulse_const;
 
-	int64_t jerk_fract;
-	int64_t accel_fract;
-	int64_t speed_fract;
-	int64_t speed_start_fract;
-	int64_t speed_concave_lin_fract;
-	int64_t speed_lin_convex_fract;
+	engval_t jerk_fract;
+	engval_t accel_lin_fract;
+
+	engval_t speed_fract;
+	engval_t speed_start_fract;
+	engval_t speed_concave_lin_fract;
+	engval_t speed_lin_convex_fract;
 
 	int32_t mb_used = 0;
 	int32_t pulse_from;
@@ -129,7 +150,8 @@ int32_t motion_engine_convert(
 	speed_concave_lin_fract	= motion_engine_speed_to_fract(calc->T11_v,axis_idx,step_freq);
 	speed_lin_convex_fract	= motion_engine_speed_to_fract(calc->T12_v,axis_idx,step_freq);
 
-	accel_fract     		= motion_engine_accel_to_fract(calc->accel,axis_idx,step_freq);
+	accel_lin_fract    		= motion_engine_accel_to_fract(calc->accel,axis_idx,step_freq);
+
 
 	jerk_fract				= motion_engine_jerk_to_fract(calc->jerk,axis_idx,step_freq);
 
@@ -279,14 +301,14 @@ int32_t motion_engine_convert(
 		}
 
 
-		mbfr[mb_used].mf.pulse_count_total   = pulse_concave[0];
-		mbfr[mb_used].mf.pulse_count 		 = pulse_concave[0];
-		mbfr[mb_used].mf.speed_fract 		 = speed_start_fract;
-		mbfr[mb_used].mf.accel_fract		 = 0;
-		mbfr[mb_used].mf.jerk_fract  		 = jerk_fract;
-		mbfr[mb_used].mf.tick_delay  		 = 0;
-		mbfr[mb_used].mf.accu 				 = 0;
-		mbfr[mb_used].dir                    = calc->dir;
+		mbfr[mb_used].data.mf.pulse_count_total   = pulse_concave[0];
+		mbfr[mb_used].data.mf.pulse_count 		 = pulse_concave[0];
+		mbfr[mb_used].data.mf.speed_fract 		 = speed_start_fract;
+		mbfr[mb_used].data.mf.accel_fract		 = 0;
+		mbfr[mb_used].data.mf.jerk_fract  		 = jerk_fract;
+		mbfr[mb_used].data.mf.tick_delay  		 = 0;
+		mbfr[mb_used].data.mf.accu 				 = 0;
+		mbfr[mb_used].data.dir                    = calc->dir;
 		mb_used++;
 	}
 
@@ -298,14 +320,14 @@ int32_t motion_engine_convert(
 		}
 
 
-		mbfr[mb_used].mf.pulse_count_total   = pulse_line[0];
-		mbfr[mb_used].mf.pulse_count 		 = pulse_line[0];
-		mbfr[mb_used].mf.speed_fract 		 = speed_concave_lin_fract;
-		mbfr[mb_used].mf.accel_fract		 = accel_fract;
-		mbfr[mb_used].mf.jerk_fract  		 = 0;
-		mbfr[mb_used].mf.tick_delay  	     = 0;
-		mbfr[mb_used].mf.accu 				 = 0;
-		mbfr[mb_used].dir                    = calc->dir;
+		mbfr[mb_used].data.mf.pulse_count_total   = pulse_line[0];
+		mbfr[mb_used].data.mf.pulse_count 		 = pulse_line[0];
+		mbfr[mb_used].data.mf.speed_fract 		 = speed_concave_lin_fract;
+		mbfr[mb_used].data.mf.accel_fract		 = accel_lin_fract;
+		mbfr[mb_used].data.mf.jerk_fract  		 = 0;
+		mbfr[mb_used].data.mf.tick_delay  	     = 0;
+		mbfr[mb_used].data.mf.accu 				 = 0;
+		mbfr[mb_used].data.dir                    = calc->dir;
 		mb_used++;
 	}
 
@@ -317,14 +339,14 @@ int32_t motion_engine_convert(
 		}
 
 
-		mbfr[mb_used].mf.pulse_count_total   = pulse_convex[0];
-		mbfr[mb_used].mf.pulse_count 		 = pulse_convex[0];
-		mbfr[mb_used].mf.speed_fract 		 = speed_lin_convex_fract;
-		mbfr[mb_used].mf.accel_fract		 = accel_fract;
-		mbfr[mb_used].mf.jerk_fract  		 = -jerk_fract;
-		mbfr[mb_used].mf.tick_delay  	     = 0;
-		mbfr[mb_used].mf.accu 				 = 0;
-		mbfr[mb_used].dir                    = calc->dir;
+		mbfr[mb_used].data.mf.pulse_count_total   = pulse_convex[0];
+		mbfr[mb_used].data.mf.pulse_count 		 = pulse_convex[0];
+		mbfr[mb_used].data.mf.speed_fract 		 = speed_lin_convex_fract;
+		mbfr[mb_used].data.mf.accel_fract		 = accel_lin_fract;
+		mbfr[mb_used].data.mf.jerk_fract  		 = -jerk_fract;
+		mbfr[mb_used].data.mf.tick_delay  	     = 0;
+		mbfr[mb_used].data.mf.accu 				 = 0;
+		mbfr[mb_used].data.dir                    = calc->dir;
 		mb_used++;
 	}
 
@@ -336,14 +358,14 @@ int32_t motion_engine_convert(
 			return -1;
 		}
 
-		mbfr[mb_used].mf.pulse_count_total 	= pulse_const;
-		mbfr[mb_used].mf.pulse_count 	   	= pulse_const;
-		mbfr[mb_used].mf.speed_fract 	  	= speed_fract;
-		mbfr[mb_used].mf.accel_fract		= 0;
-		mbfr[mb_used].mf.jerk_fract  	  	= 0;
-		mbfr[mb_used].mf.tick_delay  	    = 0;
-		mbfr[mb_used].mf.accu 				 = 0;
-		mbfr[mb_used].dir                   = calc->dir;
+		mbfr[mb_used].data.mf.pulse_count_total = pulse_const;
+		mbfr[mb_used].data.mf.pulse_count 	   	= pulse_const;
+		mbfr[mb_used].data.mf.speed_fract 	  	= speed_fract;
+		mbfr[mb_used].data.mf.accel_fract		= 0;
+		mbfr[mb_used].data.mf.jerk_fract  	  	= 0;
+		mbfr[mb_used].data.mf.tick_delay  	    = 0;
+		mbfr[mb_used].data.mf.accu 				 = 0;
+		mbfr[mb_used].data.dir                   = calc->dir;
 		mb_used++;
 	}
 
@@ -354,14 +376,14 @@ int32_t motion_engine_convert(
 			return -1;
 		}
 
-		mbfr[mb_used].mf.pulse_count_total  = pulse_convex[1];
-		mbfr[mb_used].mf.pulse_count 		= pulse_convex[1];
-		mbfr[mb_used].mf.speed_fract 		= speed_fract;
-		mbfr[mb_used].mf.accel_fract		= 0;
-		mbfr[mb_used].mf.jerk_fract  		= -jerk_fract;
-		mbfr[mb_used].mf.tick_delay  	    = 0;
-		mbfr[mb_used].mf.accu 				 = 0;
-		mbfr[mb_used].dir                   = calc->dir;
+		mbfr[mb_used].data.mf.pulse_count_total  = pulse_convex[1];
+		mbfr[mb_used].data.mf.pulse_count 		= pulse_convex[1];
+		mbfr[mb_used].data.mf.speed_fract 		= speed_fract;
+		mbfr[mb_used].data.mf.accel_fract		= 0;
+		mbfr[mb_used].data.mf.jerk_fract  		= -jerk_fract;
+		mbfr[mb_used].data.mf.tick_delay  	    = 0;
+		mbfr[mb_used].data.mf.accu 				 = 0;
+		mbfr[mb_used].data.dir                   = calc->dir;
 		mb_used++;
 	}
 
@@ -372,14 +394,14 @@ int32_t motion_engine_convert(
 			return -1;
 		}
 
-		mbfr[mb_used].mf.pulse_count_total   	= pulse_line[1];
-		mbfr[mb_used].mf.pulse_count 		 	= pulse_line[1];
-		mbfr[mb_used].mf.speed_fract 		 	= speed_lin_convex_fract;
-		mbfr[mb_used].mf.accel_fract		 	= -accel_fract;
-		mbfr[mb_used].mf.jerk_fract  		 	= 0;
-		mbfr[mb_used].mf.tick_delay  	     	= 0;
-		mbfr[mb_used].mf.accu 				    = 0;
-		mbfr[mb_used].dir                   	= calc->dir;
+		mbfr[mb_used].data.mf.pulse_count_total   	= pulse_line[1];
+		mbfr[mb_used].data.mf.pulse_count 		 	= pulse_line[1];
+		mbfr[mb_used].data.mf.speed_fract 		 	= speed_lin_convex_fract;
+		mbfr[mb_used].data.mf.accel_fract		 	= -accel_lin_fract;
+		mbfr[mb_used].data.mf.jerk_fract  		 	= 0;
+		mbfr[mb_used].data.mf.tick_delay  	     	= 0;
+		mbfr[mb_used].data.mf.accu 				    = 0;
+		mbfr[mb_used].data.dir                   	= calc->dir;
 		mb_used++;
 	}
 
@@ -390,14 +412,14 @@ int32_t motion_engine_convert(
 			return -1;
 		}
 
-		mbfr[mb_used].mf.pulse_count_total  	= pulse_concave[1];
-		mbfr[mb_used].mf.pulse_count 		 	= pulse_concave[1];
-		mbfr[mb_used].mf.speed_fract 		 	= speed_concave_lin_fract;
-		mbfr[mb_used].mf.accel_fract		 	= -accel_fract;
-		mbfr[mb_used].mf.jerk_fract  		 	= jerk_fract;
-		mbfr[mb_used].mf.tick_delay  	    	= 0;
-		mbfr[mb_used].mf.accu 					= 0;
-		mbfr[mb_used].dir                   	= calc->dir;
+		mbfr[mb_used].data.mf.pulse_count_total  	= pulse_concave[1];
+		mbfr[mb_used].data.mf.pulse_count 		 	= pulse_concave[1];
+		mbfr[mb_used].data.mf.speed_fract 		 	= speed_concave_lin_fract;
+		mbfr[mb_used].data.mf.accel_fract		 	= -accel_lin_fract;
+		mbfr[mb_used].data.mf.jerk_fract  		 	= jerk_fract;
+		mbfr[mb_used].data.mf.tick_delay  	    	= 0;
+		mbfr[mb_used].data.mf.accu 					= 0;
+		mbfr[mb_used].data.dir                   	= calc->dir;
 		mb_used++;
 	}
 

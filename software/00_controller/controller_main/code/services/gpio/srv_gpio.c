@@ -7,10 +7,20 @@
 volatile int32_t gpio_test_mode = 0;
 
 
-uint32_t 		gpio_pwm_out[PWM_GLOBAL_CNT] = {0};
-uint32_t		gpio_pwm_timer[PWM_GLOBAL_CNT] = {0};
-uint32_t		gpio_pwm_value 			= 0;
-uint32_t		gpio_pwm_value_prev 	= 0;
+typedef struct
+{
+	uint32_t 		out[PWM_GLOBAL_CNT];
+	uint32_t		timer[PWM_GLOBAL_CNT];
+
+	uint32_t		update_req[PWM_GLOBAL_CNT];
+	uint32_t		update_val[PWM_GLOBAL_CNT];
+
+	uint32_t		value;
+	uint32_t		value_prev;
+	uint32_t		force_update;
+}gpio_pwm_type;
+
+gpio_pwm_type	gpio_pwm;
 
 
 void  srv_gpio_pinmode(uint32_t out_mask)
@@ -20,7 +30,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
 
     GPIO_InitStruct.Pin = IO_CPU1_Pin;
-	if(out_mask & BV(0))
+	if(out_mask & BV(0+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -31,7 +41,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
     HAL_GPIO_Init(IO_CPU1_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU2_Pin;
-	if(out_mask & BV(1))
+	if(out_mask & BV(1+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -42,7 +52,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
     HAL_GPIO_Init(IO_CPU2_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU3_Pin;
-	if(out_mask & BV(2))
+	if(out_mask & BV(2+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -53,7 +63,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
     HAL_GPIO_Init(IO_CPU3_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU4_Pin;
-	if(out_mask & BV(3))
+	if(out_mask & BV(3+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -65,7 +75,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
 
 
     GPIO_InitStruct.Pin = IO_CPU5_Pin;
-	if(out_mask & BV(4))
+	if(out_mask & BV(4+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -76,7 +86,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
     HAL_GPIO_Init(IO_CPU5_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU6_Pin;
-	if(out_mask & BV(5))
+	if(out_mask & BV(5+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -87,7 +97,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
     HAL_GPIO_Init(IO_CPU6_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU7_Pin;
-	if(out_mask & BV(6))
+	if(out_mask & BV(6+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -98,7 +108,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
     HAL_GPIO_Init(IO_CPU7_GPIO_Port, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = IO_CPU8_Pin;
-	if(out_mask & BV(7))
+	if(out_mask & BV(7+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -110,7 +120,7 @@ void  srv_gpio_pinmode(uint32_t out_mask)
 
 
     GPIO_InitStruct.Pin = IO_CPU9_Pin;
-	if(out_mask & BV(8))
+	if(out_mask & BV(8+16))
 	{
 	    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	}
@@ -138,7 +148,6 @@ void  srv_gpio_pullupmode(uint32_t pullup_mask)
 		GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 	}
     HAL_GPIO_Init(IN_CPU1_GPIO_Port, &GPIO_InitStruct);
-
 
 
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -264,7 +273,7 @@ void  srv_gpio_pullupmode(uint32_t pullup_mask)
 
 void      srv_gpio_init(void)
 {
-
+	memset(&gpio_pwm,0,sizeof(gpio_pwm));
 }
 
 
@@ -373,169 +382,29 @@ uint32_t  srv_gpio_get_io(void)
 }
 
 
-void      srv_gpio_set_pwm(uint32_t mask,uint32_t value)
+void      srv_gpio_set_pwm(pwm_idx_e id,uint32_t enable)
 {
-
-	if(mask & BV(0))
+	if(enable != 0)
 	{
-		if(value & BV(0))
+		gpio_pwm.timer[id]  = ppctx_nv->pwm_range[id].delay_ms;
+
+		if(gpio_pwm.timer[id] == 0)
 		{
-			gpio_pwm_timer[PWM_OUT1]  = ppctx_nv->pwm_range[PWM_OUT1].delay_ms;
-
-			if(gpio_pwm_timer[PWM_OUT1] == 0)
-			{
-				srv_timer_pwm(PWM_OUT1,ppctx_nv->pwm_range[PWM_OUT1].max);
-			}
-			else
-			{
-				srv_timer_pwm(PWM_OUT1,100);
-			}
-
-			gpio_pwm_out [PWM_OUT1]  = 1;
+			srv_timer_pwm(id,ppctx_nv->pwm_range[id].max);
 		}
 		else
 		{
-			gpio_pwm_timer[PWM_OUT1] = 0;
-			gpio_pwm_out[PWM_OUT1] 	 = 0;
-
-			srv_timer_pwm(PWM_OUT1,ppctx_nv->pwm_range[PWM_OUT1].min);
+			srv_timer_pwm(id,100);
 		}
+
+		gpio_pwm.out [id]  = 1;
 	}
-
-	if(mask & BV(1))
+	else
 	{
+		gpio_pwm.timer[id] = 0;
+		gpio_pwm.out[id] 	 = 0;
 
-		if(value & BV(1))
-		{
-			gpio_pwm_timer[PWM_OUT2]  = ppctx_nv->pwm_range[PWM_OUT2].delay_ms;
-
-			if(gpio_pwm_timer[PWM_OUT2] == 0)
-			{
-				srv_timer_pwm(PWM_OUT2,ppctx_nv->pwm_range[PWM_OUT2].max);
-			}
-			else
-			{
-				srv_timer_pwm(PWM_OUT2,100);
-			}
-
-			gpio_pwm_out [PWM_OUT2]  = 1;
-		}
-		else
-		{
-			gpio_pwm_timer[PWM_OUT2]  = 0;
-			gpio_pwm_out [PWM_OUT2]   = 0;
-
-			srv_timer_pwm(PWM_OUT2,ppctx_nv->pwm_range[PWM_OUT2].min);
-		}
-	}
-
-
-	if(mask & BV(2))
-	{
-
-		if(value & BV(2))
-		{
-			gpio_pwm_timer[PWM_OUT3]  = ppctx_nv->pwm_range[PWM_OUT3].delay_ms;
-
-
-			if(gpio_pwm_timer[PWM_OUT3] == 0)
-			{
-				srv_timer_pwm(PWM_OUT3,ppctx_nv->pwm_range[PWM_OUT3].max);
-			}
-			else
-			{
-				srv_timer_pwm(PWM_OUT3,100);
-			}
-
-			gpio_pwm_out [PWM_OUT3]  = 1;
-		}
-		else
-		{
-			gpio_pwm_timer[PWM_OUT3]  = 0;
-			gpio_pwm_out [PWM_OUT3]   = 0;
-
-			srv_timer_pwm(PWM_OUT3,ppctx_nv->pwm_range[PWM_OUT3].min);
-		}
-	}
-
-	if(mask & BV(3))
-	{
-		if(value & BV(3))
-		{
-			gpio_pwm_timer[PWM_OUT4]  = ppctx_nv->pwm_range[PWM_OUT4].delay_ms;
-
-
-			if(gpio_pwm_timer[PWM_OUT4] == 0)
-			{
-				srv_timer_pwm(PWM_OUT4,ppctx_nv->pwm_range[PWM_OUT4].max);
-			}
-			else
-			{
-				srv_timer_pwm(PWM_OUT4,100);
-			}
-
-			gpio_pwm_out [PWM_OUT4]  = 1;
-		}
-		else
-		{
-			gpio_pwm_timer[PWM_OUT4]  =   0;
-			gpio_pwm_out [PWM_OUT4]   =   0;
-
-			srv_timer_pwm(PWM_OUT4,ppctx_nv->pwm_range[PWM_OUT4].min);
-		}
-	}
-
-	if(mask & BV(10))
-	{
-		if(value & BV(10))
-		{
-			gpio_pwm_timer[PWM_OUT11]  = ppctx_nv->pwm_range[PWM_OUT11].delay_ms;
-
-
-			if(gpio_pwm_timer[PWM_OUT11] == 0)
-			{
-				srv_timer_pwm(PWM_OUT11,ppctx_nv->pwm_range[PWM_OUT11].max);
-			}
-			else
-			{
-				srv_timer_pwm(PWM_OUT11,100);
-			}
-
-			gpio_pwm_out [PWM_OUT11]   = 1;
-		}
-		else
-		{
-			gpio_pwm_timer[PWM_OUT11]  =   0;
-			gpio_pwm_out [PWM_OUT11]   =   0;
-
-			srv_timer_pwm(PWM_OUT11,ppctx_nv->pwm_range[PWM_OUT11].min);
-		}
-	}
-
-	if(mask & BV(11))
-	{
-		if(value & BV(11))
-		{
-			gpio_pwm_timer[PWM_OUT12]  = ppctx_nv->pwm_range[PWM_OUT12].delay_ms;
-
-
-			if(gpio_pwm_timer[PWM_OUT12] == 0)
-			{
-				srv_timer_pwm(PWM_OUT12,ppctx_nv->pwm_range[PWM_OUT12].max);
-			}
-			else
-			{
-				srv_timer_pwm(PWM_OUT12,100);
-			}
-			gpio_pwm_out [PWM_OUT12]     = 1;
-		}
-		else
-		{
-			gpio_pwm_timer[PWM_OUT12]  =   0;
-			gpio_pwm_out [PWM_OUT12]   =   1;
-
-			srv_timer_pwm(PWM_OUT12,ppctx_nv->pwm_range[PWM_OUT12].min);
-		}
+		srv_timer_pwm(id,ppctx_nv->pwm_range[id].min);
 	}
 }
 
@@ -543,24 +412,50 @@ void      srv_gpio_set_pwm(uint32_t mask,uint32_t value)
 
 void      srv_gpio_tick_io(void)
 {
-	uint32_t ii;
-
-	uint32_t  gpio_pwm_value_next;
+	pwm_idx_e ii;
 
 
-	gpio_pwm_value_next =  gpio_pwm_value;
-	srv_gpio_set_pwm(gpio_pwm_value_prev ^ gpio_pwm_value_next,gpio_pwm_value);
-	gpio_pwm_value_prev = gpio_pwm_value_next;
+	// Global parameter change, make sure we are up to date
+	if(	gpio_pwm.force_update != 0)
+	{
+		gpio_pwm.force_update = 0;
+
+		for(ii = 0; ii < PWM_GLOBAL_CNT;ii++)
+		{
+			if(gpio_pwm.out[ii] != 0 )
+			{
+				if( gpio_pwm.timer[ii] == 0)
+				{
+					srv_timer_pwm(ii,ppctx_nv->pwm_range[ii].max);
+				}
+				else
+				{
+					// 100% case , no need to update
+				}
+			}
+			else
+			{
+				srv_timer_pwm(ii,ppctx_nv->pwm_range[ii].min);
+			}
+		}
+	}
 
 
+	// Process updates and timers
 	for(ii = 0; ii < PWM_GLOBAL_CNT;ii++)
 	{
-		if(gpio_pwm_out[ii] != 0 )
+		if(gpio_pwm.update_req[ii] != 0)
 		{
-			if( gpio_pwm_timer[ii] > 0)
+			srv_gpio_set_pwm(ii,gpio_pwm.update_val[ii]);
+			gpio_pwm.update_req[ii] = 0;
+		}
+
+		if(gpio_pwm.out[ii] != 0 )
+		{
+			if( gpio_pwm.timer[ii] > 0)
 			{
-				gpio_pwm_timer[ii]--;
-				if(gpio_pwm_timer[ii] == 0)
+				gpio_pwm.timer[ii]--;
+				if(gpio_pwm.timer[ii] == 0)
 				{
 					srv_timer_pwm(ii,ppctx_nv->pwm_range[ii].max);
 				}
@@ -572,9 +467,30 @@ void      srv_gpio_tick_io(void)
 
 void      srv_gpio_set_io(uint32_t mask,uint32_t value)
 {
-	uint32_t pwm_mask = mask & ( BV(0)|BV(1)|BV(2)|BV(3)|BV(10)|BV(11));
 
-	gpio_pwm_value = (gpio_pwm_value & (~pwm_mask)  ) | (value & pwm_mask );
+	if(mask & BV(0))
+	{
+		gpio_pwm.update_req[PWM_OUT1] = 1;
+		gpio_pwm.update_val[PWM_OUT1] = value & BV(0);
+	}
+
+	if(mask & BV(1))
+	{
+		gpio_pwm.update_req[PWM_OUT2] = 1;
+		gpio_pwm.update_val[PWM_OUT2] = value & BV(1);
+	}
+
+	if(mask & BV(2))
+	{
+		gpio_pwm.update_req[PWM_OUT3] = 1;
+		gpio_pwm.update_val[PWM_OUT3] = value & BV(2);
+	}
+
+	if(mask & BV(3))
+	{
+		gpio_pwm.update_req[PWM_OUT4] = 1;
+		gpio_pwm.update_val[PWM_OUT4] = value & BV(3);
+	}
 
 	if(mask & BV(4))
 	{
@@ -646,6 +562,14 @@ void      srv_gpio_set_io(uint32_t mask,uint32_t value)
 			GPIO_Clr(OUT_CPU10);
 		}
 	}
+
+
+	if(mask & BV(10))
+	{
+		gpio_pwm.update_req[PWM_OUT11] = 1;
+		gpio_pwm.update_val[PWM_OUT11] = value & BV(10);
+	}
+
 
 
 	if(mask & BV(0+16))
@@ -804,6 +728,8 @@ void  srv_gpio_refresh(void)
 {
 	srv_gpio_pinmode(ppctx_nv->io_cpu_dir);
 	srv_gpio_pullupmode(ppctx_nv->in_cpu_pullup);
+
+	gpio_pwm.force_update = 1;
 }
 
 

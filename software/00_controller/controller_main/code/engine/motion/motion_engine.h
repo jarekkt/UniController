@@ -48,6 +48,9 @@ typedef enum
 	JCMD_OUTPUTS
 }jcmd_e;
 
+
+typedef double  engval_t;
+
 typedef struct
 {
 	uint32_t			pulse_count_total;
@@ -55,11 +58,11 @@ typedef struct
 
 	uint32_t			tick_delay;
 
-	uint64_t			speed_fract;
-	int64_t	    		accel_fract;
-	int64_t				jerk_fract;
+	engval_t			speed_fract;
+	engval_t	    	accel_fract;
+	engval_t			jerk_fract;
 
-	uint64_t		    accu;
+	engval_t		    accu;
 }motion_phase_t;
 
 
@@ -75,12 +78,18 @@ typedef struct
 
 
 
-typedef struct _motion_buffer_t
+typedef struct
 {
 	int32_t				dir;
+	motion_phase_t  	mf;
+}motion_buffer_data_t;
 
-	motion_phase_t  		mf;
 
+
+
+typedef struct _motion_buffer_t
+{
+	motion_buffer_data_t	    data;
 	struct _motion_buffer_t  *  next;
 }motion_buffer_t;
 
@@ -194,6 +203,7 @@ typedef struct
 
 
 }motion_ctx_t;
+
 
 
 

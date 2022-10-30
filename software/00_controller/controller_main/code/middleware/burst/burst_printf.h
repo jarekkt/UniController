@@ -21,8 +21,10 @@
 
 #if 1
 #define printd(level_mask,format,...)  burst_log_printf(level_mask,format, __VA_ARGS__)
+#define printds(level_mask,format)  burst_log_printf(level_mask,format)
 #else
 #define printd(level_mask,format,...)
+#define printds(level_mask,format)
 #endif
 
 

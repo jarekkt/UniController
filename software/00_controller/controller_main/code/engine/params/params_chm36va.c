@@ -48,8 +48,10 @@
 void	params_chm36va(void)
 {
 
-   // Machine X axis
+	printds(LVL_INFO,"Configuration - setup made for CHMT36VAr\n");
 
+   // Machine X axis
+#if 0
    pctx_nv.axis[AXIS_X].pulses_step_m     = 			31940;
    pctx_nv.axis[AXIS_X].pulses_enc_m 	  = 				0; //TODO
    pctx_nv.axis[AXIS_X].endpos_min_mask   = 				0;
@@ -90,7 +92,7 @@ void	params_chm36va(void)
    pctx_nv.axis[AXIS_Z].endpos_max_mask   = 				0;
    pctx_nv.axis[AXIS_Z].endpos_min_value  =   	  		-45.0;
    pctx_nv.axis[AXIS_Z].endpos_max_value  = 			 45.0;
-   pctx_nv.axis[AXIS_Z].homing_type 	  =   P_HOMING_TO_MID;
+   pctx_nv.axis[AXIS_Z].homing_type 	  = P_HOMING_TO_MID_HOLE;
    pctx_nv.axis[AXIS_Z].homing_mask    	  = 		P_IN_CPU3;
    pctx_nv.axis[AXIS_Z].homing_value   	  =	    			0;
    pctx_nv.axis[AXIS_Z].speed_mm_s        =    		    800.0;
@@ -147,6 +149,8 @@ void	params_chm36va(void)
    pctx_nv.axis[AXIS_C].accel_mm_s2       = 		   1000.0;
    pctx_nv.axis[AXIS_C].jerk_mm_s3        = 		1000000.0;
 
+#endif
+
    // Unused
 
    pctx_nv.axis[AXIS_D].pulses_step_m     = 				0;
@@ -196,9 +200,9 @@ void	params_chm36va(void)
 
    // DRAG PIN ( LZ)
    // Will burn if operated at 100% for long – should be switched to 10%)
-   // Here configured for 100ms full power and 10% PWM afterwards
+   // Here configured for 100ms full power and 25% PWM afterwards
    pctx_nv.pwm_range[PWM_OUT12].min   	  = 				0;
-   pctx_nv.pwm_range[PWM_OUT12].max  	  = 			   10;
+   pctx_nv.pwm_range[PWM_OUT12].max  	  = 			   25;
    pctx_nv.pwm_range[PWM_OUT12].delay_ms  = 			  100;
 
    pctx_nv.axis_used_mask			      = 	 (1<<AXIS_X) |
@@ -215,14 +219,15 @@ void	params_chm36va(void)
    pctx_nv.io_cpu_dir 					  = 		P_IO_CPU1 |
 		   	   	   	   	   	   	   	   	   	   	    P_IO_CPU2;
 
-   // Pullup needed only for ESTOP (pull-downs are default, ESTOP uses reversed logic  )
-   pctx_nv.in_cpu_pullup                  = 		P_IN_CPU5;
+   // Pullup needed only for all inputs
+   pctx_nv.in_cpu_pullup                  = 		P_IN_CPU5 | P_IN_CPU4| P_IN_CPU3| P_IN_CPU2 | P_IN_CPU1;
 
-   // Reversed logic for inputs
-   pctx_nv.io_rev_mask 					  = 				0;
+   // Reversed logic for limit X/Y and ESTOP
+   // Note that limit Z is activated in "middle" position only (there is optocoupler and hole for light)
+   pctx_nv.io_rev_mask 					  = 		P_IN_CPU5 |	P_IN_CPU2 | P_IN_CPU1;
 
    // Reverse dir pins
-   pctx_nv.dir_rev_mask					  = 				0;
+   pctx_nv.dir_rev_mask					  = 		0;
 
 
    // IO filter - 5 ms
@@ -231,6 +236,5 @@ void	params_chm36va(void)
 
 
 };
-
 
 

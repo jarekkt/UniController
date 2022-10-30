@@ -190,10 +190,13 @@ static void burst_rcv_serial_process(ch_idx_e idx)
 	{
     	// Store data to flash
 		tsk_storage_activate();
-
-		// Reinitialize blocks with possible dependencies
-		srv_gpio_refresh();
 	}
+
+	// Reinitialize blocks with possible dependencies
+	srv_gpio_refresh();
+
+
+
 }
 
 
