@@ -16,6 +16,7 @@
 
 void srv_timer_pwm_init(void);
 void srv_timer_pwm_once(void);
+void srv_timer_pwm_refresh(void);
 void srv_timer_pwm(uint32_t ch, uint32_t duty_percent);
 
 

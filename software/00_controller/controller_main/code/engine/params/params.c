@@ -194,7 +194,7 @@ void params_init_default(void)
 
 	for(ii = 0; ii < AXIS_GLOBAL_CNT;ii++)
 	{
-		pctx_nv.axis[ii].pulses_step_m				= 20000;
+		pctx_nv.axis[ii].pulses_step_m				= 5000;
 		pctx_nv.axis[ii].pulses_enc_m  				= 0;
 
 		pctx_nv.axis[ii].endpos_min_mask			= 0;
@@ -209,7 +209,7 @@ void params_init_default(void)
 		pctx_nv.axis[ii].homing_retract_mm 			= 0.0;
 
 
-		pctx_nv.axis[ii].speed_mm_s					= 1000;
+		pctx_nv.axis[ii].speed_mm_s					= 500;
 		pctx_nv.axis[ii].speed_home_mm_s			= 200;
 		pctx_nv.axis[ii].speed_home_retract_mm_s	= 20;
 		pctx_nv.axis[ii].speed_safe_mm_s 			= 100;

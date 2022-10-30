@@ -98,7 +98,10 @@ void srv_timer_once(void)
 	srv_timer_quad_once();
 }
 
-
+void srv_timer_refresh(void)
+{
+	srv_timer_pwm_refresh();
+}
 
 void srv_timer_callback_slow_add(timer_callback_fn fn)
 {

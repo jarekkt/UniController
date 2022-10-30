@@ -25,6 +25,7 @@
 #define  HOME_RUNTO_FAST	1
 #define  HOME_RETRACT		2
 #define  HOME_RUNFROM		3
+#define  HOME_RUNUNTIL		4
 #define  HOME_RUNTO_SLOW   10
 
 
@@ -37,6 +38,8 @@ typedef struct
 /* Main motion buffers */
 
 static motion_buffer_t   mb_global[MF_BUFFER_CNT];
+
+
 static motion_job_t		 mj_global[MF_JOB_CNT];
 
 
@@ -324,7 +327,7 @@ int32_t motion_engine_run_home
 				result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
 			}break;
 
-			case P_HOMING_TO_MID:
+			case P_HOMING_TO_MID_EDGE:
 			{
 
 				if( (mctx.inputs_filtered & ppctx_nv->axis[axis_idx].homing_mask ) != 0)
@@ -339,7 +342,7 @@ int32_t motion_engine_run_home
 				}
 				else
 				{
-					// MMID switch not activated - run until inactive
+					// MMID switch not activated - run until active
 					io_args.io_mask_endstop	 =  ppctx_nv->axis[axis_idx].endpos_max_mask;
 					home_args.home_phase 	 = HOME_RUNTO_FAST;
 					io_args.io_mask_run_stop = ppctx_nv->axis[axis_idx].homing_mask;
@@ -358,12 +361,46 @@ int32_t motion_engine_run_home
 
 				// Home again - slowly
 				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
-				io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_max_mask;
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_max_mask;
 				io_args.io_mask_run_stop 	= ppctx_nv->axis[axis_idx].homing_mask;
 
 				result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
 			}break;
 
+			case P_HOMING_TO_MID_HOLE:
+			{
+
+				// Find the hole trying to go to min position
+				io_args.io_mask_endstop	 = ppctx_nv->axis[axis_idx].endpos_min_mask;
+				home_args.home_phase 	 = HOME_RUNUNTIL;
+				io_args.io_mask_run_stop = ppctx_nv->axis[axis_idx].homing_mask | ppctx_nv->axis[axis_idx].endpos_min_mask;
+				io_args.io_mask_run_keep = 0;
+
+				result 					|= motion_engine_run_home_schedule(-dist_home,&path_home,&home_args,&io_args,rcv_ctx);
+
+				// Find the hole trying to go to max position
+				io_args.io_mask_endstop	 =  ppctx_nv->axis[axis_idx].endpos_max_mask;
+				home_args.home_phase 	 =  HOME_RUNUNTIL;
+				io_args.io_mask_run_stop =  ppctx_nv->axis[axis_idx].homing_mask | ppctx_nv->axis[axis_idx].endpos_max_mask;
+				io_args.io_mask_run_keep =  0;
+
+				result 					|= motion_engine_run_home_schedule(-dist_home,&path_home,&home_args,&io_args,rcv_ctx);
+
+				// Retract
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
+				home_args.home_phase 		= HOME_RETRACT;
+				io_args.io_mask_run_keep	= 0;
+				io_args.io_mask_run_keep 	= 0;
+
+				result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
+
+				// Home again - slowly
+				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
+				io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_max_mask;
+				io_args.io_mask_run_stop 	= ppctx_nv->axis[axis_idx].homing_mask;
+
+				result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
+			}break;
 		}
 	}
 
@@ -418,8 +455,8 @@ int32_t motion_engine_allocate(motion_job_t * mj,uint32_t axis_idx, motion_buffe
 	else
 	{
 		// Attach new motion to the end of link list
-		mj->mb_axis_tail[axis_idx]->next = *mb_curr;
-		mj->mb_axis_tail[axis_idx] 		 = *mb_curr;
+		mj->mb_axis_head[axis_idx]->next = *mb_curr;
+		mj->mb_axis_head[axis_idx] 		 = *mb_curr;
 	}
 
 	(*mb_curr)->next = NULL;
@@ -459,8 +496,17 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,uint
 	}
 
 
+
 	// Update new target position
 	mctx.plan_pos_mm[axis_idx] = pos_mm + mctx.offset_pos_mm[axis_idx];
+
+
+	printd(LVL_DEBUG,"motion  engine run - axis  %d dist=%f target=%f\r\n",axis_idx,dist_mm,mctx.plan_pos_mm[axis_idx]);
+
+	if(dist_mm	== 0)
+	{
+		return 0;
+	}
 
 	// Get motion buffer for the move
 	if(mj->mb_head != mj->mb_tail)
@@ -483,6 +529,23 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,uint
 		// Calculate 3rd order S curve
 		motion_scurve_calc(&calc,dist_mm, ppctx_nv->axis[axis_idx].speed_safe_mm_s,speed_mm_s,accel_mm_s2,jerk_mm_s3);
 
+
+		printd(LVL_TRACE,"motion  engine calc - axis %d speed=%f sspeed=%f accel=%f jerk=%f \r\n",
+				axis_idx,
+					calc.speed,
+					calc.speed_start,
+					calc.accel,
+					calc.jerk
+		);
+
+		printd(LVL_TRACE,"motion  engine calc scurve - axis %d T11=%f(%f) T12=%f(%f) T13=%f(%f) T2=%f(%f) \r\n",
+				axis_idx,
+					calc.T11,calc.T11_s,
+					calc.T12,calc.T12_s,
+					calc.T13,calc.T13_s,
+					calc.T2,calc.T2_s
+		);
+
 		// Convert calculation for step engine format
 		if(axis_idx < AXIS_FAST_CNT)
 		{
@@ -496,7 +559,6 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,uint
 		}
 		mb_used = motion_engine_convert(axis_idx,curr_pos_mm,pos_mm,step_freq,&calc,&ppctx_nv->axis[axis_idx],mb,DIM(mb));
 
-
 		if(mb_used > 0)
 		{
 			// Inefficient way with copying - fix it later
@@ -505,8 +567,14 @@ int32_t  motion_engine_run(motion_job_t * mj,uint32_t axis_idx,float pos_mm,uint
 			{
 				if(motion_engine_allocate(mj,axis_idx, &mb_curr)==0)
 				{
-					memcpy(mb_curr,&mb[ii],sizeof(*mb_curr));
-					mb_curr->next = NULL;
+
+					printd(LVL_TRACE,"motion  engine calc segment - phase=%d pulse=%u\r\n",
+							    axis_idx,
+								mb[ii].data.mf.pulse_count
+					);
+
+
+					mb_curr->data = mb[ii].data;
 				}
 				else
 				{
@@ -532,35 +600,19 @@ int32_t motion_engine_delay
 			uint32_t	   delay_ms
 )
 {
-	int 				result = 0;
-	uint32_t   			new_mb_g_head;
+	int 				result = -1;
 	motion_buffer_t  *	mb_curr;
 
-	mj->mb_head = mj->mb_tail = mctx.mb_g_head;
-	new_mb_g_head = (mctx.mb_g_head + 1)% MF_BUFFER_CNT;
 
-	if(new_mb_g_head != mctx.mb_g_tail)
+	if(motion_engine_allocate(mj,0,&mb_curr) == 0)
 	{
-		mb_curr 	   = &mb_global[mctx.mb_g_head];
-		mj->mb_head    = new_mb_g_head;
-		mctx.mb_g_head = new_mb_g_head;
+		memset(&mb_curr->data.mf,0,sizeof(mb_curr->data.mf));
+
+		// TODO - range check ??
+		mb_curr->data.mf.tick_delay = (mctx_nv.step_freq * delay_ms) / 1000;
+
+		result = 0;
 	}
-	else
-	{
-		return -1;
-	}
-
-	// Empty list
-	mj->mb_axis_head[0] = mb_curr;
-	mj->mb_axis_tail[0] = mb_curr;
-	mb_curr->next 		= NULL;
-
-	mb_curr->dir = 0;
-
-	memset(&mb_curr->mf,0,sizeof(mb_curr->mf));
-
-	// TODO - range check ??
-	mb_curr->mf.tick_delay = (mctx_nv.step_freq * delay_ms) / 1000;
 
 
 	return result;
@@ -705,6 +757,11 @@ static int32_t  motion_task_finish_homing_job(uint32_t idx)
 			}
 		}break;
 
+		case HOME_RUNUNTIL:
+		{
+			result = 0;
+		}break;
+
 		case HOME_RUNTO_SLOW:
 		{
 
@@ -804,7 +861,7 @@ static uint32_t motion_task_start_job(uint32_t idx)
 			// Process direction setup and changes
 			if(mj_global[idx].mb_axis_head[ii] != NULL)
 			{
-				motion_engine_dir(ii,mj_global[idx].mb_axis_head[ii]->dir,mctx.active_dir);
+				motion_engine_dir(ii,mj_global[idx].mb_axis_head[ii]->data.dir,mctx.active_dir);
 			}
 		}
 
@@ -900,17 +957,17 @@ void motion_engine_tmr_step(void)
 
 	active = 0;
 
-	if(motion_engine_step_axis(0,&mctx.job->mb_axis_head[0],&mctx.curr_pulse_pos[0],&mctx.curr_dir[0],mctx.active_dir,&active) != 0)
+	if(motion_engine_step_axis(0,&mctx.job->mb_axis_tail[0],&mctx.curr_pulse_pos[0],&mctx.curr_dir[0],mctx.active_dir,&active) != 0)
 	{
 		TMR_TIRGGER_X();
 	}
 
-	if(motion_engine_step_axis(1,&mctx.job->mb_axis_head[1],&mctx.curr_pulse_pos[1],&mctx.curr_dir[1],mctx.active_dir,&active) != 0)
+	if(motion_engine_step_axis(1,&mctx.job->mb_axis_tail[1],&mctx.curr_pulse_pos[1],&mctx.curr_dir[1],mctx.active_dir,&active) != 0)
 	{
 		TMR_TIRGGER_Y();
 	}
 
-	if(motion_engine_step_axis(2,&mctx.job->mb_axis_head[2],&mctx.curr_pulse_pos[2],&mctx.curr_dir[2],mctx.active_dir,&active) != 0)
+	if(motion_engine_step_axis(2,&mctx.job->mb_axis_tail[2],&mctx.curr_pulse_pos[2],&mctx.curr_dir[2],mctx.active_dir,&active) != 0)
 	{
 		TMR_TIRGGER_Z();
 	}
@@ -919,22 +976,22 @@ void motion_engine_tmr_step(void)
 	{
 		// A/B/C/D run  half the speed
 
-		if(motion_engine_step_axis(3,&mctx.job->mb_axis_head[3],&mctx.curr_pulse_pos[3],&mctx.curr_dir[3],mctx.active_dir,&active) != 0)
+		if(motion_engine_step_axis(3,&mctx.job->mb_axis_tail[3],&mctx.curr_pulse_pos[3],&mctx.curr_dir[3],mctx.active_dir,&active) != 0)
 		{
 			GPIO_STEP_SET_A();
 		}
 
-		if(motion_engine_step_axis(4,&mctx.job->mb_axis_head[4],&mctx.curr_pulse_pos[4],&mctx.curr_dir[4],mctx.active_dir,&active) != 0)
+		if(motion_engine_step_axis(4,&mctx.job->mb_axis_tail[4],&mctx.curr_pulse_pos[4],&mctx.curr_dir[4],mctx.active_dir,&active) != 0)
 		{
 			GPIO_STEP_SET_B();
 		}
 
-		if(motion_engine_step_axis(5,&mctx.job->mb_axis_head[5],&mctx.curr_pulse_pos[5],&mctx.curr_dir[5],mctx.active_dir,&active) != 0)
+		if(motion_engine_step_axis(5,&mctx.job->mb_axis_tail[5],&mctx.curr_pulse_pos[5],&mctx.curr_dir[5],mctx.active_dir,&active) != 0)
 		{
 			GPIO_STEP_SET_C();
 		}
 
-		if(motion_engine_step_axis(6,&mctx.job->mb_axis_head[6],&mctx.curr_pulse_pos[6],&mctx.curr_dir[6],mctx.active_dir,&active) != 0)
+		if(motion_engine_step_axis(6,&mctx.job->mb_axis_tail[6],&mctx.curr_pulse_pos[6],&mctx.curr_dir[6],mctx.active_dir,&active) != 0)
 		{
 			GPIO_STEP_SET_D();
 		}

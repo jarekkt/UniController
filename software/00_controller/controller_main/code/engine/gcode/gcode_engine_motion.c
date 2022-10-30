@@ -173,7 +173,7 @@ void gcode_engine_euclidean_geometry(
 	{
 		if( ( (*axis_mask) & ( 1<<ii))!= 0)
 		{
-			scale = axis[ii] / vector_len;
+			scale = fabsf(axis[ii]) / vector_len;
 			pP[ii].speed_mm_s  = path->speed_mm_s * scale;
 			pP[ii].accel_mm_s2 = path->accel_mm_s2 * scale;
 			pP[ii].jerk_mm_s3  = path->jerk_mm_s3 * scale;
@@ -230,9 +230,21 @@ int32_t gcode_engine_motion(motion_job_t * mj,float * axis, uint32_t is_incremen
 	path.accel_mm_s2 	 = gcode_engine_accelerate(G,GCODE_I_NONE);
 	path.jerk_mm_s3      = gcode_engine_jerk(H,GCODE_I_NONE);
 
+	printd(LVL_DEBUG,"motion  engine - axis mask(0x%x) speed=%f acc=%f jerk=%f\r\n",axis_mask,path.speed_mm_s,path.accel_mm_s2,path.jerk_mm_s3);
 
 	// Solve geometry with Euclidean distance calculation
 	gcode_engine_euclidean_geometry(mj,axis,is_incremental,&axis_mask,&path,pP);
+
+	for( ii = GCODE_I_X; ii <= GCODE_I_LAST_AXIS;ii++)
+	{
+		if( axis_mask & ( 1<< ii))
+		{
+			printd(LVL_TRACE,"motion  engine after geometry - axis  %d speed=%f acc=%f jerk=%f\r\n",ii,pP[ii].speed_mm_s,pP[ii].accel_mm_s2,pP[ii].jerk_mm_s3);
+		}
+	}
+
+
+
 
 	for( ii = GCODE_I_X; ii <= GCODE_I_LAST_AXIS;ii++)
 	{

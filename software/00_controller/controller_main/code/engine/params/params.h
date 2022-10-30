@@ -13,7 +13,9 @@ void params_once(void);
 #define P_HOMING_NONE			0
 #define P_HOMING_TO_MIN			1
 #define P_HOMING_TO_MAX			2
-#define P_HOMING_TO_MID			3
+#define P_HOMING_TO_MID_EDGE	3
+#define P_HOMING_TO_MID_HOLE	4
+
 
 #define P_IN_CPU1				BV(0)
 #define P_IN_CPU2				BV(1)

@@ -95,6 +95,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 		{
 			case GCODE_F_G28:
 			{
+			    printds(LVL_INFO,"GCODE engine - homing(G28)\r\n");
+
 				// homing motion
 				result = gcode_engine_motion_G28(rcv_ctx,&cmd);
 				if(result != 0)
@@ -106,6 +108,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 			case GCODE_F_G0:
 			case GCODE_F_G1:
 			{
+				printds(LVL_INFO,"GCODE engine - move(G0/G1)\r\n");
+
 				// linear move/ homing shared code
 				result = gcode_engine_motion_G0G1(rcv_ctx,&cmd,gcd.gcx.is_incremental);
 				if(result != 0)
@@ -116,6 +120,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 
 			case GCODE_F_G4:
 			{
+				printds(LVL_INFO,"GCODE engine - delay(G4)\r\n");
+
 				if(  (cmd.tokens_present_mask & (1<< GCODE_I_S) ))
 				{
 					args[0] = 1000 * cmd.tokens[GCODE_I_S].value.val_float;
@@ -134,6 +140,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 
 			case GCODE_F_G20:
 			{
+				printds(LVL_INFO,"GCODE engine - inch(G20)\r\n");
+
 				// units inch
 				gcd.gcx.is_inch = 1;
 				gcode_engine_command_execute(JCMD_OK,rcv_ctx,0,0);
@@ -141,6 +149,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 
 			case GCODE_F_G21:
 			{
+				printds(LVL_INFO,"GCODE engine - mm(G21)\r\n");
+
 				// units mm
 				gcd.gcx.is_inch = 0;
 				gcode_engine_command_execute(JCMD_OK,rcv_ctx,0,0);
@@ -162,10 +172,14 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 						cnt++;
 						if(cmd.fn == GCODE_F_G90)
 						{
+							printd(LVL_INFO,"GCODE engine - %d axis non-incremental (G90)\r\n",ii);
+
 							gcd.gcx.is_incremental &= ~(1<<ii);
 						}
 						else
 						{
+							printd(LVL_INFO,"GCODE engine - %d axis incremental (G90)\r\n",ii);
+
 							gcd.gcx.is_incremental |= (1<<ii);
 						}
 					}
@@ -182,6 +196,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 
 			case GCODE_F_G92:
 			{
+				printds(LVL_INFO,"GCODE engine - set position (G92)\r\n");
+
 				result = gcode_engine_motion_G92(rcv_ctx,&cmd);
 				if(result != 0)
 				{
@@ -195,6 +211,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 
 			case GCODE_F_M42:
 			{
+				printds(LVL_INFO,"GCODE engine - set output (M42)\r\n");
+
 				if(  (cmd.tokens_present_mask & (1<< GCODE_I_S)) &&
 					 (cmd.tokens_present_mask & (1<< GCODE_I_P))
 				)
@@ -213,22 +231,30 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 
 			case GCODE_F_M105:
 			{
+				printds(LVL_INFO,"GCODE engine - get sensors (M105)\r\n");
+
 				gcode_engine_command_execute(JCMD_SENSORS,rcv_ctx,0,0);
 			}break;
 
 			case GCODE_F_M114:
 			{
+				printds(LVL_INFO,"GCODE engine - get coords (M114)\r\n");
+
 				gcode_engine_command_execute(JCMD_COORDS,rcv_ctx,0,0);
 			}break;
 
 			case GCODE_F_M115:
 			{
+				printds(LVL_INFO,"GCODE engine - get firmware info (M115)\r\n");
+
 				gcode_engine_command_execute(JCMD_FWINFO,rcv_ctx,0,0);
 
 			}break;
 
 			case GCODE_F_M204:
 			{
+				printds(LVL_INFO,"GCODE engine - set acceleration (M204)\r\n");
+
 				if(cmd.tokens_present_mask & (1<< GCODE_I_S))
 				{
 					S = cmd.tokens[GCODE_I_S].value.val_float;
@@ -244,6 +270,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 
 			case GCODE_F_M201_3:
 			{
+				printds(LVL_INFO,"GCODE engine - set jerk (M201.3)\r\n");
+
 				if(cmd.tokens_present_mask & (1<< GCODE_I_S))
 				{
 					S = cmd.tokens[GCODE_I_S].value.val_float;
@@ -259,6 +287,8 @@ void gcode_engine_command(char * cmd_line, uint32_t len,const burst_rcv_ctx_t * 
 
 			case GCODE_F_M400:
 			{
+				printds(LVL_INFO,"GCODE engine - sync (M400)\r\n");
+
 				gcode_engine_command_execute(JCMD_OK,rcv_ctx,0,0);
 			}break;
 

@@ -5,33 +5,35 @@
 
 uint32_t motion_engine_step_axis(int32_t axis_idx,motion_buffer_t ** p_mbfr,int32_t * pulse_pos,int32_t * dir,int32_t * active_dir,int32_t * active)
 {
-	uint64_t 		  prev_accu;
+	//uint64_t 		  prev_accu;
 	uint32_t 		  pulse = 0;
 	motion_buffer_t * mbfr = *p_mbfr;
 
 	if(mbfr != NULL)
 	{
-		if(mbfr->mf.tick_delay > 0)
+		if(mbfr->data.mf.tick_delay > 0)
 		{
-			mbfr->mf.tick_delay--;
+			mbfr->data.mf.tick_delay--;
 			*active = 1;
 		}
-		else if(mbfr->mf.pulse_count > 0)
+		else if(mbfr->data.mf.pulse_count > 0)
 		{
-			prev_accu = mbfr->mf.accu;
-			mbfr->mf.accel_fract += mbfr->mf.jerk_fract;
-			mbfr->mf.speed_fract += mbfr->mf.accel_fract;
-			mbfr->mf.accu += mbfr->mf.speed_fract;
+			//prev_accu = mbfr->data.mf.accu;
+			mbfr->data.mf.accel_fract += mbfr->data.mf.jerk_fract;
+			mbfr->data.mf.speed_fract += mbfr->data.mf.accel_fract;
+			mbfr->data.mf.accu 		  += mbfr->data.mf.speed_fract;
 
-			if(prev_accu >  mbfr->mf.accu)
+			if( mbfr->data.mf.accu >= 1.0)
 			{
-				pulse = 1;
-				mbfr->mf.pulse_count--;
+				mbfr->data.mf.accu = mbfr->data.mf.accu -1;
 
-				*pulse_pos += mbfr->dir;
+				pulse = 1;
+				mbfr->data.mf.pulse_count--;
+
+				*pulse_pos += mbfr->data.dir;
 			}
 
-			if( mbfr->mf.pulse_count > 0)
+			if( mbfr->data.mf.pulse_count > 0)
 			{
 				*active = 1;
 			}
@@ -46,7 +48,7 @@ next:
 			*p_mbfr = mbfr->next;
 			if(*p_mbfr!= NULL)
 			{
-				*dir    = (*p_mbfr)->dir;
+				*dir    = (*p_mbfr)->data.dir;
 				motion_engine_dir(axis_idx,*dir,active_dir);
 				*active = 1;
 			}
@@ -69,11 +71,11 @@ void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_DIR1);
+					GPIO_Set(OUT_DIR3);
 				}
 				else
 				{
-					GPIO_Clr(OUT_DIR1);
+					GPIO_Clr(OUT_DIR3);
 				}
 			}break;
 
@@ -94,11 +96,11 @@ void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_DIR3);
+					GPIO_Set(OUT_DIR1);
 				}
 				else
 				{
-					GPIO_Clr(OUT_DIR3);
+					GPIO_Clr(OUT_DIR1);
 				}
 			}break;
 
@@ -106,11 +108,11 @@ void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_DIR4);
+					GPIO_Set(OUT_DIR6);
 				}
 				else
 				{
-					GPIO_Clr(OUT_DIR4);
+					GPIO_Clr(OUT_DIR6);
 				}
 			}break;
 
@@ -130,11 +132,11 @@ void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_DIR6);
+					GPIO_Set(OUT_DIR4);
 				}
 				else
 				{
-					GPIO_Clr(OUT_DIR6);
+					GPIO_Clr(OUT_DIR4);
 				}
 			}break;
 
