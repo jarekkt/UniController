@@ -15,7 +15,11 @@ typedef struct
 	uint32_t ovr_on;
 	uint32_t ovr_off;
 	uint32_t ovr_stat;
-
+	uint32_t ovr_blink;
+	uint32_t ovr_blink_bit;
+	uint32_t ovr_hw_step_blink;
+	uint32_t ovr_blink_cntr;
+	uint32_t ovr_blink_toggle;
 }mwr_iotest_type;
 
 
@@ -80,8 +84,10 @@ mwr_iotest_type  iot;
 
 const var_ptable_t   iotest_mwr_var_ptable[] SERMON_ATTR =
 {
-  { "iotest_ovr_on",    &iot.ovr_on            ,E_VA_UINT_FREE    },
-  { "iotest_ovr_off",   &iot.ovr_off           ,E_VA_UINT_FREE    },
+  { "iotest_ovr_on", 	  	 &iot.ovr_on            ,E_VA_UINT_FREE    },
+  { "iotest_ovr_off",      	 &iot.ovr_off           ,E_VA_UINT_FREE    },
+  { "iotest_ovr_blink",  	 &iot.ovr_blink         ,E_VA_UINT_FREE    },
+  { "iotest_ovr_blink_bit",  &iot.ovr_blink_bit     ,E_VA_UINT_FREE    },
 };
 
 
@@ -157,6 +163,45 @@ void mwr_iotest_test_task(void)
       iot.ovr_off  = 0;
    }
 
+   if(iot.ovr_blink_bit != 0 )
+   {
+	   iot.ovr_blink 		= ( 1 << (iot.ovr_blink_bit-1));
+	   iot.ovr_blink_bit 	= 0;
+   }
+
+   if(iot.ovr_blink != 0 )
+   {
+	   iot.ovr_blink_cntr++;
+
+	   if( (iot.ovr_blink_cntr % (50/MWR_IOTEST_THREAD_PERIOD)) == 0)
+	   {
+		   iot.ovr_blink_toggle = !iot.ovr_blink_toggle;
+
+		   if(iot.ovr_blink_toggle != 0)
+		   {
+			   mwr_iotest_set(iot.ovr_blink,iot.ovr_blink);
+
+			   if(iot.ovr_hw_step_blink & 0x01)
+			   {
+				   TMR_TIRGGER_X();
+			   }
+
+			   if(iot.ovr_hw_step_blink & 0x02)
+			   {
+				   TMR_TIRGGER_Y();
+			   }
+
+			   if(iot.ovr_hw_step_blink & 0x04)
+			   {
+				   TMR_TIRGGER_Z();
+			   }
+		   }
+		   else
+		   {
+			   mwr_iotest_set(iot.ovr_blink,0);
+		   }
+	   }
+   }
 }
 
 

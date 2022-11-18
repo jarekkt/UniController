@@ -9,10 +9,10 @@
 #include "services.h"
 #include "middleware.h"
 #include "engine.h"
+#include "r128.h"
 
 #include "motion_engine.h"
 #include "motion_scurve.h"
-
 
 
 int32_t  motion_engine_units_to_pulse(float units_mm,int32_t axis)
@@ -59,54 +59,18 @@ int32_t  motion_engine_units_to_enc(float units_mm,int32_t axis)
 
 static engval_t  motion_engine_speed_to_fract(float speed_mm_s,int32_t axis,uint32_t step_freq)
 {
-#if 0
-	int64_t	    result;
-
-	result 			= ((int64_t)motion_engine_units_to_pulse(speed_mm_s,axis)) << 32;
-	result 			= result / ((int64_t)step_freq);
-
-	return result << 32;
-#else
 	return (engval_t)(motion_engine_units_to_pulse_d(speed_mm_s,axis))/((engval_t)step_freq);
-#endif
-
 }
 
 
 static engval_t  motion_engine_accel_to_fract(float accel_mm_s2,int32_t axis,uint32_t step_freq)
 {
-#if 0
-	int64_t	    result;
-
-	result 			= ((int64_t)motion_engine_units_to_pulse(accel_mm_s2,axis)) << 32;
-	result 			= result / ((int64_t)step_freq);
-	//result 			= result << 32;
-	result 			= result / ((int64_t)step_freq);
-
-
-	return result;
-#else
 	return (engval_t)(motion_engine_units_to_pulse_d(accel_mm_s2,axis))/ ( ((engval_t)step_freq) * ((engval_t)step_freq));
-#endif
 }
 
 static engval_t  motion_engine_jerk_to_fract(float jerk_mm_s3,int32_t axis,uint32_t step_freq)
 {
-#if 0
-	int64_t	    result;
-
-	result 			= ((int64_t)motion_engine_units_to_pulse(jerk_mm_s3,axis)) << 32;
-	result 			= result / ((int64_t)step_freq);
-//	result 			= result << 32;
-	result 			= result / ((int64_t)step_freq);
-	result 			= result / ((int64_t)step_freq);
-
-
-	return result;
-#else
 	return (engval_t)(motion_engine_units_to_pulse_d(jerk_mm_s3,axis))/ ( ((engval_t)step_freq) * ((engval_t)step_freq) * ((engval_t)step_freq));
-#endif
-
 }
 
 
@@ -131,7 +95,7 @@ int32_t motion_engine_convert(
 	engval_t jerk_fract;
 	engval_t accel_lin_fract;
 
-	engval_t speed_fract;
+	engval_t speed_top_fract;
 	engval_t speed_start_fract;
 	engval_t speed_concave_lin_fract;
 	engval_t speed_lin_convex_fract;
@@ -141,14 +105,10 @@ int32_t motion_engine_convert(
 	int32_t pulse_to;
 	int32_t pulse_budget;
 
-
-
-
-
 	speed_start_fract       = motion_engine_speed_to_fract(calc->speed_start,axis_idx,step_freq);
-	speed_fract				= motion_engine_speed_to_fract(calc->speed,axis_idx,step_freq);
 	speed_concave_lin_fract	= motion_engine_speed_to_fract(calc->T11_v,axis_idx,step_freq);
 	speed_lin_convex_fract	= motion_engine_speed_to_fract(calc->T12_v,axis_idx,step_freq);
+	speed_top_fract			= motion_engine_speed_to_fract(calc->T13_v,axis_idx,step_freq);
 
 	accel_lin_fract    		= motion_engine_accel_to_fract(calc->accel,axis_idx,step_freq);
 
@@ -303,7 +263,7 @@ int32_t motion_engine_convert(
 
 		mbfr[mb_used].data.mf.pulse_count_total   = pulse_concave[0];
 		mbfr[mb_used].data.mf.pulse_count 		 = pulse_concave[0];
-		mbfr[mb_used].data.mf.speed_fract 		 = speed_start_fract;
+ 		mbfr[mb_used].data.mf.speed_fract 		 = speed_start_fract;
 		mbfr[mb_used].data.mf.accel_fract		 = 0;
 		mbfr[mb_used].data.mf.jerk_fract  		 = jerk_fract;
 		mbfr[mb_used].data.mf.tick_delay  		 = 0;
@@ -360,7 +320,7 @@ int32_t motion_engine_convert(
 
 		mbfr[mb_used].data.mf.pulse_count_total = pulse_const;
 		mbfr[mb_used].data.mf.pulse_count 	   	= pulse_const;
-		mbfr[mb_used].data.mf.speed_fract 	  	= speed_fract;
+		mbfr[mb_used].data.mf.speed_fract 	  	= speed_top_fract;
 		mbfr[mb_used].data.mf.accel_fract		= 0;
 		mbfr[mb_used].data.mf.jerk_fract  	  	= 0;
 		mbfr[mb_used].data.mf.tick_delay  	    = 0;
@@ -378,7 +338,7 @@ int32_t motion_engine_convert(
 
 		mbfr[mb_used].data.mf.pulse_count_total  = pulse_convex[1];
 		mbfr[mb_used].data.mf.pulse_count 		= pulse_convex[1];
-		mbfr[mb_used].data.mf.speed_fract 		= speed_fract;
+		mbfr[mb_used].data.mf.speed_fract 		= speed_top_fract;
 		mbfr[mb_used].data.mf.accel_fract		= 0;
 		mbfr[mb_used].data.mf.jerk_fract  		= -jerk_fract;
 		mbfr[mb_used].data.mf.tick_delay  	    = 0;

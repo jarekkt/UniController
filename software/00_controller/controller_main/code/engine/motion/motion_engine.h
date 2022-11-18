@@ -224,7 +224,7 @@ int32_t motion_engine_run
 (			motion_job_t * mj,
 			uint32_t axis_idx,
 			float pos_mm,
-			uint32_t is_incremental,
+			uint32_t is_incremental_mask,
 			float speed_mm_s,
 			float accel_mm_s2,
 			float jerk_mm_s3
@@ -256,6 +256,7 @@ void 	 motion_engine_tmr_endpos(void);
 float    motion_engine_pulse_to_units(int32_t pulses,int32_t axis);
 int32_t  motion_engine_units_to_pulse(float units_mm,int32_t axis);
 int32_t  motion_engine_units_to_enc(float units_mm,int32_t axis);
+void	 motion_engine_speed_test(void);
 
 
 int32_t	motion_engine_convert

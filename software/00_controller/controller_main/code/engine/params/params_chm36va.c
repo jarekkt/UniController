@@ -33,8 +33,8 @@
 
 	Inputs:
 
-	- IN_X_LIM					IN_CPU1
-	- IN_Y_LIM					IN_CPU2
+	- IN_Y_LIM					IN_CPU1
+	- IN_X_LIM					IN_CPU2
 	- IN_Z_LIM					IN_CPU3
 	- IN_LZ_LIM					IN_CPU4
 	- ESTOP						IN_CPU5
@@ -51,38 +51,39 @@ void	params_chm36va(void)
 	printds(LVL_INFO,"Configuration - setup made for CHMT36VAr\n");
 
    // Machine X axis
-#if 0
    pctx_nv.axis[AXIS_X].pulses_step_m     = 			31940;
    pctx_nv.axis[AXIS_X].pulses_enc_m 	  = 				0; //TODO
-   pctx_nv.axis[AXIS_X].endpos_min_mask   = 				0;
-   pctx_nv.axis[AXIS_X].endpos_max_mask   = 		P_IN_CPU1;
+   pctx_nv.axis[AXIS_X].endpos_min_mask   = 		P_IN_CPU2;
+   pctx_nv.axis[AXIS_X].endpos_max_mask   = 				0;
    pctx_nv.axis[AXIS_X].endpos_min_value  =   	  		  0.0;
    pctx_nv.axis[AXIS_X].endpos_max_value  = 			525.0;
    pctx_nv.axis[AXIS_X].homing_type 	  =   P_HOMING_TO_MIN;
-   pctx_nv.axis[AXIS_X].homing_mask    	  = 		P_IN_CPU1;
+   pctx_nv.axis[AXIS_X].homing_mask    	  = 		P_IN_CPU2;
    pctx_nv.axis[AXIS_X].homing_value   	  =	    		  0.0;
+   pctx_nv.axis[AXIS_X].homing_retract_mm =	    		  5.0;
    pctx_nv.axis[AXIS_X].speed_mm_s        =    		   1000.0;
    pctx_nv.axis[AXIS_X].speed_home_mm_s   = 			 80.0;
    pctx_nv.axis[AXIS_X].speed_safe_mm_s   = 	 		 10.0;
    pctx_nv.axis[AXIS_X].accel_mm_s2       =   		   4000.0;
-   pctx_nv.axis[AXIS_X].jerk_mm_s3        = 		1000000.0;
+   pctx_nv.axis[AXIS_X].jerk_mm_s3        = 		  50000.0;
 
    // Machine Y axis
 
    pctx_nv.axis[AXIS_Y].pulses_step_m     = 			31940;
    pctx_nv.axis[AXIS_Y].pulses_enc_m 	  = 				0; //TODO
-   pctx_nv.axis[AXIS_Y].endpos_min_mask   = 				0;
-   pctx_nv.axis[AXIS_Y].endpos_max_mask   = 		P_IN_CPU2;
+   pctx_nv.axis[AXIS_Y].endpos_min_mask   = 		P_IN_CPU1;
+   pctx_nv.axis[AXIS_Y].endpos_max_mask   = 				0;
    pctx_nv.axis[AXIS_Y].endpos_min_value  =   	  		  0.0;
    pctx_nv.axis[AXIS_Y].endpos_max_value  = 			475.0;
    pctx_nv.axis[AXIS_Y].homing_type 	  =   P_HOMING_TO_MIN;
-   pctx_nv.axis[AXIS_Y].homing_mask    	  = 		P_IN_CPU2;
+   pctx_nv.axis[AXIS_Y].homing_mask    	  = 		P_IN_CPU1;
    pctx_nv.axis[AXIS_Y].homing_value   	  =	    		  0.0;
+   pctx_nv.axis[AXIS_Y].homing_retract_mm =	    		  5.0;
    pctx_nv.axis[AXIS_Y].speed_mm_s        =    		    800.0;
    pctx_nv.axis[AXIS_Y].speed_home_mm_s   = 			 80.0;
    pctx_nv.axis[AXIS_Y].speed_safe_mm_s   = 	 		 10.0;
    pctx_nv.axis[AXIS_Y].accel_mm_s2       =   		   4000.0;
-   pctx_nv.axis[AXIS_Y].jerk_mm_s3        = 		 100000.0;
+   pctx_nv.axis[AXIS_Y].jerk_mm_s3        = 		  50000.0;
 
    // Machine Z axis
 
@@ -95,61 +96,67 @@ void	params_chm36va(void)
    pctx_nv.axis[AXIS_Z].homing_type 	  = P_HOMING_TO_MID_HOLE;
    pctx_nv.axis[AXIS_Z].homing_mask    	  = 		P_IN_CPU3;
    pctx_nv.axis[AXIS_Z].homing_value   	  =	    			0;
+   pctx_nv.axis[AXIS_Z].homing_retract_mm =	    		  5.0;
    pctx_nv.axis[AXIS_Z].speed_mm_s        =    		    800.0;
    pctx_nv.axis[AXIS_Z].speed_home_mm_s   = 			 80.0;
    pctx_nv.axis[AXIS_Z].speed_safe_mm_s   = 	 		 10.0;
    pctx_nv.axis[AXIS_Z].accel_mm_s2       =   		   8000.0;
    pctx_nv.axis[AXIS_Z].jerk_mm_s3        = 		 100000.0;
 
-   // Machine N1 axis
 
-   pctx_nv.axis[AXIS_A].pulses_step_m     = 		 	 4444;
+   // Machine peeler axis
+
+   pctx_nv.axis[AXIS_A].pulses_step_m     = 		    69264;
    pctx_nv.axis[AXIS_A].endpos_min_mask   = 				0;
    pctx_nv.axis[AXIS_A].endpos_max_mask   = 				0;
-   pctx_nv.axis[AXIS_A].endpos_min_value  = 		   -120.0;
-   pctx_nv.axis[AXIS_A].endpos_max_value  = 			120.0;
+   pctx_nv.axis[AXIS_A].endpos_min_value  = 				0;
+   pctx_nv.axis[AXIS_A].endpos_max_value  = 				0;
    pctx_nv.axis[AXIS_A].homing_type 	  = 	P_HOMING_NONE;
    pctx_nv.axis[AXIS_A].homing_mask    	  = 				0;
-   pctx_nv.axis[AXIS_A].homing_value   	  = 			  0.0;
-   pctx_nv.axis[AXIS_A].speed_mm_s        = 		   2000.0;
+   pctx_nv.axis[AXIS_A].homing_value   	  = 				0;
+   pctx_nv.axis[AXIS_A].homing_retract_mm =	    		  0.0;
+   pctx_nv.axis[AXIS_A].speed_mm_s        = 		    500.0;
    pctx_nv.axis[AXIS_A].speed_home_mm_s   = 				0;
    pctx_nv.axis[AXIS_A].speed_safe_mm_s   = 			 10.0;
-   pctx_nv.axis[AXIS_A].accel_mm_s2       = 		 100000.0;
-   pctx_nv.axis[AXIS_A].jerk_mm_s3        = 	    1000000.0;
+   pctx_nv.axis[AXIS_A].accel_mm_s2       = 		   1000.0;
+   pctx_nv.axis[AXIS_A].jerk_mm_s3        = 		1000000.0;
 
-   // Machine N2 axis
+   // Machine N1 axis
 
-   pctx_nv.axis[AXIS_B].pulses_step_m     = 			 4444;
+   pctx_nv.axis[AXIS_B].pulses_step_m     = 		 	 4444;
    pctx_nv.axis[AXIS_B].endpos_min_mask   = 				0;
    pctx_nv.axis[AXIS_B].endpos_max_mask   = 				0;
    pctx_nv.axis[AXIS_B].endpos_min_value  = 		   -120.0;
    pctx_nv.axis[AXIS_B].endpos_max_value  = 			120.0;
    pctx_nv.axis[AXIS_B].homing_type 	  = 	P_HOMING_NONE;
+   pctx_nv.axis[AXIS_B].homing_retract_mm =	    		  0.0;
    pctx_nv.axis[AXIS_B].homing_mask    	  = 				0;
    pctx_nv.axis[AXIS_B].homing_value   	  = 			  0.0;
    pctx_nv.axis[AXIS_B].speed_mm_s        = 		   2000.0;
    pctx_nv.axis[AXIS_B].speed_home_mm_s   = 				0;
    pctx_nv.axis[AXIS_B].speed_safe_mm_s   = 			 10.0;
-   pctx_nv.axis[AXIS_B].accel_mm_s2       = 		 100000.0;
-   pctx_nv.axis[AXIS_B].jerk_mm_s3        = 	    1000000.0;
+   pctx_nv.axis[AXIS_B].accel_mm_s2       = 		   1000.0;
+   pctx_nv.axis[AXIS_B].jerk_mm_s3        = 	     100000.0;
 
-   // Machine peeler axis
+   // Machine N2 axis
 
-   pctx_nv.axis[AXIS_C].pulses_step_m     = 		    69264;
+   pctx_nv.axis[AXIS_C].pulses_step_m     = 			 4444;
    pctx_nv.axis[AXIS_C].endpos_min_mask   = 				0;
    pctx_nv.axis[AXIS_C].endpos_max_mask   = 				0;
-   pctx_nv.axis[AXIS_C].endpos_min_value  = 				0;
-   pctx_nv.axis[AXIS_C].endpos_max_value  = 				0;
+   pctx_nv.axis[AXIS_C].endpos_min_value  = 		   -120.0;
+   pctx_nv.axis[AXIS_C].endpos_max_value  = 			120.0;
    pctx_nv.axis[AXIS_C].homing_type 	  = 	P_HOMING_NONE;
+   pctx_nv.axis[AXIS_C].homing_retract_mm =	    		  0.0;
    pctx_nv.axis[AXIS_C].homing_mask    	  = 				0;
-   pctx_nv.axis[AXIS_C].homing_value   	  = 				0;
-   pctx_nv.axis[AXIS_C].speed_mm_s        = 		    500.0;
+   pctx_nv.axis[AXIS_C].homing_value   	  = 			  0.0;
+   pctx_nv.axis[AXIS_C].speed_mm_s        = 		   2000.0;
    pctx_nv.axis[AXIS_C].speed_home_mm_s   = 				0;
    pctx_nv.axis[AXIS_C].speed_safe_mm_s   = 			 10.0;
    pctx_nv.axis[AXIS_C].accel_mm_s2       = 		   1000.0;
-   pctx_nv.axis[AXIS_C].jerk_mm_s3        = 		1000000.0;
+   pctx_nv.axis[AXIS_C].jerk_mm_s3        = 	     100000.0;
 
-#endif
+
+
 
    // Unused
 
@@ -161,6 +168,7 @@ void	params_chm36va(void)
    pctx_nv.axis[AXIS_D].homing_type 	  = 				0;
    pctx_nv.axis[AXIS_D].homing_mask    	  = 				0;
    pctx_nv.axis[AXIS_D].homing_value   	  = 				0;
+   pctx_nv.axis[AXIS_D].homing_retract_mm =	    		  0.0;
    pctx_nv.axis[AXIS_D].speed_mm_s        = 				0;
    pctx_nv.axis[AXIS_D].speed_home_mm_s   = 				0;
    pctx_nv.axis[AXIS_D].speed_safe_mm_s   = 				0;
@@ -212,6 +220,10 @@ void	params_chm36va(void)
 												 (1<<AXIS_B) |
 												 (1<<AXIS_C);
 
+   // Incremental axis
+   pctx_nv.axis_inc_mask			      = 	 (1<<AXIS_A);
+
+
    // ESTOP configuration
    pctx_nv.estop_mask					  = 		P_IN_CPU5;
 
@@ -224,10 +236,11 @@ void	params_chm36va(void)
 
    // Reversed logic for limit X/Y and ESTOP
    // Note that limit Z is activated in "middle" position only (there is optocoupler and hole for light)
-   pctx_nv.io_rev_mask 					  = 		P_IN_CPU5 |	P_IN_CPU2 | P_IN_CPU1;
+   pctx_nv.io_rev_mask 					  = 		P_IN_CPU5 |	P_IN_CPU3 | P_IN_CPU2 | P_IN_CPU1;
 
    // Reverse dir pins
-   pctx_nv.dir_rev_mask					  = 		0;
+   pctx_nv.dir_rev_mask					  = 		(1<<AXIS_X)| (1<<AXIS_Y)|(1<<AXIS_Z)|(1<<AXIS_A);
+
 
 
    // IO filter - 5 ms

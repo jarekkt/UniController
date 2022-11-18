@@ -93,6 +93,7 @@ typedef struct
 	uint32_t			dir_rev_mask;
 	uint32_t			estop_mask;
 	uint32_t			axis_used_mask;
+	uint32_t			axis_inc_mask;
 	uint32_t			io_cpu_dir;
 	uint32_t			in_cpu_pullup;
 	uint32_t			in_cpu_filter_ms;
