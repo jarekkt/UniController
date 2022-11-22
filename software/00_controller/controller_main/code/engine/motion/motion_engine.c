@@ -22,11 +22,13 @@
 #define  HIT_STOP			0x10
 #define  HIT_RUN			0x20
 
+
 #define  HOME_RUNTO_FAST	1
 #define  HOME_RETRACT		2
 #define  HOME_RUNFROM		3
 #define  HOME_RUNUNTIL		4
-#define  HOME_RUNTO_SLOW   10
+#define  HOME_RUNTO_SLOW    5
+
 
 
 typedef struct
@@ -185,18 +187,24 @@ int32_t motion_engine_run_home_schedule(
 )
 {
 	motion_job_t * 	mj;
-	int32_t			result;
-
+	int32_t			result = -1;
 
 	if(motion_engine_job_init(&mj,rcv_ctx) == 0)
 	{
-		mj->jcmd = JCMD_MOTION;
-
-		result = motion_engine_run(mj,home_args->home_axis,dist,1<<home_args->home_axis,path->speed_mm_s,path->accel_mm_s2,path->jerk_mm_s3);
-
 		mj->homing = *home_args;
-		mj->io     = *io_args;
 
+		if(path != NULL)
+		{
+			mj->jcmd = JCMD_MOTION;
+
+			result = motion_engine_run(mj,home_args->home_axis,dist,1<<home_args->home_axis,path->speed_mm_s,path->accel_mm_s2,path->jerk_mm_s3);
+			mj->io     = *io_args;
+		}
+		else
+		{
+			mj->jcmd = JCMD_MOTION_HOME_ACK;
+			result = 0;
+		}
 	}
 
 
@@ -423,6 +431,14 @@ int32_t motion_engine_run_home
 				}
 			}break;
 		}
+
+		if(result == 0)
+		{
+			result 					   |= motion_engine_run_home_schedule(0,NULL,&home_args,NULL,rcv_ctx);
+
+		}
+
+
 	}
 
 
@@ -649,11 +665,13 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 	switch(mj->jcmd)
 	{
+
 		case JCMD_OK:
 		{
 			 length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok\r\n");
 		}break;
 
+		case JCMD_MOTION_HOME_ACK:
 		case JCMD_MOTION_WAIT:
 		case JCMD_MOTION:
 		{
@@ -724,6 +742,11 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 			}
 		}break;
 
+		case JCMD_MOTION_HOME:
+		{
+			// These are silent
+		}break;
+
 
 		default:
 		case JCMD_FAIL:
@@ -734,7 +757,10 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 	}
 
 
-	burst_rcv_send_response(&mj->comm_ctx,mctx.resp_buffer,length);
+	if(length > 0)
+	{
+		burst_rcv_send_response(&mj->comm_ctx,mctx.resp_buffer,length);
+	}
 }
 
 
@@ -790,9 +816,6 @@ static int32_t  motion_task_finish_homing_job(uint32_t idx)
 			{
 				result = 0;
 			}
-
-			// Only homing moves are acknowledged (last successful phase)
-			motion_engine_ack(&mj_global[idx],result);
 		}break;
 
 
@@ -841,6 +864,11 @@ static int32_t  motion_task_finish_job(uint32_t idx)
 	}
 	else
 	{
+		if(mj_global[idx].jcmd == JCMD_MOTION_HOME_ACK)
+		{
+			motion_task_finish_homing_job(idx);
+		}
+
 		result = 0;
 		motion_engine_ack(&mj_global[idx],result);
 	}
