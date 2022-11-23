@@ -69,6 +69,19 @@
     "version": 3
   },
   "project": {
-    "files": []
+    "files": [
+      {
+        "name": "shield_chm36VA.kicad_pcb",
+        "open": false,
+        "window": {
+          "display": 1,
+          "maximized": false,
+          "pos_x": 0,
+          "pos_y": 0,
+          "size_x": 960,
+          "size_y": 1080
+        }
+      }
+    ]
   }
 }

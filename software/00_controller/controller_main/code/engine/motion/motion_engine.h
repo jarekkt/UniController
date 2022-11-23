@@ -195,6 +195,11 @@ typedef struct
 	/* Command response buffer */
 	char			    resp_buffer[384];
 
+	/* Enocders */
+
+	int32_t			   encoders[3];
+
+
 	/* Misc */
 
 	uint32_t inputs;

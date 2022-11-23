@@ -4,7 +4,7 @@
 
 
 
-volatile uint16_t adc_vars[ADC_CH_CNT]  __attribute__ ((section (".dma")));
+volatile uint16_t adc_vars[ADC_CH_CNT];//  __attribute__ ((section (".dma")));
 
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc3;

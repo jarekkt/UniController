@@ -15,3 +15,4 @@
 /hardware/00_Uni_Printer/gerbers
 
 hardware/00_Uni_Printer/Uni_Printer-backups
+*.bak

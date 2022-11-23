@@ -1069,6 +1069,15 @@ void motion_engine_io_filter(void)
 	mctx.inputs_filtered = new_io;
 }
 
+void motion_engine_encoders()
+{
+	mctx.encoders[0] = srv_timer_quad_get(0);
+	mctx.encoders[1] = srv_timer_quad_get(1);
+	mctx.encoders[2] = srv_timer_quad_get(2);
+
+}
+
+
 int32_t motion_engine_soft_limits_active(void)
 {
 	int result = -1;
@@ -1109,6 +1118,7 @@ void motion_engine_tmr_endpos(void)
 
 
 	motion_engine_io_filter();
+	motion_engine_encoders();
 
 
 	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)
