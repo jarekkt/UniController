@@ -71,15 +71,27 @@
   "project": {
     "files": [
       {
-        "name": "shield_chm36VA.kicad_pcb",
+        "name": "shield_chm36VA.kicad_sch",
         "open": false,
         "window": {
-          "display": 1,
-          "maximized": false,
-          "pos_x": 0,
-          "pos_y": 0,
-          "size_x": 960,
-          "size_y": 1080
+          "display": 0,
+          "maximized": true,
+          "pos_x": 3015,
+          "pos_y": 423,
+          "size_x": 1683,
+          "size_y": 810
+        }
+      },
+      {
+        "name": "shield_chm36VA.kicad_pcb",
+        "open": true,
+        "window": {
+          "display": 0,
+          "maximized": true,
+          "pos_x": 2992,
+          "pos_y": 429,
+          "size_x": 1684,
+          "size_y": 648
         }
       }
     ]

@@ -61,7 +61,7 @@
       35,
       36
     ],
-    "visible_layers": "fffff47_7ffffff9",
+    "visible_layers": "fffff47_fffffff9",
     "zone_display_mode": 1
   },
   "meta": {
@@ -69,6 +69,31 @@
     "version": 3
   },
   "project": {
-    "files": []
+    "files": [
+      {
+        "name": "Uni_Printer.kicad_sch",
+        "open": false,
+        "window": {
+          "display": 0,
+          "maximized": true,
+          "pos_x": 3015,
+          "pos_y": 423,
+          "size_x": 1683,
+          "size_y": 810
+        }
+      },
+      {
+        "name": "Uni_Printer.kicad_pcb",
+        "open": false,
+        "window": {
+          "display": 1,
+          "maximized": true,
+          "pos_x": -12,
+          "pos_y": 213,
+          "size_x": 1684,
+          "size_y": 564
+        }
+      }
+    ]
   }
 }
