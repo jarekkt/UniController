@@ -175,6 +175,7 @@ const var_ptable_t   params_var_ptable[] SERMON_ATTR =
   { "pwm_out12_delay", 	  		&pctx_nv.pwm_range[PWM_OUT12].delay_ms  	,E_VA_UINT_FREE  },
 
   { "motion_axis_mask", 		&pctx_nv.axis_used_mask						,E_VA_UINT_FREE  },
+  { "motion_axis_inc", 			&pctx_nv.axis_inc_mask						,E_VA_UINT_FREE  },
   { "io_cpu_dir", 				&pctx_nv.io_cpu_dir 						,E_VA_UINT_FREE  },
   { "in_cpu_pullup",			&pctx_nv.in_cpu_pullup						,E_VA_UINT_FREE  },
   { "in_cpu_filter_ms",			&pctx_nv.in_cpu_filter_ms					,E_VA_UINT_FREE  },

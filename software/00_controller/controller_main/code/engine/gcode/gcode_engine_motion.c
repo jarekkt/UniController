@@ -138,7 +138,7 @@ void gcode_engine_euclidean_geometry(
 {
 	int32_t  	 ii;
 	float		 vector_len = 0;
-	float	     delta;
+	float	     delta[GCODE_I_LAST_AXIS];
 	float        scale;
 	path_scale_t path_scale;
 
@@ -148,16 +148,16 @@ void gcode_engine_euclidean_geometry(
 		{
 			if( (is_incremental & (1<<ii))==0)
 			{
-				delta = axis[ii] - mj->pos_end_mm[ii];
+				delta[ii] = axis[ii] - mj->pos_end_mm[ii];
 			}
 			else
 			{
-				delta = axis[ii];
+				delta[ii] = axis[ii];
 			}
 
 			if( delta != 0)
 			{
-				vector_len += pow(delta,2);
+				vector_len += pow(delta[ii],2);
 			}
 			else
 			{
@@ -194,6 +194,13 @@ void gcode_engine_euclidean_geometry(
 		}
 	}
 
+
+	fw_assert(path_scale.s_speed !=0);
+	fw_assert(path_scale.s_accel !=0);
+	fw_assert(path_scale.s_jerk !=0);
+
+
+
 	for( ii = GCODE_I_X; ii <= GCODE_I_LAST_AXIS;ii++)
 	{
 		if( ( (*axis_mask) & ( 1<<ii))!= 0)
@@ -208,7 +215,7 @@ void gcode_engine_euclidean_geometry(
 
 
 
-int32_t gcode_engine_motion(motion_job_t * mj,float * axis, uint32_t is_incremental,float F,float G,float H)
+int32_t gcode_engine_motion(motion_job_t * mj,float * axis, uint32_t is_incremental_mask,float F,float G,float H)
 {
 	uint32_t    	axis_mask = 0;
 	int32_t	    	ii;
@@ -250,7 +257,7 @@ int32_t gcode_engine_motion(motion_job_t * mj,float * axis, uint32_t is_incremen
 	{
 		if(axis_mask & ( 1<< ii))
 		{
-			motion_engine_run(mj,ii,axis[ii],is_incremental,pP[ii].speed_mm_s,pP[ii].accel_mm_s2,pP[ii].jerk_mm_s3);
+			motion_engine_run(mj,ii,axis[ii],is_incremental_mask,pP[ii].speed_mm_s,pP[ii].accel_mm_s2,pP[ii].jerk_mm_s3);
 
 			// Setup active soft limits
 
@@ -354,7 +361,7 @@ int32_t   gcode_engine_motion_G28(const burst_rcv_ctx_t * rcv_ctx,const gcode_co
 
 
 
-int32_t   gcode_engine_motion_G0G1(const burst_rcv_ctx_t * rcv_ctx,const gcode_command_t *	cmd,uint32_t is_incremental)
+int32_t   gcode_engine_motion_G0G1(const burst_rcv_ctx_t * rcv_ctx,const gcode_command_t *	cmd,uint32_t is_incremental_mask)
 {
 	float 				axis[GCODE_I_LAST_AXIS+1];
 	float				F,G,H;
@@ -409,7 +416,7 @@ int32_t   gcode_engine_motion_G0G1(const burst_rcv_ctx_t * rcv_ctx,const gcode_c
 		}
 
 
-		result = gcode_engine_motion(mj,axis,is_incremental,F,G,H);
+		result = gcode_engine_motion(mj,axis,is_incremental_mask,F,G,H);
 		if( result == 0)
 		{
 			motion_engine_jobs_start();

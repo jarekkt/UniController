@@ -209,16 +209,18 @@ void tcpconn_init(void)
 
   tcpconn_send_int(tctd.conn_message,strlen(tctd.conn_message),&tctd);
 
-  tctd.conn_message = "Welcome to UniController debug interface\r\n";
+
+
 
 }
 
 void tcpconn_once(void)
 {
+  tctd.conn_message = "Welcome to UniController debug interface\r\n";
 
 
-   sys_thread_new("tcpconn", tcpconn_thread, &tctx, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
-   sys_thread_new("tcpconn_deb", tcpconn_thread, &tctd, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+  sys_thread_new("tcpconn", tcpconn_thread, &tctx, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+  sys_thread_new("tcpconn_deb", tcpconn_thread, &tctd, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 }
 
 

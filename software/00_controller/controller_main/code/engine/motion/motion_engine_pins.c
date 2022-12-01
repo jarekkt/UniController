@@ -62,8 +62,16 @@ next:
 
 void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 {
-	dir = dir ^ ppctx_nv->dir_rev_mask;
+
+	fw_assert(dir != 0);
+
 	active_dir[idx] = dir;
+
+
+	if( ppctx_nv->dir_rev_mask & (1<<idx))
+	{
+		dir = -dir;
+	}
 
 	switch(idx)
 	{
@@ -96,23 +104,25 @@ void motion_engine_dir(int32_t idx,int32_t dir,int32_t * active_dir)
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_DIR1);
+					GPIO_Set(OUT_STEP6);
 				}
 				else
 				{
-					GPIO_Clr(OUT_DIR1);
+					GPIO_Clr(OUT_STEP6);
 				}
+
+
 			}break;
 
 			case AXIS_A:
 			{
 				if(dir > 0)
 				{
-					GPIO_Set(OUT_DIR6);
+					GPIO_Set(OUT_DIR1);
 				}
 				else
 				{
-					GPIO_Clr(OUT_DIR6);
+					GPIO_Clr(OUT_DIR1);
 				}
 			}break;
 

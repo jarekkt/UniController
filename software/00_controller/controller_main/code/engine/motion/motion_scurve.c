@@ -30,23 +30,23 @@ typedef struct
 
 typedef struct
 {
-	float distance;
-	float speed0;
-	float speed;
-	float accel;
-	float jerk;
+	 double distance;
+	 double speed0;
+	 double speed;
+	 double accel;
+	 double jerk;
 }test_set_t;
 
 typedef struct
 {
-	float T11;
-	float T12;
-	float T13;
-	float T2;
-	float speed0;
-	float speed;
-	float accel;
-	float jerk;
+	 double T11;
+	 double T12;
+	 double T13;
+	 double T2;
+	 double speed0;
+	 double speed;
+	 double accel;
+	 double jerk;
 
 }test_result_t;
 
@@ -285,7 +285,6 @@ int32_t motion_scurve_test(uint32_t test_nr)
 	float					delta = 0.01;
 
 
-
 	if(test_nr > DIM(test_cases))
 	{
 		return -1;
@@ -303,42 +302,42 @@ int32_t motion_scurve_test(uint32_t test_nr)
 	motion_scurve_calc(&calc,dist_001mm,speed_safe_001mm_s,speed_001mm_s,accel_001mm_s2,jerk_001mm_s3);
 
 
-	if(fabsf(calc.T11-tc->tr.T11) > delta )
+	if(fabs(calc.T11-tc->tr.T11) > delta )
 	{
 		return -1;
 	}
 
-	if(fabsf(calc.T12-tc->tr.T12) > delta )
+	if(fabs(calc.T12-tc->tr.T12) > delta )
 	{
 		return -2;
 	}
 
-	if(fabsf(calc.T13-tc->tr.T13) > delta )
+	if(fabs(calc.T13-tc->tr.T13) > delta )
 	{
 		return -3;
 	}
 
-	if(fabsf(calc.T2-tc->tr.T2) > delta )
+	if(fabs(calc.T2-tc->tr.T2) > delta )
 	{
 		return -4;
 	}
 
-	if(fabsf(calc.speed_start - tc->tr.speed0) > delta )
+	if(fabs(calc.speed_start - tc->tr.speed0) > delta )
 	{
 		return -5;
 	}
 
-	if(fabsf(calc.speed - tc->tr.speed) > delta )
+	if(fabs(calc.speed - tc->tr.speed) > delta )
 	{
 		return -6;
 	}
 
-	if(fabsf(calc.accel - tc->tr.accel) > delta )
+	if(fabs(calc.accel - tc->tr.accel) > delta )
 	{
 		return -7;
 	}
 
-	if(fabsf(calc.jerk - tc->tr.jerk) > delta )
+	if(fabs(calc.jerk - tc->tr.jerk) > delta )
 	{
 		return -8;
 	}

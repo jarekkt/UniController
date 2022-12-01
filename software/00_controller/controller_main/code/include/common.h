@@ -5,9 +5,9 @@ typedef enum
 {
 	AXIS_X,
 	AXIS_Y,
-	AXIS_Z,
 	AXIS_FAST_CNT,
-	AXIS_A = AXIS_FAST_CNT,
+	AXIS_Z= AXIS_FAST_CNT,
+	AXIS_A,
 	AXIS_B,
 	AXIS_C,
 	AXIS_D,

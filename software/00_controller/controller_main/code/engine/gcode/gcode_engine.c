@@ -41,7 +41,8 @@ void gcode_engine_init(void)
 void gcode_engine_once(void)
 {
 	// Initial setup for speed/acceleration/jerk
-	gcd.gcx.path_param  =ppctx_nv->path_initial_m;
+	gcd.gcx.path_param  	=  ppctx_nv->path_initial_m;
+	gcd.gcx.is_incremental 	=  ppctx_nv->axis_inc_mask;
 }
 
 
