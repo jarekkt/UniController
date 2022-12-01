@@ -130,7 +130,7 @@ void  gcode_engine_axis_scale(path_params_t * pP,path_scale_t * pScale)
 void gcode_engine_euclidean_geometry(
 			motion_job_t 	    * mj,
 			float			    * axis,
-			uint32_t			  is_incremental,
+			uint32_t			  is_incremental_mask,
 			uint32_t			* axis_mask,
 			const path_params_t	* path,
 			path_params_t		* pP
@@ -146,7 +146,7 @@ void gcode_engine_euclidean_geometry(
 	{
 		if( ( (*axis_mask) & ( 1<<ii))!= 0)
 		{
-			if( (is_incremental & (1<<ii))==0)
+			if( (is_incremental_mask & (1<<ii)) == 0)
 			{
 				delta[ii] = axis[ii] - mj->pos_end_mm[ii];
 			}
@@ -240,7 +240,7 @@ int32_t gcode_engine_motion(motion_job_t * mj,float * axis, uint32_t is_incremen
 	printd(LVL_DEBUG,"motion  engine - axis mask(0x%x) speed=%f acc=%f jerk=%f\r\n",axis_mask,path.speed_mm_s,path.accel_mm_s2,path.jerk_mm_s3);
 
 	// Solve geometry with Euclidean distance calculation
-	gcode_engine_euclidean_geometry(mj,axis,is_incremental,&axis_mask,&path,pP);
+	gcode_engine_euclidean_geometry(mj,axis,is_incremental_mask,&axis_mask,&path,pP);
 
 	for( ii = GCODE_I_X; ii <= GCODE_I_LAST_AXIS;ii++)
 	{
