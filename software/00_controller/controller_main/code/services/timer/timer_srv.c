@@ -34,7 +34,7 @@ timer_srv_t tsrv;
 
 
 
-void TIM15_IRQHandler()
+void TIM5_IRQHandler()
 {
   int ii;
 
@@ -46,9 +46,9 @@ void TIM15_IRQHandler()
     tsrv.time_slow_cb[ii]();
   }
 
-  __HAL_TIM_CLEAR_IT(&tsrv.hTim15, TIM_IT_UPDATE);
+  __HAL_TIM_CLEAR_IT(&tsrv.hTim5, TIM_IT_UPDATE);
   __DSB();
-  //GPIO_Set_Unc(OUT_CPU9);
+
 
 }
 
@@ -190,19 +190,19 @@ void srv_timer_init(void)
      *
      * */
 
-    __HAL_RCC_TIM15_CLK_ENABLE();
+    __HAL_RCC_TIM5_CLK_ENABLE();
 
-    tsrv.hTim15.Instance           = TIM15;
-    tsrv.hTim15.Init.Prescaler     = (tsrv.tim_clock/ TIMER_SRV_1MHZ) - 1;
-    tsrv.hTim15.Init.CounterMode   = TIM_COUNTERMODE_UP;
-    tsrv.hTim15.Init.Period        = TIMER_SRV_1MHZ / TIMER_SRV_SLOW_HZ;
-    tsrv.hTim15.Init.ClockDivision = 0;
-    HAL_TIM_Base_Init(&tsrv.hTim15);
+    tsrv.hTim5.Instance           = TIM5;
+    tsrv.hTim5.Init.Prescaler     = (tsrv.tim_clock/ TIMER_SRV_1MHZ) - 1;
+    tsrv.hTim5.Init.CounterMode   = TIM_COUNTERMODE_UP;
+    tsrv.hTim5.Init.Period        = TIMER_SRV_1MHZ / TIMER_SRV_SLOW_HZ;
+    tsrv.hTim5.Init.ClockDivision = 0;
+    HAL_TIM_Base_Init(&tsrv.hTim5);
 
-    HAL_TIM_Base_Start_IT(&tsrv.hTim15);
+    HAL_TIM_Base_Start_IT(&tsrv.hTim5);
 
-    HAL_NVIC_SetPriority(TIM15_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY, 0);
-    HAL_NVIC_EnableIRQ(TIM15_IRQn);
+    HAL_NVIC_SetPriority(TIM5_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY, 0);
+    HAL_NVIC_EnableIRQ(TIM5_IRQn);
 
 
     /* Service callback timer - fast ( 10 kHz)
