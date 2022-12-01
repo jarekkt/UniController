@@ -11,6 +11,7 @@ typedef struct
   TIM_HandleTypeDef  hTim6;
   TIM_HandleTypeDef  hTim7;
   TIM_HandleTypeDef  hTim13;
+  TIM_HandleTypeDef  hTim15;
   TIM_HandleTypeDef  hTim16;
 
 
@@ -47,7 +48,7 @@ void TIM5_IRQHandler()
 
   __HAL_TIM_CLEAR_IT(&tsrv.hTim5, TIM_IT_UPDATE);
   __DSB();
-  GPIO_Set_Unc(OUT_CPU9);
+
 
 }
 
@@ -62,9 +63,6 @@ void  TIM6_DAC_IRQHandler()
   {
     tsrv.time_fast_cb[ii]();
   }
-
-
-  GPIO_Clr_Unc(OUT_CPU10);
 
   __HAL_TIM_CLEAR_IT(&tsrv.hTim6, TIM_IT_UPDATE);
   __DSB();
@@ -82,9 +80,6 @@ void TIM16_IRQHandler()
    {
 	   tsrv.step_fn();
    }
-
-   GPIO_Clr_Unc(OUT_CPU9);
-
 
   __HAL_TIM_CLEAR_IT(&tsrv.hTim16, TIM_IT_UPDATE);
   __DSB();
@@ -189,14 +184,14 @@ void srv_timer_init(void)
      *
      * */
 
-    __HAL_RCC_TIM5_CLK_ENABLE();
+    __HAL_RCC_TIM15_CLK_ENABLE();
 
-    tsrv.hTim5.Instance           = TIM5;
-    tsrv.hTim5.Init.Prescaler     = (tsrv.tim_clock/ TIMER_SRV_1MHZ) - 1;
-    tsrv.hTim5.Init.CounterMode   = TIM_COUNTERMODE_UP;
-    tsrv.hTim5.Init.Period        = TIMER_SRV_1MHZ / TIMER_SRV_SLOW_HZ;
-    tsrv.hTim5.Init.ClockDivision = 0;
-    HAL_TIM_Base_Init(&tsrv.hTim5);
+    tsrv.hTim15.Instance           = TIM15;
+    tsrv.hTim15.Init.Prescaler     = (tsrv.tim_clock/ TIMER_SRV_1MHZ) - 1;
+    tsrv.hTim15.Init.CounterMode   = TIM_COUNTERMODE_UP;
+    tsrv.hTim15.Init.Period        = TIMER_SRV_1MHZ / TIMER_SRV_SLOW_HZ;
+    tsrv.hTim15.Init.ClockDivision = 0;
+    HAL_TIM_Base_Init(&tsrv.hTim15);
 
     HAL_TIM_Base_Start_IT(&tsrv.hTim5);
 
