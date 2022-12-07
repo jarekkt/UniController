@@ -150,11 +150,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Inc/usart.h</locationURI>
 		</link>
 		<link>
-			<name>cube/Core/Src/Startup</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>cube/Core/Src/adc.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/adc.c</locationURI>
@@ -230,6 +225,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Src/usart.c</locationURI>
 		</link>
 		<link>
+			<name>cube/Core/Startup/startup_stm32h743vitx.s</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Startup/startup_stm32h743vitx.s</locationURI>
+		</link>
+		<link>
 			<name>cube/Drivers/BSP/Components</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -288,11 +288,6 @@
 			<name>cube/Middlewares/Third_Party/LwIP</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>cube/Core/Src/Startup/startup_stm32h743vitx.s</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/controller_cube/Core/Startup/startup_stm32h743vitx.s</locationURI>
 		</link>
 		<link>
 			<name>cube/Drivers/BSP/Components/lan8742</name>

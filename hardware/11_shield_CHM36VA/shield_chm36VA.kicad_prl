@@ -1,6 +1,6 @@
 {
   "board": {
-    "active_layer": 0,
+    "active_layer": 31,
     "active_layer_preset": "",
     "auto_track_width": true,
     "hidden_nets": [],
@@ -36,7 +36,7 @@
       8,
       9,
       10,
-      11,
+      12,
       13,
       14,
       15,
@@ -69,6 +69,31 @@
     "version": 3
   },
   "project": {
-    "files": []
+    "files": [
+      {
+        "name": "shield_chm36VA.kicad_sch",
+        "open": true,
+        "window": {
+          "display": 0,
+          "maximized": true,
+          "pos_x": 155,
+          "pos_y": 185,
+          "size_x": 1683,
+          "size_y": 810
+        }
+      },
+      {
+        "name": "shield_chm36VA.kicad_pcb",
+        "open": true,
+        "window": {
+          "display": 0,
+          "maximized": true,
+          "pos_x": 155,
+          "pos_y": 27,
+          "size_x": 1683,
+          "size_y": 1329
+        }
+      }
+    ]
   }
 }

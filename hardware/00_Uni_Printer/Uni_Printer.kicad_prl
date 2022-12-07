@@ -36,7 +36,7 @@
       8,
       9,
       10,
-      11,
+      12,
       13,
       14,
       15,
@@ -69,6 +69,19 @@
     "version": 3
   },
   "project": {
-    "files": []
+    "files": [
+      {
+        "name": "Uni_Printer.kicad_pcb",
+        "open": false,
+        "window": {
+          "display": 0,
+          "maximized": true,
+          "pos_x": 2981,
+          "pos_y": 220,
+          "size_x": 1683,
+          "size_y": 810
+        }
+      }
+    ]
   }
 }
