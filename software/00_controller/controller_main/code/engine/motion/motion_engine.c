@@ -22,13 +22,11 @@
 #define  HIT_STOP			0x10
 #define  HIT_RUN			0x20
 
-
 #define  HOME_RUNTO_FAST	1
 #define  HOME_RETRACT		2
 #define  HOME_RUNFROM		3
 #define  HOME_RUNUNTIL		4
 #define  HOME_RUNTO_SLOW    5
-
 
 
 typedef struct
@@ -80,6 +78,7 @@ void motion_engine_stop_timer(void)
 
 void motion_engine_once(void)
 {
+
 	srv_timer_callback_fast_add(motion_engine_tmr_endpos);
 
 	motion_scurve_test_all();
@@ -194,11 +193,11 @@ int32_t motion_engine_run_home_schedule(
 		mj->homing = *home_args;
 
 		if(path != NULL)
-		{
+	{
 			mj->jcmd = JCMD_MOTION;
 
 			result = motion_engine_run(mj,home_args->home_axis,dist,1<<home_args->home_axis,path->speed_mm_s,path->accel_mm_s2,path->jerk_mm_s3);
-			mj->io     = *io_args;
+		mj->io     = *io_args;
 		}
 		else
 		{
@@ -293,7 +292,7 @@ int32_t motion_engine_run_home
 			case P_HOMING_TO_MIN:
 			{
 				io_args.io_mask_endstop	 =  ppctx_nv->axis[axis_idx].endpos_min_mask;
-				io_args.io_mask_run_stop =  ppctx_nv->axis[axis_idx].homing_mask;
+				io_args.io_mask_run_stop = ppctx_nv->axis[axis_idx].homing_mask;
 
 				if( (mctx.inputs_filtered & ppctx_nv->axis[axis_idx].homing_mask ) == 0)
 				{
@@ -304,17 +303,17 @@ int32_t motion_engine_run_home
 
 				if( dist_retract != 0)
 				{
-					// Retract
-					home_args.home_phase 		= HOME_RETRACT;
-					io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_max_mask;
+				// Retract
+				home_args.home_phase 		= HOME_RETRACT;
+				io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_max_mask;
 					io_args.io_mask_run_stop    = 0;
-					result 				   	   |= motion_engine_run_home_schedule(dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
+				result 				   	   |= motion_engine_run_home_schedule(dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
 
-					// Home again - slowly
-					home_args.home_phase 	 	= HOME_RUNTO_SLOW;
-					io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
+				// Home again - slowly
+				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
 					io_args.io_mask_run_stop 	=  ppctx_nv->axis[axis_idx].homing_mask;
-					result 					   |= motion_engine_run_home_schedule(-2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
+				result 					   |= motion_engine_run_home_schedule(-2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
 				}
 			}break;
 
@@ -333,19 +332,19 @@ int32_t motion_engine_run_home
 
 				if( dist_retract != 0)
 				{
-					// Retract
-					home_args.home_phase 		= HOME_RETRACT;
-					io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_min_mask;
+				// Retract
+				home_args.home_phase 		= HOME_RETRACT;
+				io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_min_mask;
 					io_args.io_mask_run_stop    = 0;
 
-					result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
+				result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
 
-					// Home again - slowly
-					home_args.home_phase 	 	= HOME_RUNTO_SLOW;
-					io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_max_mask;
+				// Home again - slowly
+				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_max_mask;
 					io_args.io_mask_run_stop    =  ppctx_nv->axis[axis_idx].homing_mask;
 
-					result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
+				result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
 				}
 			}break;
 
@@ -375,20 +374,20 @@ int32_t motion_engine_run_home
 
 				if( dist_retract != 0)
 				{
-					// Retract
-					io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
-					home_args.home_phase 		= HOME_RETRACT;
-					io_args.io_mask_run_keep	= 0;
-					io_args.io_mask_run_keep 	= 0;
+				// Retract
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
+				home_args.home_phase 		= HOME_RETRACT;
+				io_args.io_mask_run_keep	= 0;
+				io_args.io_mask_run_keep 	= 0;
 
-					result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
+				result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
 
-					// Home again - slowly
-					home_args.home_phase 	 	= HOME_RUNTO_SLOW;
-					io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_max_mask;
-					io_args.io_mask_run_stop 	= ppctx_nv->axis[axis_idx].homing_mask;
+				// Home again - slowly
+				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_max_mask;
+				io_args.io_mask_run_stop 	= ppctx_nv->axis[axis_idx].homing_mask;
 
-					result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
+				result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
 				}
 			}break;
 
@@ -409,36 +408,24 @@ int32_t motion_engine_run_home
 				io_args.io_mask_run_stop =  ppctx_nv->axis[axis_idx].homing_mask | ppctx_nv->axis[axis_idx].endpos_max_mask;
 				io_args.io_mask_run_keep =  0;
 
-				result 					|= motion_engine_run_home_schedule(dist_home,&path_home,&home_args,&io_args,rcv_ctx);
+				result 					|= motion_engine_run_home_schedule(-dist_home,&path_home,&home_args,&io_args,rcv_ctx);
 
-				if( dist_retract != 0)
-				{
-					// Retract
-					io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
-					home_args.home_phase 		= HOME_RETRACT;
-					io_args.io_mask_run_stop	= 0;
-					io_args.io_mask_run_keep 	= 0;
+				// Retract
+				io_args.io_mask_endstop	 	= ppctx_nv->axis[axis_idx].endpos_min_mask;
+				home_args.home_phase 		= HOME_RETRACT;
+				io_args.io_mask_run_keep	= 0;
+				io_args.io_mask_run_keep 	= 0;
 
-					result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
+				result 				   	   |= motion_engine_run_home_schedule(-dist_retract,&path_home,&home_args,&io_args,rcv_ctx);
 
-					// Home again - slowly
-					io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_max_mask;
-					home_args.home_phase 	 	= HOME_RUNTO_SLOW;
-					io_args.io_mask_run_stop 	= ppctx_nv->axis[axis_idx].homing_mask;
-					io_args.io_mask_run_keep 	= 0;
+				// Home again - slowly
+				home_args.home_phase 	 	= HOME_RUNTO_SLOW;
+				io_args.io_mask_endstop	 	=  ppctx_nv->axis[axis_idx].endpos_max_mask;
+				io_args.io_mask_run_stop 	= ppctx_nv->axis[axis_idx].homing_mask;
 
-					result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
-				}
+				result 					   |= motion_engine_run_home_schedule(2*dist_retract,&path_retract,&home_args,&io_args,rcv_ctx);
 			}break;
 		}
-
-		if(result == 0)
-		{
-			result 					   |= motion_engine_run_home_schedule(0,NULL,&home_args,NULL,rcv_ctx);
-
-		}
-
-
 	}
 
 
@@ -665,7 +652,6 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 	switch(mj->jcmd)
 	{
-
 		case JCMD_OK:
 		{
 			 length = snprintf(mctx.resp_buffer, sizeof(mctx.resp_buffer),"ok\r\n");
@@ -759,8 +745,8 @@ void  motion_engine_ack(motion_job_t * mj,int32_t result)
 
 	if(length > 0)
 	{
-		burst_rcv_send_response(&mj->comm_ctx,mctx.resp_buffer,length);
-	}
+	burst_rcv_send_response(&mj->comm_ctx,mctx.resp_buffer,length);
+}
 }
 
 
@@ -1021,14 +1007,14 @@ void motion_engine_tmr_step(void)
 	{
 
 		if(motion_engine_step_axis(3,&mctx.job->mb_axis_tail[3],&mctx.curr_pulse_pos[3],&mctx.curr_dir[3],mctx.active_dir,&active) != 0)
-		{
-			TMR_TIRGGER_Z();
-		}
+	{
+		TMR_TIRGGER_Z();
+	}
 
 
 		// A/B/C/D run  half the speed
 
-		if(motion_engine_step_axis(2,&mctx.job->mb_axis_tail[2],&mctx.curr_pulse_pos[2],&mctx.curr_dir[2],mctx.active_dir,&active) != 0)
+		if(motion_engine_step_axis(3,&mctx.job->mb_axis_tail[3],&mctx.curr_pulse_pos[3],&mctx.curr_dir[3],mctx.active_dir,&active) != 0)
 		{
 			GPIO_STEP_SET_A();
 		}
@@ -1120,6 +1106,15 @@ void motion_engine_io_filter(void)
 	mctx.inputs_filtered = new_io;
 }
 
+void motion_engine_encoders()
+{
+	mctx.encoders[0] = srv_timer_quad_get(0);
+	mctx.encoders[1] = srv_timer_quad_get(1);
+	mctx.encoders[2] = srv_timer_quad_get(2);
+
+}
+
+
 int32_t motion_engine_soft_limits_active(void)
 {
 	int result = -1;
@@ -1160,6 +1155,7 @@ void motion_engine_tmr_endpos(void)
 
 
 	motion_engine_io_filter();
+	motion_engine_encoders();
 
 
 	for(ii =0; ii < AXIS_GLOBAL_CNT;ii++)

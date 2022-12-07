@@ -130,7 +130,7 @@ void  gcode_engine_axis_scale(path_params_t * pP,path_scale_t * pScale)
 void gcode_engine_euclidean_geometry(
 			motion_job_t 	    * mj,
 			float			    * axis,
-			uint32_t			  is_incremental,
+			uint32_t			  is_incremental_mask,
 			uint32_t			* axis_mask,
 			const path_params_t	* path,
 			path_params_t		* pP
@@ -146,7 +146,7 @@ void gcode_engine_euclidean_geometry(
 	{
 		if( ( (*axis_mask) & ( 1<<ii))!= 0)
 		{
-			if( (is_incremental & (1<<ii))==0)
+			if( (is_incremental_mask & (1<<ii)) == 0)
 			{
 				delta[ii] = axis[ii] - mj->pos_end_mm[ii];
 			}
@@ -173,11 +173,7 @@ void gcode_engine_euclidean_geometry(
 	{
 		if( ( (*axis_mask) & ( 1<<ii))!= 0)
 		{
-			scale = fabsf(delta[ii]) / vector_len;
-
-			fw_assert(scale !=0);
-
-
+			scale = fabsf(axis[ii]) / vector_len;
 			pP[ii].speed_mm_s  = path->speed_mm_s * scale;
 			pP[ii].accel_mm_s2 = path->accel_mm_s2 * scale;
 			pP[ii].jerk_mm_s3  = path->jerk_mm_s3 * scale;

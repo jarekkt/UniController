@@ -572,6 +572,13 @@ void      srv_gpio_set_io(uint32_t mask,uint32_t value)
 
 
 
+	if(mask & BV(11))
+	{
+		gpio_pwm.update_req[PWM_OUT12] = 1;
+		gpio_pwm.update_val[PWM_OUT12] = value & BV(11);
+	}
+
+
 	if(mask & BV(0+16))
 	{
 		if(value & BV(0+16))

@@ -64,6 +64,9 @@ void  TIM6_DAC_IRQHandler()
     tsrv.time_fast_cb[ii]();
   }
 
+
+  
+
   __HAL_TIM_CLEAR_IT(&tsrv.hTim6, TIM_IT_UPDATE);
   __DSB();
 

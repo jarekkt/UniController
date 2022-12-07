@@ -181,13 +181,6 @@ class motion_profile_caster:
             self.mp_x_cast.scale(math.cos(math.atan2(dY,dX)))
             self.mp_y_cast.scale(math.sin(math.atan2(dY, dX)))
 
-
-
-
-
-
-
-
 class tick_calc:
     def __init__(self,dist,profile,tick_time,log=0,test_case=0):
         self.m_dist    = dist
@@ -202,6 +195,7 @@ class tick_calc:
         self.c_jerk    = 0
         self.c_dist    = 0
         self.c_tick    = 0
+        self.c_tick_total = 0
         self.c_idx     = 0
         self.log       = log
         self.test_case = test_case
@@ -249,11 +243,14 @@ class tick_calc:
             if self.log:
                 print('Changing acceleration {}->{} and speed {}->{} (max speed limit)'.format(old_acc, self.m_accel_s,old_speed,self.m_speed ))
 
+
+
         self.T11 = self.m_accel_s / self.m_jerk
         self.T13 = self.T11
         self.T12 = (self.m_speed - self.m_speed0 - (self.m_accel_s * self.m_accel_s)/self.m_jerk)/self.m_accel_s
         if self.T12 < 0:
             self.T12 = 0
+
 
         self.s_t1 = (self.m_speed0 + (self.m_accel_s * self.m_accel_s)/(6*self.m_jerk))*(self.m_accel_s/self.m_jerk)
         self.v_t1 = self.m_speed0 + (self.m_accel_s * self.m_accel_s)/(2*self.m_jerk)
@@ -359,7 +356,7 @@ class tick_calc:
             zdist = zdist - self.S1 - self.S2
             if zdist <  self.s_t3:
                 # T31 phase
-                coeff = [-self.m_jerk / 6, 0, self.m_speed, -zdist]
+                coeff = [-self.m_jerk / 6, 0, self.v_t3, -zdist]
                 roots = np.roots(coeff)
                 result = roots[2].real + self.T1 + self.T2
 
@@ -416,12 +413,14 @@ class tick_calc:
         self.t_jerk.append(self.c_jerk)
         self.t_speed.append(self.c_speed)
         self.t_accel.append(self.c_accel)
-        self.t_time.append(self.c_tick)
+        self.t_time.append(self.c_tick_total)
         self.t_dist.append(self.c_dist)
 
-    def advance(self):
+    def advance(self, idle=0):
         self.c_idx = self.c_idx + 1
-        self.c_tick = self.c_tick + self.m_tick
+        self.c_tick_total = self.c_tick_total + self.m_tick
+        if idle == 0:
+            self.c_tick = self.c_tick + self.m_tick
 
     def execute(self):
         self.calc_phase()
@@ -434,6 +433,22 @@ class tick_calc:
             self.add_log()
             self.advance()
 
+    def execute_seq(self,delay_time,total_time):
+        while self.c_tick_total < delay_time:
+            self.add_log()
+            self.advance(idle =1)
+
+        while self.m_dist >= self.c_dist:
+            if self.c_tick_total > total_time:
+                break
+            self.one_step()
+            self.add_log()
+            self.advance()
+
+
+        while self.c_tick_total < total_time:
+            self.add_log()
+            self.advance(idle =1)
 
     def plot(self,plt):
         # Plot the data
@@ -477,11 +492,53 @@ p.show()
 """
 
 p = plt
-mp_x = motion_profile(100000, 1000, 1000, 1)
-l1 = tick_calc(10, mp_x, 0.001, 1)
-l1.execute()
-l1.plot(p)
+
+
+move_dist = 50
+move_z = -10
+move_z_safe = -2
+tick = 0.000001
+
+mp_move = motion_profile(1000, 10000, 100000, 10)
+mp_z = motion_profile(500, 5000, 50000, 10)
+
+l_move = tick_calc(move_dist, mp_move, tick, log=1)
+l_move.calc_phase()
+l_z = tick_calc(-move_z, mp_z, tick, log=1)
+l_z.calc_phase()
+
+# time bugdet for Z blending - half of the XY move
+
+t_budget = l_move.T1 + l_move.T2/2
+t_z_all = l_z.T1 + l_z.T2 + l_z.T3
+t_z_safe = l_z.calc_rev_time(-move_z - -move_z_safe)
+
+t_z_delta = t_z_all - t_z_safe
+
+if t_z_delta < t_budget:
+    t_z_delay = t_z_safe
+else:
+    t_z_delay = t_z_all - t_budget
+
+l_move.execute_seq(t_z_delay, t_z_delay + t_budget)
+l_z.execute_seq(0, t_z_delay + t_budget)
+
+
+for ii in range(0,len(l_z.t_dist)):
+    l_z.t_dist[ii] = l_z.t_dist[ii]- -move_z
+
+p.plot(l_move.t_dist, l_z.t_dist , label='x_z blending')
+p.plot([0, move_dist/2 ], [move_z_safe,move_z_safe], 'k-', lw=2)
+
+end_z_marker = l_move.t_dist[ int(t_z_all /tick)]
+
+
+p.plot( [end_z_marker, end_z_marker ],[0,move_z], 'g.', lw=1)
+
+
 p.show()
+
+
 
 
 print('Done')

@@ -65,6 +65,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>cube/Core/Startup</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>cube/Drivers/BSP</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>

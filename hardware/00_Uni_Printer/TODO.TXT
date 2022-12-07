@@ -1,1 +1,0 @@
-- check LM2904 footrpint ( smaller then so8)
