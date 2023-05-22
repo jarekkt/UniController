@@ -1,12 +1,14 @@
 {
   "board": {
-    "active_layer": 35,
+    "active_layer": 31,
     "active_layer_preset": "",
     "auto_track_width": false,
+    "hidden_netclasses": [],
     "hidden_nets": [],
     "high_contrast_mode": 0,
     "net_color_mode": 1,
     "opacity": {
+      "images": 0.6,
       "pads": 1.0,
       "tracks": 1.0,
       "vias": 1.0,
@@ -36,6 +38,7 @@
       8,
       9,
       10,
+      11,
       12,
       13,
       14,
@@ -61,27 +64,14 @@
       35,
       36
     ],
-    "visible_layers": "fffff47_7ffffff9",
-    "zone_display_mode": 1
+    "visible_layers": "fffff47_ffffffff",
+    "zone_display_mode": 0
   },
   "meta": {
     "filename": "Uni_Printer.kicad_prl",
     "version": 3
   },
   "project": {
-    "files": [
-      {
-        "name": "Uni_Printer.kicad_pcb",
-        "open": false,
-        "window": {
-          "display": 0,
-          "maximized": true,
-          "pos_x": 2981,
-          "pos_y": 220,
-          "size_x": 1683,
-          "size_y": 810
-        }
-      }
-    ]
+    "files": []
   }
 }

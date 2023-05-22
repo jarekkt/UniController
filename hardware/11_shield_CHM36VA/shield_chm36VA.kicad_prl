@@ -3,10 +3,12 @@
     "active_layer": 31,
     "active_layer_preset": "",
     "auto_track_width": true,
+    "hidden_netclasses": [],
     "hidden_nets": [],
     "high_contrast_mode": 0,
     "net_color_mode": 1,
     "opacity": {
+      "images": 0.6,
       "pads": 1.0,
       "tracks": 1.0,
       "vias": 1.0,
@@ -27,28 +29,20 @@
       "zones": true
     },
     "visible_items": [
-      0,
       1,
       2,
       3,
       4,
       5,
-      8,
       9,
       10,
-      12,
       13,
-      14,
       15,
       16,
       17,
-      18,
-      19,
       20,
       21,
       22,
-      23,
-      24,
       25,
       26,
       27,
@@ -56,12 +50,10 @@
       29,
       30,
       32,
-      33,
       34,
-      35,
-      36
+      35
     ],
-    "visible_layers": "fffffff_ffffffff",
+    "visible_layers": "0021080_00000000",
     "zone_display_mode": 0
   },
   "meta": {
@@ -69,31 +61,6 @@
     "version": 3
   },
   "project": {
-    "files": [
-      {
-        "name": "shield_chm36VA.kicad_sch",
-        "open": true,
-        "window": {
-          "display": 0,
-          "maximized": true,
-          "pos_x": 155,
-          "pos_y": 185,
-          "size_x": 1683,
-          "size_y": 810
-        }
-      },
-      {
-        "name": "shield_chm36VA.kicad_pcb",
-        "open": true,
-        "window": {
-          "display": 0,
-          "maximized": true,
-          "pos_x": 155,
-          "pos_y": 27,
-          "size_x": 1683,
-          "size_y": 1329
-        }
-      }
-    ]
+    "files": []
   }
 }
