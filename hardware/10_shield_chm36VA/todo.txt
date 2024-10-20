@@ -1,6 +1,0 @@
-- add buzzer OUT_CPU8
-- U2 AM26LV -> LS, different footprint
-- D1 SMCJ26CA different footprint ( smaller D->C )
-- diods for power outputs ( burnt on coil)
-- dir signals switched on connector
-- step/dir6 switched

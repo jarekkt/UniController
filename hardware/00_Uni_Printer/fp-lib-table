@@ -1,4 +1,0 @@
-(fp_lib_table
-  (lib (name "moje")(type "KiCad")(uri "${KIPRJMOD}/Biblioteki/moje.pretty")(options "")(descr ""))
-  (lib (name "footprints")(type "KiCad")(uri "${KIPRJMOD}/Biblioteki/kicad-libraries-master/footprints.pretty")(options "")(descr ""))
-)

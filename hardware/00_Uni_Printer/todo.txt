@@ -1,2 +1,0 @@
-- check LM2904 footrpint ( smaller than so8)
-- fix Vref+ connection ( to VDDA)
