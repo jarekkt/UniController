@@ -60185,8 +60185,8 @@
 			(justify left bottom)
 		)
 	)
-	(gr_text "UniMixBase   v1.0\njaroslaw.karwik@gmail.com"
-		(at 123.9 137.8 90)
+	(gr_text "UniMixBase   v1.0  \njaroslaw.karwik@gmail.com\ngithub.com/jarekkt/UniController"
+		(at 124.8 119.2 90)
 		(layer "F.SilkS")
 		(uuid "2be0415d-e627-4e99-acd8-16c1ff4ec2a7")
 		(effects
@@ -60195,7 +60195,7 @@
 				(thickness 0.3)
 				(bold yes)
 			)
-			(justify left bottom)
+			(justify bottom)
 		)
 	)
 	(gr_text "G"
