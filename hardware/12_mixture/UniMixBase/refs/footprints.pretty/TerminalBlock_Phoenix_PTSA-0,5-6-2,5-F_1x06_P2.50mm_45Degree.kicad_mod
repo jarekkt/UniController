@@ -1,0 +1,128 @@
+(footprint "TerminalBlock_Phoenix_PTSA-0,5-6-2,5-F_1x06_P2.50mm_45Degree" (version 20221018) (generator pcbnew)
+  (layer "F.Cu")
+  (descr "PCB termination blocks, offset pins, 2.5 mm pitch Order No. 1989780, http://phoenixcontact.net/product/1989780")
+  (tags "connector terminal block Phoenix PTSA")
+  (attr through_hole)
+  (fp_text reference "REF**" (at 0.8 -8.1) (layer "F.SilkS")
+      (effects (font (size 1 1) (thickness 0.15)) (justify left))
+    (tstamp bb5e65a6-abe2-41dc-9e10-28e010d6aae3)
+  )
+  (fp_text value "TerminalBlock_Phoenix_PTSA-0,5-6-2,5-F_1x06_P2.50mm_45Degree" (at 5.5 6.15) (layer "F.Fab")
+      (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp 159c8abb-5fe5-42a0-bcd4-0e9b5fd28aca)
+  )
+  (fp_text user "${REFERENCE}" (at 5.5 -2.4) (layer "F.Fab")
+      (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp 1cbc5103-0a97-4350-a151-301e8dd5ce14)
+  )
+  (fp_poly
+    (pts
+      (xy 0 -7.6)
+      (xy -0.4 -8.2)
+      (xy 0.4 -8.2)
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.SilkS") (tstamp 70643f38-4cfb-4c60-85a6-7d02efbe6145))
+  (fp_poly
+    (pts
+      (xy 0 -7.6)
+      (xy -0.4 -8.2)
+      (xy 0.4 -8.2)
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.Fab") (tstamp db623aa4-43d3-47f4-b035-4cbd2dcb8d4b))
+  (fp_line (start -3.50 -7.90) (end 14.60 -7.90)
+    (stroke (width 0.12) (type solid)) (layer "F.CrtYd") (tstamp 147ad71c-ef5b-4daf-b207-834775312885))
+  (fp_line (start -3.50 5.30) (end -3.50 -7.90)
+    (stroke (width 0.12) (type solid)) (layer "F.CrtYd") (tstamp a91a702c-477c-41d4-abcf-32d116bcc50b))
+  (fp_line (start 14.60 -7.90) (end 14.60 5.30)
+    (stroke (width 0.12) (type solid)) (layer "F.CrtYd") (tstamp f3e86812-b5dc-45b2-9956-9403da16bd4b))
+  (fp_line (start 14.60 5.30) (end -3.50 5.30)
+    (stroke (width 0.12) (type solid)) (layer "F.CrtYd") (tstamp 3fa591be-670d-4714-a107-ea48a8c7019d))
+  (fp_line (start -2.75 -7.30) (end -1.25 -7.30)
+    (stroke (width 0.1) (type solid)) (layer "F.Fab") (tstamp 5ecf77c7-5e6a-472c-b238-4e87c1ff8adb))
+  (fp_line (start -2.75 4.70) (end -2.75 -7.30)
+    (stroke (width 0.1) (type solid)) (layer "F.Fab") (tstamp a697a05c-bab7-4dca-aade-58c301563d88))
+  (fp_line (start -1.25 -7.30) (end -1.25 4.70)
+    (stroke (width 0.1) (type solid)) (layer "F.Fab") (tstamp 857ad384-df04-4a82-a078-7ea545536a40))
+  (fp_line (start -1.25 4.70) (end -2.75 4.70)
+    (stroke (width 0.1) (type solid)) (layer "F.Fab") (tstamp 3701cc43-e4b3-4f3b-b623-71b3c0afb5ba))
+  (fp_line (start -1.25 4.70) (end 13.75 4.70)
+    (stroke (width 0.1) (type solid)) (layer "F.Fab") (tstamp 5ec12563-57d5-443e-9445-5c2f191a71c3))
+  (fp_line (start 13.75 -7.30) (end -1.25 -7.30)
+    (stroke (width 0.1) (type solid)) (layer "F.Fab") (tstamp 96ba2640-aeb0-4513-9bcb-c71d5dfac0b8))
+  (fp_line (start 13.75 4.70) (end 13.75 -7.30)
+    (stroke (width 0.1) (type solid)) (layer "F.Fab") (tstamp 4b7b5231-9a1a-45d4-9430-79f923ce4898))
+  (fp_circle (center 0.00 2.50) (end -0.50 2.50)
+    (stroke (width 0.12) (type solid)) (fill none) (layer "F.Fab") (tstamp ad830373-16ec-486f-bfa8-d1935bda2ca4))
+  (fp_circle (center 2.50 2.50) (end 2.00 2.50)
+    (stroke (width 0.12) (type solid)) (fill none) (layer "F.Fab") (tstamp 28c356f9-47cc-4c07-a6fa-aec3912b0b1e))
+  (fp_circle (center 5.00 2.50) (end 4.50 2.50)
+    (stroke (width 0.12) (type solid)) (fill none) (layer "F.Fab") (tstamp d6ddc421-768d-4b02-8089-3e3cddd8c5ca))
+  (fp_circle (center 7.50 2.50) (end 7.00 2.50)
+    (stroke (width 0.12) (type solid)) (fill none) (layer "F.Fab") (tstamp 2c4960fb-9066-4c11-87bd-9336a341ac50))
+  (fp_circle (center 10.00 2.50) (end 9.50 2.50)
+    (stroke (width 0.12) (type solid)) (fill none) (layer "F.Fab") (tstamp 98039810-2bf2-48f8-9519-5ac35c738d3d))
+  (fp_circle (center 12.50 2.50) (end 12.00 2.50)
+    (stroke (width 0.12) (type solid)) (fill none) (layer "F.Fab") (tstamp 719a4578-4bff-4723-8a85-87c19e98c8bf))
+  (fp_poly
+    (pts
+      (xy -0.4 2.5)
+      (xy -0.4 4.6)
+      (xy 0.4 4.6)
+      (xy 0.4 2.5)
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.Fab") (tstamp 0cb22775-4cfb-4c13-8c50-d2bc8043616d))
+  (fp_poly
+    (pts
+      (xy 2.1 2.5)
+      (xy 2.1 4.6)
+      (xy 2.9 4.6)
+      (xy 2.9 2.5)
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.Fab") (tstamp 81981fbb-e400-4349-b887-1d30a0274295))
+  (fp_poly
+    (pts
+      (xy 4.6 2.5)
+      (xy 4.6 4.6)
+      (xy 5.4 4.6)
+      (xy 5.4 2.5)
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.Fab") (tstamp 71537803-0a41-46c1-9600-874453163ab3))
+  (fp_poly
+    (pts
+      (xy 7.1 2.5)
+      (xy 7.1 4.6)
+      (xy 7.9 4.6)
+      (xy 7.9 2.5)
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.Fab") (tstamp 5fbb9ba3-ceb8-4ad5-a6ea-afdb40ce1673))
+  (fp_poly
+    (pts
+      (xy 9.6 2.5)
+      (xy 9.6 4.6)
+      (xy 10.4 4.6)
+      (xy 10.4 2.5)
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.Fab") (tstamp 7693a0bc-8bfe-4d92-96d5-7bf5ef3d7be7))
+  (fp_poly
+    (pts
+      (xy 12.1 2.5)
+      (xy 12.1 4.6)
+      (xy 12.9 4.6)
+      (xy 12.9 2.5)
+    )
+
+    (stroke (width 0.1) (type solid)) (fill solid) (layer "F.Fab") (tstamp 32bde7ac-8468-440a-b057-4fc2c2332a78))
+  (pad "1" thru_hole roundrect (at 0.00 0.00) (size 1.40 1.40) (drill 1) (layers "*.Cu" "*.Mask") (roundrect_rratio 0.178571) (tstamp 47142eaa-9837-4d2a-ada1-6e77d638f7cf))
+  (pad "2" thru_hole oval (at 2.50 0.00) (size 1.40 1.40) (drill 1) (layers "*.Cu" "*.Mask") (tstamp a6f70e3d-b6b9-4e6e-b6b0-bb9934d07a19))
+  (pad "3" thru_hole oval (at 5.00 0.00) (size 1.40 1.40) (drill 1) (layers "*.Cu" "*.Mask") (tstamp a24a4bb7-fda1-43ef-a52c-c20713e9248d))
+  (pad "4" thru_hole oval (at 7.50 0.00) (size 1.40 1.40) (drill 1) (layers "*.Cu" "*.Mask") (tstamp 785571be-a0c2-46ca-b982-28694f55b644))
+  (pad "5" thru_hole oval (at 10.00 0.00) (size 1.40 1.40) (drill 1) (layers "*.Cu" "*.Mask") (tstamp 31ee0343-afe2-4732-83c3-c0f568247a4a))
+  (pad "6" thru_hole oval (at 12.50 0.00) (size 1.40 1.40) (drill 1) (layers "*.Cu" "*.Mask") (tstamp ef722b14-f32d-458b-b400-5f6acafe6e88))
+)

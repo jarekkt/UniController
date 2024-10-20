@@ -1,0 +1,10 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "TMC2209_SILENTSTEPSTICK")(type "KiCad")(uri "${KIPRJMOD}/refs/TMC2209_SILENTSTEPSTICK.kicad_sym")(options "")(descr ""))
+  (lib (name "XGZP6847A")(type "KiCad")(uri "${KIPRJMOD}/refs/XGZP6847A.kicad_sym")(options "")(descr ""))
+  (lib (name "AP7375-50W5-7")(type "KiCad")(uri "${KIPRJMOD}/refs/AP7375-50W5-7.kicad_sym")(options "")(descr ""))
+  (lib (name "NUCLEO-H745ZI-Q")(type "KiCad")(uri "${KIPRJMOD}/refs/NUCLEO-H745ZI-Q.kicad_sym")(options "")(descr ""))
+  (lib (name "NUCLEO-H753ZI")(type "KiCad")(uri "${KIPRJMOD}/refs/NUCLEO-H753ZI.kicad_sym")(options "")(descr ""))
+  (lib (name "3557-2")(type "KiCad")(uri "${KIPRJMOD}/refs/3557-2.kicad_sym")(options "")(descr ""))
+  (lib (name "VNN3NV04PTR-E")(type "KiCad")(uri "${KIPRJMOD}/refs/VNN3NV04PTR-E.kicad_sym")(options "")(descr ""))
+)
