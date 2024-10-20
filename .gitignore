@@ -16,3 +16,9 @@
 
 hardware/00_Uni_Printer/Uni_Printer-backups
 *.bak
+/hardware/11_shield_CHM36VA/shield_chm36VA-backups
+/hardware/12_mixture/UniMixBase/UniMixBase-backups
+/hardware/12_mixture/UniMixHead/UniMixHead-backups
+/hardware/12_mixture/UniMixHead/UniMixBase-backups
+/hardware/12_mixture/UniMixBase/pdf
+/hardware/12_mixture/UniMixBase/ger

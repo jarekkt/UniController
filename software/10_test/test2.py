@@ -2,89 +2,83 @@
 
 
 
-f = 100000
-pps = 31940/1000
-time = 0.04
+f = 50000
+pps = 20
+vel  = 10
+acc  = 4
+time = 5
 
-vf=0.0031939999999999998
-af=0
-jf=3.1939999999999999e-09
-
-print('1A----')
-print(vf *f/pps)
-print(af *f *f/pps)
-print(jf *f *f*f/pps)
-
-acc = 0
-for ii in range(0,int(time*f)):
-   af =af +jf
-   vf = vf + af
-   acc = acc +vf
-
-print('1B----')
+print('Base ----')
+print(vel)
+print(pps)
 print(acc)
-print(vf)
-print(af)
-
-print('----')
-print(vf *f/pps)
-print(af *f *f/pps)
-print(jf *f *f*f/pps)
-
-time = 0.0965793803
-
-vf=0.028746000000000001
-af=1.2775999999999999e-05
-jf=0
-
-print('2A----')
-
-print(vf *f/pps)
-print(af *f *f/pps)
-print(jf *f *f*f/pps)
+print(time)
+print(vel*time + 0.5*acc*time*time)
+print(vel + acc *time)
 
 
+fvel = vel * pps / f
+facc = acc * pps / (f*f)
 
-acc = 0
+
+accum = 0
 for ii in range(0,int(time*f)):
-   af =af +jf
-   vf = vf + af
-   acc = acc +vf
+   fvel = fvel + facc
+   accum = accum +fvel
 
-print('2B----')
-print(acc)
-print(vf)
-print(af)
-print('----')
-print(vf *f/pps)
-print(af *f *f/pps)
-print(jf *f *f*f/pps)
+print('Run up 0----')
+print( '0- dist={}'.format(accum/pps))
+print('0- vel={}'.format(fvel*f/pps))
+print('0- acc={}'.format(facc*f*f/pps))
+
+jerk = 4* acc / time
+fjcc = jerk * pps / (f*f*f)
+fvel = vel * pps / f
+
+print('Run up 1----')
+accum = 0
+facc = 0
+for ii in range(0,int(time*f/2)):
+   facc = facc + fjcc
+   fvel = fvel + facc
+   accum = accum + fvel
+
+print( '1- dist={}'.format(accum/pps))
+print('1- vel={}'.format(fvel*f/pps))
+print('1- acc={}'.format(facc*f*f/pps))
+
+print('Run up 2----')
+for ii in range(0,int(time*f/2)):
+   facc = facc - fjcc
+   fvel = fvel + facc
+   accum = accum + fvel
 
 
+print( '2- dist={}'.format(accum/pps))
+print('2- vel={}'.format(fvel*f/pps))
+print('2- acc={}'.format(facc*f*f/pps))
 
-print('3A----')
-time = 0.04
-vf=0.15213582080688476
-af=1.2775999999999999e-05
-jf=-3.1939999999999999e-09
+print('Run down 3----')
 
-print(vf *f/pps)
-print(af *f *f/pps)
-print(jf *f *f*f/pps)
+accum = 0
+facc = 0
+for ii in range(0,int(time*f/2)):
+   facc = facc - fjcc
+   fvel = fvel + facc
+   accum = accum + fvel
+
+print( '3- dist={}'.format(accum/pps))
+print('3- vel={}'.format(fvel*f/pps))
+print('3- acc={}'.format(facc*f*f/pps))
+
+print('Run dn 4----')
 
 
+for ii in range(0,int(time*f/2)):
+   facc = facc + fjcc
+   fvel = fvel + facc
+   accum = accum + fvel
 
-acc = 0
-for ii in range(0,int(time*f)):
-   af =af +jf
-   vf = vf + af
-   acc = acc +vf
-
-print('3B----')
-print(acc)
-print(vf)
-print(af)
-print('----')
-print(vf *f/pps)
-print(af *f *f/pps)
-print(jf *f *f*f/pps)
+print( '4- dist={}'.format(accum/pps))
+print('4- vel={}'.format(fvel*f/pps))
+print('4- acc={}'.format(facc*f*f/pps))

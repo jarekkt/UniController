@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import array as arr
 import math
 import numpy as np
@@ -185,6 +184,7 @@ class tick_calc:
     def __init__(self,dist,profile,tick_time,log=0,test_case=0):
         self.m_dist    = dist
         self.m_speed   = profile.m_speed
+        self.m_speed_ini = profile.m_speed
         self.m_speed0  = profile.m_speed0
         self.m_accel_s = profile.m_accel
         self.m_jerk    = profile.m_jerk
@@ -319,6 +319,7 @@ class tick_calc:
         self.T = self.T1 + self.T2 + self.T3
         if self.log:
             print('T11={} T12={} T13={}  T1={} half_dist/s1 = {}/{}  T2={}'.format(self.T11,self.T12,self.T13,self.T1 ,half_dist,self.s_t123,self.T2))
+            print('TS={}/{}'.format(self.m_speed, self.m_speed_ini))
 
     def calc_rev_time(self,zdist):
         org_dist = zdist
@@ -491,10 +492,12 @@ test.path_plot(p)
 p.show()
 """
 
+'''
+
 p = plt
 
 
-move_dist = 50
+move_dist = 3
 move_z = -10
 move_z_safe = -2
 tick = 0.000001
@@ -538,8 +541,35 @@ p.plot( [end_z_marker, end_z_marker ],[0,move_z], 'g.', lw=1)
 
 p.show()
 
+'''
+
+tt = 10
+acc = 100000
+jerk = 10
+vel0 = 10
+vel = vel0 + tt*acc
+
+#jerk = acc*acc/(tt*acc)
+
+jerk = 20000
+acc  = acc *2
+
+move_dist = 2* (vel0 * tt + acc * tt * tt/2)
+print(move_dist/2)
+print(jerk)
+
+mp = motion_profile(vel, acc, jerk, vel0)
+move = tick_calc(move_dist, mp, 0.0001 , log=1)
+move.execute()
 
 
+
+p = plt
+
+move.plot(p)
+
+p.interactive(False)
+p.show(block=True)
 
 print('Done')
 
