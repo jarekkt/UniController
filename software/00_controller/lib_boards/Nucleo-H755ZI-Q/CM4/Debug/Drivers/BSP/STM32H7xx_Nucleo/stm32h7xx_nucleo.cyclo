@@ -1,0 +1,13 @@
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:115:9:BSP_GetVersion	1
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:129:9:BSP_LED_Init	6
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:176:9:BSP_LED_DeInit	4
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:206:9:BSP_LED_On	4
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:231:9:BSP_LED_Off	4
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:256:9:BSP_LED_Toggle	4
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:281:9:BSP_LED_GetState	4
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:308:9:BSP_PB_Init	2
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:353:9:BSP_PB_DeInit	1
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:371:9:BSP_PB_GetState	1
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:381:6:BSP_PB_IRQHandler	1
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:391:13:BSP_PB_Callback	1
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c:613:13:BUTTON_USER_EXTI_Callback	1

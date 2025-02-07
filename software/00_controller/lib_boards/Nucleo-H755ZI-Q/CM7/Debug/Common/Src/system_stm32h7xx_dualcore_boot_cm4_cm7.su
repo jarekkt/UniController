@@ -1,0 +1,2 @@
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.c:177:6:SystemInit	4	static
+/home/jarek/Projects/vcs/UniController/software/00_controller/lib_boards/Nucleo-H755ZI-Q/Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.c:323:6:SystemCoreClockUpdate	48	static

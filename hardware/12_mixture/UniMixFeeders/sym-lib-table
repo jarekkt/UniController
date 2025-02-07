@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "LPC11C22FBD48_301_")(type "KiCad")(uri "/home/jarek/Projects/vcs/UniController/hardware/12_mixture/UniMixBase/refs/LPC11C22FBD48_301_.kicad_sym")(options "")(descr ""))
+)

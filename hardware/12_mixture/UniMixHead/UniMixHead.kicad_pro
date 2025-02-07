@@ -459,7 +459,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "UniMixBase.kicad_pro",
+    "filename": "UniMixHead.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -494,7 +494,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "ger",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
