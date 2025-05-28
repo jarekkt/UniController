@@ -78,6 +78,19 @@
     "version": 3
   },
   "project": {
-    "files": []
+    "files": [
+      {
+        "name": "UniMixHead.kicad_sch",
+        "open": false,
+        "window": {
+          "display": 0,
+          "maximized": true,
+          "pos_x": 164,
+          "pos_y": 60,
+          "size_x": 1658,
+          "size_y": 992
+        }
+      }
+    ]
   }
 }

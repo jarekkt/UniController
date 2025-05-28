@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 3.2,
-          "height": 5.6,
-          "width": 5.6
+          "drill": 0.762,
+          "height": 1.524,
+          "width": 1.524
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -48,7 +48,7 @@
         "silk_text_thickness": 0.1,
         "silk_text_upright": false,
         "zones": {
-          "min_clearance": 0.4
+          "min_clearance": 0.35
         }
       },
       "diff_pair_dimensions": [
@@ -58,7 +58,18 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "courtyards_overlap|30700000|85875000|0c95e560-c1fa-404a-8b8c-ccfb362688f9|8eb4a9a3-2333-45b2-a6bd-753b0cfb516b",
+        "courtyards_overlap|30700000|87475000|2f59d20d-3f1c-49e7-a005-b5438ddd866e|8eb4a9a3-2333-45b2-a6bd-753b0cfb516b",
+        "courtyards_overlap|31300000|70075000|deaac81d-5286-4b93-91dc-be3a977d5ac0|e5f969e3-1119-4a4d-9c0d-ea0d98cad42e",
+        "courtyards_overlap|31325000|68475000|a9872fa5-800f-4e6a-be6d-7c4bdd9df4c8|deaac81d-5286-4b93-91dc-be3a977d5ac0",
+        "courtyards_overlap|31525000|51875000|eedd923f-abe4-4a1d-831e-9908d98a745d|f54f8da9-055e-4a74-9eda-67ac03a13a25",
+        "courtyards_overlap|31525000|53475000|75c717f1-38f4-46b5-ab93-f3fbf9d484fa|f54f8da9-055e-4a74-9eda-67ac03a13a25",
+        "courtyards_overlap|35005000|79255000|8eb4a9a3-2333-45b2-a6bd-753b0cfb516b|9af85dc8-56bf-4706-8ab2-108782f53993",
+        "courtyards_overlap|35705000|62255000|641bd68d-29ef-43be-bc80-fc1b03d30824|deaac81d-5286-4b93-91dc-be3a977d5ac0",
+        "courtyards_overlap|35955000|45505000|addb0bd6-3f9e-430b-a602-bdd9dfeaf812|f54f8da9-055e-4a74-9eda-67ac03a13a25",
+        "courtyards_overlap|67875000|77550000|1f722aaa-95db-441a-bf60-543c1d63da87|57442942-71ce-4cf6-b7a2-67dea9f205e7"
+      ],
       "meta": {
         "version": 2
       },
@@ -103,7 +114,7 @@
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
         "text_height": "warning",
-        "text_thickness": "ignore",
+        "text_thickness": "warning",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
         "track_dangling": "warning",
@@ -179,13 +190,13 @@
       ],
       "track_widths": [
         0.0,
-        0.0,
         0.2,
         0.3,
         0.5,
         1.0,
-        1.8,
-        2.0
+        2.0,
+        3.0,
+        4.0
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -220,7 +231,11 @@
         },
         {
           "diameter": 0.6,
-          "drill": 0.3
+          "drill": 0.2
+        },
+        {
+          "diameter": 0.8,
+          "drill": 0.4
         }
       ],
       "zones_allow_external_fillets": false
@@ -440,7 +455,7 @@
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "ignore",
       "power_pin_not_driven": "error",
       "similar_labels": "warning",
       "simulation_model_issue": "ignore",
@@ -455,7 +470,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "UniMixFeeders.kicad_pro",
+    "filename": "UniMixHeadFd.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -490,7 +505,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "./ger",
+      "plot": "ger",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
@@ -535,7 +550,7 @@
           "show": true
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Footprint",
           "name": "Footprint",
           "show": true
@@ -560,14 +575,92 @@
         },
         {
           "group_by": false,
-          "label": "Arrow Part Number",
-          "name": "Arrow Part Number",
+          "label": "Availability",
+          "name": "Availability",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Check_prices",
+          "name": "Check_prices",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Description_1",
+          "name": "Description_1",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MANUFACTURER",
+          "name": "MANUFACTURER",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MF",
+          "name": "MF",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MP",
+          "name": "MP",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "PARTREV",
+          "name": "PARTREV",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Package",
+          "name": "Package",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Price",
+          "name": "Price",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "SNAPEDA_PN",
+          "name": "SNAPEDA_PN",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "STANDARD",
+          "name": "STANDARD",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "SnapEDA_Link",
+          "name": "SnapEDA_Link",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Opis",
+          "name": "Description",
           "show": false
         },
         {
           "group_by": false,
           "label": "Arrow Price/Stock",
           "name": "Arrow Price/Stock",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Arrow Part Number",
+          "name": "Arrow Part Number",
           "show": false
         },
         {
@@ -602,50 +695,8 @@
         },
         {
           "group_by": false,
-          "label": "Opis",
-          "name": "Description",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Comment",
-          "name": "Comment",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Comtec",
-          "name": "Comtec",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Digikey",
-          "name": "Digikey",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Category",
-          "name": "Category",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Provider",
-          "name": "Provider",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "Type",
-          "name": "Type",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "MFG num",
-          "name": "MFG num",
+          "label": "Purchase-URL",
+          "name": "Purchase-URL",
           "show": false
         }
       ],
@@ -696,7 +747,7 @@
   },
   "sheets": [
     [
-      "74a4cd88-bbb7-4cb4-8105-9b19d15ccc1c",
+      "f56802d9-f699-4746-9270-4bac50efc0a1",
       "Root"
     ]
   ],
